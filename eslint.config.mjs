@@ -1,6 +1,7 @@
 import withNuxt from "./.nuxt/eslint.config.mjs";
 
 export default withNuxt({
+  files: ["**/*.{ts,vue,js}"],
   rules: {
     "vue/html-self-closing": [
       "warn",
@@ -11,7 +12,6 @@ export default withNuxt({
         },
       },
     ],
-    "vue/multi-word-component-names": ["off"],
-    "@typescript-eslint/no-explicit-any": ["off"],
+    "vue/multi-word-component-names": "off",
   },
 });

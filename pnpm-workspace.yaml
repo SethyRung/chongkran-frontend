@@ -1,0 +1,8 @@
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@sentry/cli'
+  - '@tailwindcss/oxide'
+  - esbuild
+  - sharp
+  - unrs-resolver
+  - vue-demi
