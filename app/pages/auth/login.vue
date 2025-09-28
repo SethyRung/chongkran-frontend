@@ -114,6 +114,16 @@ const isAuthenticated = useCookie<boolean>("authenticated", {
   sameSite: "strict",
   maxAge: parseInt(config.public.rtMaxAge),
 });
+const userProfile = useCookie("user_profile", {
+  secure: true,
+  sameSite: "strict",
+  maxAge: parseInt(config.public.rtMaxAge),
+});
+const userRole = useCookie("userRole", {
+  secure: true,
+  sameSite: "strict",
+  maxAge: parseInt(config.public.rtMaxAge),
+});
 
 const isSubmitting = ref<boolean>(false);
 
@@ -126,10 +136,42 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     method: "POST",
     body: event.data,
   });
+
   if (response.status.code === StatusCode.OK) {
+    // Set authentication cookies
     isAuthenticated.value = true;
     accessToken.value = response.data.accessToken;
     refreshToken.value = response.data.refreshToken;
+
+    try {
+      // Fetch user profile data
+      const profileResponse = await useApi<{
+        id: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        gender: string;
+        dateOfBirth: string;
+        role: string;
+      }>("/auth/me", {
+        method: "GET",
+      });
+
+      if (profileResponse.status.code === StatusCode.OK) {
+        // Store user profile and role
+        userProfile.value = profileResponse.data;
+        userRole.value = profileResponse.data.role;
+      }
+    } catch (error) {
+      // Handle profile fetch error but continue with login
+      console.error("Failed to fetch user profile:", error);
+      toast.add({
+        title: "Warning",
+        description: "Logged in successfully but couldn't fetch profile data",
+        color: "warning",
+      });
+    }
+
     navigateTo("/");
   } else {
     toast.add({
