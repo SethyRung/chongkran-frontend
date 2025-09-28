@@ -1,5 +1,45 @@
+<script setup lang="ts">
+const {
+  status,
+  data: response,
+  execute,
+} = await useAsyncData(
+  "home",
+  async () => {
+    const [recipesRes, categoriesRes] = await Promise.all([
+      useApi<Paginated<Recipe>>("/recipes", {
+        method: "GET",
+        query: { limit: 4, page: 1 },
+      }),
+      useApi<Paginated<Category>>("/categories", { method: "GET" }),
+    ]);
+    return {
+      recipes: recipesRes.data,
+      categories: categoriesRes.data,
+    };
+  },
+  {
+    lazy: true,
+    immediate: false,
+    transform: (data) =>
+      data.recipes.content.map((recipe) => ({
+        ...recipe,
+        category:
+          data.categories.content.find((category) => category.id === recipe.id)
+            ?.name ?? "",
+      })),
+  }
+);
+
+const recipes = computed<Recipe[]>(() => response.value ?? []);
+
+onMounted(async () => {
+  await execute();
+});
+</script>
+
 <template>
-  <div class="p-4 md:px-12 lg:px-20 space-y-8">
+  <div class="py-4 space-y-8">
     <div
       class="relative md:h-[500px] p-4 md:p-12 rounded-2xl overflow-hidden flex justify-between items-center gap-4 bg-[url('/images/hero.jpg')] bg-cover bg-right"
     >
@@ -198,42 +238,3 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-const {
-  status,
-  data: response,
-  execute,
-} = await useAsyncData(
-  "home",
-  async () => {
-    const [recipesRes, categoriesRes] = await Promise.all([
-      useApi<Paginated<Recipe>>("/recipes", {
-        method: "GET",
-        query: { limit: 4, page: 1 },
-      }),
-      useApi<Paginated<Category>>("/categories", { method: "GET" }),
-    ]);
-    return {
-      recipes: recipesRes.data,
-      categories: categoriesRes.data,
-    };
-  },
-  {
-    lazy: true,
-    immediate: false,
-    transform: (data) =>
-      data.recipes.content.map((recipe) => ({
-        ...recipe,
-        category:
-          data.categories.content.find((category) => category.id === recipe.id)
-            ?.name ?? "",
-      })),
-  }
-);
-
-const recipes = computed<Recipe[]>(() => response.value ?? []);
-
-onMounted(async () => {
-  await execute();
-});
-</script>

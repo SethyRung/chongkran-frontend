@@ -1,11 +1,13 @@
+<script lang="ts" setup></script>
+
 <template>
-  <div class="min-h-screen flex flex-col font-sans">
-    <Header />
-    <div class="flex-1">
-      <slot></slot>
-    </div>
-    <Footer />
+  <div class="font-sans">
+    <AppHeader />
+    <UMain>
+      <UContainer>
+        <slot></slot>
+      </UContainer>
+    </UMain>
+    <AppFooter />
   </div>
 </template>
-
-<script lang="ts" setup></script>

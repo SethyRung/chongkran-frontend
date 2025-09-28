@@ -1,5 +1,89 @@
+<script setup lang="ts">
+import type { CommandPaletteItem, TabsItem } from "@nuxt/ui";
+
+const search = ref<string>();
+
+const tabOptions = ref<TabsItem[]>([
+  {
+    label: "All",
+    value: "all",
+  },
+  {
+    label: "Favorites",
+    value: "favorites",
+  },
+]);
+
+const selectedTab = ref<string>("all");
+
+const sortOptions = ref(["Date", "Name"]);
+
+const filterOptions = computed<CommandPaletteItem[]>(() =>
+  categories.value.map((category) => ({
+    labeL: category.name,
+    suffix: recipes.value
+      .filter((recipe) => recipe.category === category.id)
+      .length.toString(),
+  }))
+);
+
+const filterBy = ref<string>();
+
+const page = ref(1);
+const itemPerPage = ref<number>(8);
+
+const {
+  status: categoriesStatus,
+  data: categoriesRes,
+  execute: categoriesExecute,
+} = await useAsyncData(
+  () => useApi<Paginated<Category>>("/categories", { method: "GET" }),
+  {
+    lazy: true,
+    immediate: false,
+  }
+);
+
+const {
+  status: recipesStatus,
+  data: recipesRes,
+  execute: recipesExecute,
+} = await useAsyncData(
+  () =>
+    useApi<Paginated<Recipe>>("/recipes", {
+      method: "GET",
+      query: { limit: itemPerPage.value, page: page.value },
+    }),
+  {
+    lazy: true,
+    immediate: false,
+  }
+);
+
+const categories = computed<Category[]>(
+  () => categoriesRes.value?.data.content ?? []
+);
+
+const recipes = computed<Recipe[]>(
+  () =>
+    recipesRes.value?.data.content.map((recipe) => ({
+      ...recipe,
+      category:
+        categories.value.find((category) => category.id === recipe.id)?.name ??
+        "",
+    })) ?? []
+);
+
+const totalPage = computed<number>(() => recipesRes.value?.data.total ?? 0);
+
+onMounted(() => {
+  categoriesExecute();
+  recipesExecute();
+});
+</script>
+
 <template>
-  <div class="p-4 md:px-12 lg:px-20 space-y-8">
+  <div class="py-4 space-y-8">
     <div class="relative h-40 overflow-hidden">
       <div
         class="absolute -z-10 w-full h-full rounded-2xl bg-gradient-to-r from-gray-100 to-primary-200"
@@ -105,86 +189,3 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import type { CommandPaletteItem, TabsItem } from "@nuxt/ui";
-
-const search = ref<string>();
-
-const tabOptions = ref<TabsItem[]>([
-  {
-    label: "All",
-    value: "all",
-  },
-  {
-    label: "Favorites",
-    value: "favorites",
-  },
-]);
-
-const selectedTab = ref<string>("all");
-
-const sortOptions = ref(["Date", "Name"]);
-
-const filterOptions = computed<CommandPaletteItem[]>(() =>
-  categories.value.map((category) => ({
-    labeL: category.name,
-    suffix: recipes.value
-      .filter((recipe) => recipe.category === category.id)
-      .length.toString(),
-  }))
-);
-
-const filterBy = ref<string>();
-
-const page = ref(1);
-const itemPerPage = ref<number>(8);
-
-const {
-  status: categoriesStatus,
-  data: categoriesRes,
-  execute: categoriesExecute,
-} = await useAsyncData(
-  () => useApi<Paginated<Category>>("/categories", { method: "GET" }),
-  {
-    lazy: true,
-    immediate: false,
-  }
-);
-
-const {
-  status: recipesStatus,
-  data: recipesRes,
-  execute: recipesExecute,
-} = await useAsyncData(
-  () =>
-    useApi<Paginated<Recipe>>("/recipes", {
-      method: "GET",
-      query: { limit: itemPerPage.value, page: page.value },
-    }),
-  {
-    lazy: true,
-    immediate: false,
-  }
-);
-
-const categories = computed<Category[]>(
-  () => categoriesRes.value?.data.content ?? []
-);
-
-const recipes = computed<Recipe[]>(
-  () =>
-    recipesRes.value?.data.content.map((recipe) => ({
-      ...recipe,
-      category:
-        categories.value.find((category) => category.id === recipe.id)?.name ??
-        "",
-    })) ?? []
-);
-
-const totalPage = computed<number>(() => recipesRes.value?.data.total ?? 0);
-
-onMounted(() => {
-  categoriesExecute();
-  recipesExecute();
-});
-</script>
