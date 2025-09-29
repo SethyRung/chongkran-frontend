@@ -93,7 +93,7 @@ const navigationItems = reactive<NavigationMenuItem[]>([
           class="rounded-full"
         />
       </UDropdownMenu>
-      <UButton v-else label="Log in" variant="outline" to="/auth/login" />
+      <UButton v-else label="Log in" variant="outline" to="/auth" />
     </template>
     <template #body>
       <UNavigationMenu
