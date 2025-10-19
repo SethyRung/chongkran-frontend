@@ -1,5 +1,5 @@
 import type { NitroFetchOptions } from "nitropack";
-import type { Response } from "#shared/types/Response";
+import type { Response } from "#shared/types";
 
 export const useApi = async <T>(
   url: string,

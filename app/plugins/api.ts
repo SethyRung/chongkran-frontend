@@ -1,5 +1,5 @@
 import { StatusCode } from "#shared/enums/base";
-import type { Response } from "#shared/types/Response";
+import type { Response } from "#shared/types";
 import type { NitroFetchOptions } from "nitropack";
 
 export default defineNuxtPlugin((nuxtApp) => {
