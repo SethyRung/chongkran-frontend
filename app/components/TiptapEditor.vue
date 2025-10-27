@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { EditorContent, useEditor } from "@tiptap/vue-3";
 import { StarterKit as TiptapStarterKit } from "@tiptap/starter-kit";
 import { Image as TiptapImage } from "@tiptap/extension-image";

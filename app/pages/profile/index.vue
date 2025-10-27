@@ -1,3 +1,22 @@
+<script lang="ts" setup>
+import type { SelectItem } from "@nuxt/ui";
+import DatePicker from "~/components/forms/DatePicker.vue";
+
+const genderOptions: SelectItem[] = [
+  { label: "Male", value: "M" },
+  { label: "Female", value: "F" },
+];
+
+const formState = reactive({
+  firstName: "",
+  lastName: "",
+  gender: "",
+  email: "",
+  dateOfBirth: "",
+  role: "",
+});
+</script>
+
 <template>
   <div class="max-w-5xl px-4 md:px-12 lg:px-20 mt-8 mb-20 mx-auto space-y-6">
     <div class="flex flex-wrap justify-between items-center gap-6">
@@ -35,22 +54,3 @@
     </UForm>
   </div>
 </template>
-
-<script lang="ts" setup>
-import type { SelectItem } from "@nuxt/ui";
-import DatePicker from "~/components/forms/DatePicker.vue";
-
-const genderOptions: SelectItem[] = [
-  { label: "Male", value: "M" },
-  { label: "Female", value: "F" },
-];
-
-const formState = reactive({
-  firstName: "",
-  lastName: "",
-  gender: "",
-  email: "",
-  dateOfBirth: "",
-  role: "",
-});
-</script>

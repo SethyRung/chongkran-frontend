@@ -1,3 +1,9 @@
+<script lang="ts" setup>
+useHead({
+  title: "Chongkran",
+});
+</script>
+
 <template>
   <UApp>
     <NuxtLayout>
@@ -5,11 +11,7 @@
     </NuxtLayout>
   </UApp>
 </template>
-<script setup>
-useHead({
-  title: "Chongkran",
-});
-</script>
+
 <style scoped>
 .page-enter-active,
 .page-leave-active {

@@ -1,18 +1,3 @@
-<template>
-  <UPopover>
-    <UButton v-bind="props" :size="buttonSize">
-      {{
-        modelValue
-          ? df.format(modelValue.toDate(getLocalTimeZone()))
-          : "Select a date"
-      }}
-    </UButton>
-    <template #content>
-      <UCalendar v-model="modelValue" class="p-2" />
-    </template>
-  </UPopover>
-</template>
-
 <script setup lang="ts">
 import type { CalendarDate } from "@internationalized/date";
 import { DateFormatter, getLocalTimeZone } from "@internationalized/date";
@@ -84,3 +69,18 @@ const props = withDefaults(defineProps<DatePickerProps>(), {
 const { size: formGroupSize } = useFormField();
 const buttonSize = computed(() => props.size || formGroupSize.value);
 </script>
+
+<template>
+  <UPopover>
+    <UButton v-bind="props" :size="buttonSize">
+      {{
+        modelValue
+          ? df.format(modelValue.toDate(getLocalTimeZone()))
+          : "Select a date"
+      }}
+    </UButton>
+    <template #content>
+      <UCalendar v-model="modelValue" class="p-2" />
+    </template>
+  </UPopover>
+</template>

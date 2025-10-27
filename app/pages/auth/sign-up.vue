@@ -1,3 +1,70 @@
+<script lang="ts" setup>
+import * as z from "zod";
+import type { FormSubmitEvent } from "@nuxt/ui";
+import { StatusCode } from "#shared/enums/base";
+
+definePageMeta({
+  layout: "auth",
+});
+
+const toast = useToast();
+
+const isShowPassword = ref<boolean>(false);
+
+const schema = z
+  .object({
+    firstName: z.string(),
+    lastName: z.string(),
+    email: z.string().email("Invalid email"),
+    password: z.string().min(8, "Must be at least 8 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+type Schema = z.output<typeof schema>;
+
+const state = reactive<Partial<Schema>>({
+  firstName: undefined,
+  lastName: undefined,
+  email: undefined,
+  password: undefined,
+  confirmPassword: undefined,
+});
+
+const isSubmitting = ref<boolean>(false);
+
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  isSubmitting.value = true;
+  const response = await useApi<string>("/auth/signup", {
+    method: "POST",
+    body: {
+      firstName: event.data.firstName,
+      lastName: event.data.lastName,
+      email: event.data.email,
+      password: event.data.password,
+    },
+  });
+  if (response.status.code === StatusCode.OK) {
+    toast.add({
+      title: "Success",
+      description: response.data,
+      color: "success",
+    });
+    navigateTo("/auth/login");
+  } else {
+    toast.add({
+      title: "Error",
+      description: response.status.message,
+      color: "error",
+    });
+  }
+  isSubmitting.value = false;
+}
+</script>
+
 <template>
   <div
     class="max-h-full flex lg:gap-10 p-7 lg:pr-0 lg:p-14 bg-white border border-[#666]/35 rounded-3xl"
@@ -138,70 +205,3 @@
     </div>
   </div>
 </template>
-
-<script lang="ts" setup>
-import * as z from "zod";
-import type { FormSubmitEvent } from "@nuxt/ui";
-import { StatusCode } from "#shared/enums/base";
-
-definePageMeta({
-  layout: "auth",
-});
-
-const toast = useToast();
-
-const isShowPassword = ref<boolean>(false);
-
-const schema = z
-  .object({
-    firstName: z.string(),
-    lastName: z.string(),
-    email: z.string().email("Invalid email"),
-    password: z.string().min(8, "Must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type Schema = z.output<typeof schema>;
-
-const state = reactive<Partial<Schema>>({
-  firstName: undefined,
-  lastName: undefined,
-  email: undefined,
-  password: undefined,
-  confirmPassword: undefined,
-});
-
-const isSubmitting = ref<boolean>(false);
-
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  isSubmitting.value = true;
-  const response = await useApi<string>("/auth/signup", {
-    method: "POST",
-    body: {
-      firstName: event.data.firstName,
-      lastName: event.data.lastName,
-      email: event.data.email,
-      password: event.data.password,
-    },
-  });
-  if (response.status.code === StatusCode.OK) {
-    toast.add({
-      title: "Success",
-      description: response.data,
-      color: "success",
-    });
-    navigateTo("/auth/login");
-  } else {
-    toast.add({
-      title: "Error",
-      description: response.status.message,
-      color: "error",
-    });
-  }
-  isSubmitting.value = false;
-}
-</script>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { CommandPaletteItem, TabsItem } from "@nuxt/ui";
 
 const search = ref<string>();
