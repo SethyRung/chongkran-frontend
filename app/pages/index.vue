@@ -28,7 +28,7 @@ const {
           data.categories.content.find((category) => category.id === recipe.id)
             ?.name ?? "",
       })),
-  }
+  },
 );
 
 const recipes = computed<Recipe[]>(() => response.value ?? []);
@@ -41,7 +41,7 @@ onMounted(async () => {
 <template>
   <div class="py-4 space-y-8">
     <div
-      class="relative md:h-[500px] p-4 md:p-12 rounded-2xl overflow-hidden flex justify-between items-center gap-4 bg-[url('/images/hero.jpg')] bg-cover bg-right"
+      class="relative md:h-125 p-4 md:p-12 rounded-2xl overflow-hidden flex justify-between items-center gap-4 bg-[url('/images/hero.jpg')] bg-cover bg-right"
     >
       <div class="absolute inset-0 bg-gray-50/50"></div>
       <div
