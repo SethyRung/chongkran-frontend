@@ -1,120 +1,129 @@
 <script lang="ts" setup>
-import type { Author, Recipe } from '~/shared/types'
+import type { Author, Recipe } from "~/shared/types";
 
 // Page setup
-const route = useRoute()
-const { $api } = useNuxtApp()
-const { user } = useAuth()
+const route = useRoute();
+const { $api } = useNuxtApp();
+const { user } = useAuth();
 
 // State
-const author = ref<Author | null>(null)
-const recipes = ref<Recipe[]>([])
-const isLoading = ref(true)
-const error = ref<string | null>(null)
-const activeTab = ref('recipes')
-const currentPage = ref(1)
-const limit = ref(9)
-const sortBy = ref('recent')
-const totalRecipes = ref(0)
+const author = ref<Author | null>(null);
+const recipes = ref<Recipe[]>([]);
+const isLoading = ref(true);
+const error = ref<string | null>(null);
+const activeTab = ref("recipes");
+const currentPage = ref(1);
+const limit = ref(9);
+const sortBy = ref("recent");
+const totalRecipes = ref(0);
 
 // Computed properties
-const authorId = computed(() => route.params.id as string)
-const currentUserId = computed(() => user.value?.id)
+const authorId = computed(() => route.params.id as string);
+const currentUserId = computed(() => user.value?.id);
 
-const totalPages = computed(() => Math.ceil(totalRecipes.value / limit.value))
+const totalPages = computed(() => Math.ceil(totalRecipes.value / limit.value));
 
 const hasSocialLinks = computed(() => {
-  return author.value?.website || author.value?.instagram ||
-         author.value?.youtube || author.value?.tiktok
-})
+  return (
+    author.value?.website ||
+    author.value?.instagram ||
+    author.value?.youtube ||
+    author.value?.tiktok
+  );
+});
 
 const authorStats = computed(() => {
-  if (!author.value) return []
+  if (!author.value) return [];
 
   return [
-    { key: 'followersCount', label: 'Followers', value: author.value.followersCount || 0 },
-    { key: 'recipesCount', label: 'Recipes', value: author.value.recipesCount || 0 },
-    { key: 'totalViews', label: 'Views', value: author.value.totalViews || 0 },
-    { key: 'totalLikes', label: 'Likes', value: author.value.totalLikes || 0 },
-  ]
-})
+    { key: "followersCount", label: "Followers", value: author.value.followersCount || 0 },
+    { key: "recipesCount", label: "Recipes", value: author.value.recipesCount || 0 },
+    { key: "totalViews", label: "Views", value: author.value.totalViews || 0 },
+    { key: "totalLikes", label: "Likes", value: author.value.totalLikes || 0 },
+  ];
+});
 
 const tabs = computed(() => [
-  { key: 'recipes', label: 'Recipes' },
-  { key: 'about', label: 'About' },
-])
+  { key: "recipes", label: "Recipes" },
+  { key: "about", label: "About" },
+]);
 
 const sortOptions = [
-  { label: 'Most Recent', value: 'recent' },
-  { label: 'Most Popular', value: 'popular' },
-  { label: 'Top Rated', value: 'rated' },
-]
+  { label: "Most Recent", value: "recent" },
+  { label: "Most Popular", value: "popular" },
+  { label: "Top Rated", value: "rated" },
+];
 
 // Methods
 const formatNumber = (num: number) => {
-  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'
-  if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
-  return num.toString()
-}
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+  return num.toString();
+};
 
 const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long'
-  })
-}
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+  });
+};
 
 const fetchAuthor = async () => {
   try {
-    isLoading.value = true
-    const response = await $api(`/users/authors/${authorId.value}`)
-    author.value = response.data
+    isLoading.value = true;
+    const response = await $api(`/users/authors/${authorId.value}`);
+    author.value = response.data;
   } catch (err: any) {
-    error.value = err.response?.data?.message || 'Failed to fetch author'
+    error.value = err.response?.data?.message || "Failed to fetch author";
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const fetchAuthorRecipes = async () => {
   try {
-    const params: any = { page: currentPage.value, limit: limit.value }
+    const params: any = { page: currentPage.value, limit: limit.value };
 
-    if (sortBy.value === 'popular') {
-      params.sort = 'views'
-      params.order = 'desc'
-    } else if (sortBy.value === 'rated') {
-      params.sort = 'likes'
-      params.order = 'desc'
+    if (sortBy.value === "popular") {
+      params.sort = "views";
+      params.order = "desc";
+    } else if (sortBy.value === "rated") {
+      params.sort = "likes";
+      params.order = "desc";
     } else {
-      params.sort = 'createdAt'
-      params.order = 'desc'
+      params.sort = "createdAt";
+      params.order = "desc";
     }
 
-    const response = await $api(`/recipes/author/${authorId.value}`, { params })
-    recipes.value = response.data.content
-    totalRecipes.value = response.data.total
+    const response = await $api(`/recipes/author/${authorId.value}`, { params });
+    recipes.value = response.data.content;
+    totalRecipes.value = response.data.total;
   } catch (err: any) {
-    console.error('Failed to fetch recipes:', err)
+    console.error("Failed to fetch recipes:", err);
   }
-}
+};
 
 // Watchers
 watch([currentPage, sortBy], () => {
-  fetchAuthorRecipes()
-})
+  fetchAuthorRecipes();
+});
 
 // Lifecycle
 onMounted(() => {
-  fetchAuthor()
-  fetchAuthorRecipes()
-})
+  fetchAuthor();
+  fetchAuthorRecipes();
+});
 
 // SEO
 useSeoMeta({
-  title: () => author.value ? `${author.value.firstName} ${author.value.lastName} - Recipes & Profile` : 'Author Profile',
-  description: () => author.value?.bio || `Discover amazing recipes by ${author.value?.firstName} ${author.value?.lastName}`,
-})
+  title: () =>
+    author.value
+      ? `${author.value.firstName} ${author.value.lastName} - Recipes & Profile`
+      : "Author Profile",
+  description: () =>
+    author.value?.bio ||
+    `Discover amazing recipes by ${author.value?.firstName} ${author.value?.lastName}`,
+});
 </script>
 
 <template>
@@ -149,7 +158,9 @@ useSeoMeta({
                 :alt="`${author.firstName} ${author.lastName}`"
                 class="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white shadow-lg group-hover:scale-105 transition-transform duration-300"
               />
-              <div class="absolute -bottom-2 -right-2 bg-primary-500 text-white p-2 rounded-full shadow-lg">
+              <div
+                class="absolute -bottom-2 -right-2 bg-primary-500 text-white p-2 rounded-full shadow-lg"
+              >
                 <UIcon name="i-lucide-check" class="w-4 h-4" />
               </div>
             </div>
@@ -260,7 +271,9 @@ useSeoMeta({
             <div class="space-y-6">
               <div class="flex items-center justify-between">
                 <h3 class="text-xl font-semibold text-gray-900">
-                  {{ item.label }} ({{ authorStats.find(s => s.key === 'recipesCount')?.value || 0 }})
+                  {{ item.label }} ({{
+                    authorStats.find((s) => s.key === "recipesCount")?.value || 0
+                  }})
                 </h3>
                 <USelectMenu
                   v-model="sortBy"
@@ -271,12 +284,11 @@ useSeoMeta({
               </div>
 
               <!-- Recipe Grid -->
-              <div v-if="recipes.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <RecipeCard
-                  v-for="recipe in recipes"
-                  :key="recipe.id"
-                  :recipe="recipe"
-                />
+              <div
+                v-if="recipes.length"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                <RecipeCard v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
               </div>
 
               <!-- Empty State -->

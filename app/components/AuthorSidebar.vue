@@ -33,10 +33,7 @@ const navigationItems = reactive<NavigationMenuItem[]>([
 <template>
   <div class="w-64 bg-white border-r border-[#666]/35 flex flex-col h-full">
     <div class="p-6 border-b border-[#666]/35">
-      <NuxtLink
-        to="/"
-        class="font-bold text-primary-500 flex items-center gap-1.5 text-lg"
-      >
+      <NuxtLink to="/" class="font-bold text-primary-500 flex items-center gap-1.5 text-lg">
         <UIcon name="i-lucide-cooking-pot" size="24" /> Chongkran
       </NuxtLink>
       <p class="text-sm text-[#666] mt-2">Author Dashboard</p>

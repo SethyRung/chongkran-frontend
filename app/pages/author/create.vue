@@ -16,10 +16,7 @@ const isPublishing = ref(false);
 const fileInput = ref<HTMLInputElement>();
 
 const basicInfoSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Title is required")
-    .max(100, "Title must be less than 100 characters"),
+  title: z.string().min(1, "Title is required").max(100, "Title must be less than 100 characters"),
   category: z.string().min(1, "Category is required"),
   prepTime: z
     .number()
@@ -46,7 +43,7 @@ const ingredientsSchema = z.object({
       z.object({
         name: z.string().min(1, "Ingredient name is required"),
         quantity: z.string().min(1, "Quantity is required"),
-      })
+      }),
     )
     .min(1, "At least one ingredient is required"),
 });
@@ -128,7 +125,7 @@ watch(
   (newState) => {
     Object.assign(recipeState, newState);
   },
-  { deep: true }
+  { deep: true },
 );
 
 watch(
@@ -136,7 +133,7 @@ watch(
   (newState) => {
     recipeState.ingredients = newState.ingredients;
   },
-  { deep: true }
+  { deep: true },
 );
 
 watch(
@@ -144,7 +141,7 @@ watch(
   (newState) => {
     recipeState.instructions = newState.instructions;
   },
-  { deep: true }
+  { deep: true },
 );
 
 const stepValidation = computed(() => {
@@ -163,10 +160,7 @@ const stepValidation = computed(() => {
     case 1: // Ingredients
       return ingredientsState.ingredients.length > 0;
     case 2: // Instructions
-      return (
-        instructionsState.instructions &&
-        instructionsState.instructions.length >= 10
-      );
+      return instructionsState.instructions && instructionsState.instructions.length >= 10;
     case 3: // Review
       return true;
     default:
@@ -299,9 +293,7 @@ async function publishRecipe() {
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8"
       >
         <div class="flex-1">
-          <h1
-            class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2"
-          >
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
             Create New Recipe
           </h1>
           <p class="text-base sm:text-lg text-gray-600">
@@ -315,13 +307,7 @@ async function publishRecipe() {
           footer: 'flex items-center justify-between ',
         }"
       >
-        <UStepper
-          ref="stepperRef"
-          v-model="currentStep"
-          :items="steps"
-          linear
-          class="w-full"
-        >
+        <UStepper ref="stepperRef" v-model="currentStep" :items="steps" linear class="w-full">
           <template #basic-info>
             <div class="space-y-4">
               <UCard variant="outline" class="rounded-[12px]">
@@ -335,12 +321,7 @@ async function publishRecipe() {
                   class="space-y-6"
                 >
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <UFormField
-                      label="Recipe Title"
-                      name="title"
-                      required
-                      size="xl"
-                    >
+                    <UFormField label="Recipe Title" name="title" required size="xl">
                       <UInput
                         v-model="basicInfoState.title"
                         placeholder="Enter recipe title"
@@ -349,12 +330,7 @@ async function publishRecipe() {
                       />
                     </UFormField>
 
-                    <UFormField
-                      label="Category"
-                      name="category"
-                      required
-                      size="xl"
-                    >
+                    <UFormField label="Category" name="category" required size="xl">
                       <USelect
                         v-model="basicInfoState.category"
                         :items="categoryOptions"
@@ -364,12 +340,7 @@ async function publishRecipe() {
                       />
                     </UFormField>
 
-                    <UFormField
-                      label="Prep Time"
-                      name="prepTime"
-                      required
-                      size="xl"
-                    >
+                    <UFormField label="Prep Time" name="prepTime" required size="xl">
                       <UInput
                         v-model="basicInfoState.prepTime"
                         type="number"
@@ -379,12 +350,7 @@ async function publishRecipe() {
                       />
                     </UFormField>
 
-                    <UFormField
-                      label="Cook Time"
-                      name="cookTime"
-                      required
-                      size="xl"
-                    >
+                    <UFormField label="Cook Time" name="cookTime" required size="xl">
                       <UInput
                         v-model="basicInfoState.cookTime"
                         type="number"
@@ -394,12 +360,7 @@ async function publishRecipe() {
                       />
                     </UFormField>
 
-                    <UFormField
-                      label="Servings"
-                      name="servings"
-                      required
-                      size="xl"
-                    >
+                    <UFormField label="Servings" name="servings" required size="xl">
                       <UInput
                         v-model="basicInfoState.servings"
                         type="number"
@@ -409,12 +370,7 @@ async function publishRecipe() {
                       />
                     </UFormField>
 
-                    <UFormField
-                      label="Difficulty"
-                      name="difficulty"
-                      required
-                      size="xl"
-                    >
+                    <UFormField label="Difficulty" name="difficulty" required size="xl">
                       <USelect
                         v-model="basicInfoState.difficulty"
                         :items="difficultyOptions"
@@ -426,11 +382,7 @@ async function publishRecipe() {
                   </div>
 
                   <!-- Recipe Description -->
-                  <UFormField
-                    label="Recipe Description"
-                    name="description"
-                    required
-                  >
+                  <UFormField label="Recipe Description" name="description" required>
                     <UTextarea
                       v-model="basicInfoState.description"
                       placeholder="Describe your recipe in detail. What makes it special? What's the story behind it?"
@@ -440,10 +392,7 @@ async function publishRecipe() {
                     />
                     <div class="mt-4 text-sm text-[#666]">
                       <p>Minimum 10 characters required (max 2000)</p>
-                      <p>
-                        {{ basicInfoState.description?.length || 0 }} / 2000
-                        characters
-                      </p>
+                      <p>{{ basicInfoState.description?.length || 0 }} / 2000 characters</p>
                     </div>
                   </UFormField>
                 </UForm>
@@ -463,9 +412,7 @@ async function publishRecipe() {
                           class="mx-auto mb-2 text-[#666]"
                         />
                         <p class="text-[#666]">Click to upload recipe image</p>
-                        <p class="text-xs text-[#666] mt-1">
-                          PNG, JPG up to 10MB
-                        </p>
+                        <p class="text-xs text-[#666] mt-1">PNG, JPG up to 10MB</p>
                       </div>
                       <div v-if="recipeState.image" class="relative">
                         <NuxtImg
@@ -523,10 +470,7 @@ async function publishRecipe() {
                     :key="index"
                     class="flex gap-3"
                   >
-                    <UFormField
-                      :name="`ingredients.${index}.name`"
-                      class="flex-1"
-                    >
+                    <UFormField :name="`ingredients.${index}.name`" class="flex-1">
                       <UInput
                         v-model="ingredient.name"
                         placeholder="Ingredient name"
@@ -534,10 +478,7 @@ async function publishRecipe() {
                         :ui="{ base: 'rounded-[12px] ring-[#666]/35' }"
                       />
                     </UFormField>
-                    <UFormField
-                      :name="`ingredients.${index}.quantity`"
-                      class="w-32"
-                    >
+                    <UFormField :name="`ingredients.${index}.quantity`" class="w-32">
                       <UInput
                         v-model="ingredient.quantity"
                         placeholder="Quantity"
@@ -584,10 +525,7 @@ async function publishRecipe() {
                   <div class="mt-4 text-sm text-[#666]">
                     <p>Provide step-by-step instructions for your recipe</p>
                     <p>Minimum 10 characters required (max 10000)</p>
-                    <p>
-                      {{ instructionsState.instructions?.length || 0 }} / 10000
-                      characters
-                    </p>
+                    <p>{{ instructionsState.instructions?.length || 0 }} / 10000 characters</p>
                   </div>
                 </UForm>
               </UCard>
@@ -606,9 +544,7 @@ async function publishRecipe() {
                     <div>
                       <h3 class="font-semibold mb-2">Basic Info</h3>
                       <p><strong>Title:</strong> {{ recipeState.title }}</p>
-                      <p>
-                        <strong>Category:</strong> {{ recipeState.category }}
-                      </p>
+                      <p><strong>Category:</strong> {{ recipeState.category }}</p>
                       <p>
                         <strong>Prep Time:</strong>
                         {{ recipeState.prepTime }} minutes
@@ -617,9 +553,7 @@ async function publishRecipe() {
                         <strong>Cook Time:</strong>
                         {{ recipeState.cookTime }} minutes
                       </p>
-                      <p>
-                        <strong>Servings:</strong> {{ recipeState.servings }}
-                      </p>
+                      <p><strong>Servings:</strong> {{ recipeState.servings }}</p>
                       <p>
                         <strong>Difficulty:</strong>
                         {{ recipeState.difficulty }}
@@ -662,10 +596,7 @@ async function publishRecipe() {
                   <div class="border-t pt-4">
                     <h3 class="font-semibold mb-2">Ingredients Preview</h3>
                     <ul class="list-disc list-inside text-sm">
-                      <li
-                        v-for="(ingredient, index) in recipeState.ingredients"
-                        :key="index"
-                      >
+                      <li v-for="(ingredient, index) in recipeState.ingredients" :key="index">
                         {{ ingredient.quantity }} {{ ingredient.name }}
                       </li>
                     </ul>

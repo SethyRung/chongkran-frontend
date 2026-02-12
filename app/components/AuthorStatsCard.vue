@@ -27,7 +27,7 @@ onMounted(() => {
   isMobile.value = window.innerWidth < 640;
 
   // Listen for window resize
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     isMobile.value = window.innerWidth < 640;
   });
 });
@@ -67,7 +67,11 @@ const formattedValue = computed(() => {
 </script>
 
 <template>
-  <UCard variant="outline" class="rounded-[12px] hover:shadow-sm transition-shadow cursor-pointer" @click="$emit('click')">
+  <UCard
+    variant="outline"
+    class="rounded-[12px] hover:shadow-sm transition-shadow cursor-pointer"
+    @click="$emit('click')"
+  >
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4">
       <div class="flex items-center gap-4 w-full sm:w-auto">
         <div :class="iconWrapperClass">
@@ -78,7 +82,9 @@ const formattedValue = computed(() => {
           <p class="text-xl sm:text-2xl font-bold truncate">{{ formattedValue }}</p>
         </div>
       </div>
-      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+      <div
+        class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto"
+      >
         <div v-if="trend !== 0" class="flex items-center gap-1">
           <UIcon
             :name="trend > 0 ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
@@ -98,7 +104,7 @@ const formattedValue = computed(() => {
               :class="iconClass"
               :style="{
                 height: `${point}%`,
-                left: `${(index / (miniChartData.length - 1)) * 100}%`
+                left: `${(index / (miniChartData.length - 1)) * 100}%`,
               }"
             />
           </div>

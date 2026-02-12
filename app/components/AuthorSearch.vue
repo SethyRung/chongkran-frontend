@@ -1,82 +1,85 @@
 <script lang="ts" setup>
-import type { Author } from '~/shared/types'
+import type { Author } from "~/shared/types";
 
 interface Props {
-  placeholder?: string
-  icon?: string
-  size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  showFollowButton?: boolean
-  maxResults?: number
+  placeholder?: string;
+  icon?: string;
+  size?: "2xs" | "xs" | "sm" | "md" | "lg" | "xl";
+  showFollowButton?: boolean;
+  maxResults?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  placeholder: 'Search authors...',
-  icon: 'i-lucide-search',
-  size: 'md',
+  placeholder: "Search authors...",
+  icon: "i-lucide-search",
+  size: "md",
   showFollowButton: true,
-  maxResults: 5
-})
+  maxResults: 5,
+});
 
 const emit = defineEmits<{
-  select: [author: Author]
-}>()
+  select: [author: Author];
+}>();
 
 // Composables
-const { searchAuthors } = useAuthor()
-const { user } = useAuth()
+const { searchAuthors } = useAuthor();
+const { user } = useAuth();
 
 // State
-const searchQuery = ref('')
-const searchResults = ref<Author[]>([])
-const isLoading = ref(false)
-const showResults = ref(false)
+const searchQuery = ref("");
+const searchResults = ref<Author[]>([]);
+const isLoading = ref(false);
+const showResults = ref(false);
 
 // Computed properties
-const currentUserId = computed(() => user.value?.id)
+const currentUserId = computed(() => user.value?.id);
 
 // Debounced search
 const debouncedSearch = useDebounceFn(async () => {
   if (!searchQuery.value.trim()) {
-    searchResults.value = []
-    return
+    searchResults.value = [];
+    return;
   }
 
-  isLoading.value = true
+  isLoading.value = true;
   try {
-    const results = await searchAuthors(searchQuery.value.trim(), props.maxResults)
-    searchResults.value = results
+    const results = await searchAuthors(searchQuery.value.trim(), props.maxResults);
+    searchResults.value = results;
   } catch (error) {
-    console.error('Search failed:', error)
-    searchResults.value = []
+    console.error("Search failed:", error);
+    searchResults.value = [];
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}, 300)
+}, 300);
 
 // Methods
 const handleSearch = () => {
-  debouncedSearch()
-}
+  debouncedSearch();
+};
 
 const handleBlur = () => {
   // Delay hiding results to allow clicking on results
   setTimeout(() => {
-    showResults.value = false
-  }, 200)
-}
+    showResults.value = false;
+  }, 200);
+};
 
 const selectAuthor = (author: Author) => {
-  emit('select', author)
-  showResults.value = false
-  searchQuery.value = ''
-}
+  emit("select", author);
+  showResults.value = false;
+  searchQuery.value = "";
+};
 
 // Watch for external changes to search query
-watch(() => props.modelValue, (newValue) => {
-  if (newValue !== searchQuery.value) {
-    searchQuery.value = newValue || ''
-  }
-})
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue !== searchQuery.value) {
+      searchQuery.value = newValue || "";
+    }
+  },
+);
 </script>
 
 <template>
@@ -136,7 +139,7 @@ watch(() => props.modelValue, (newValue) => {
               <div class="text-sm text-gray-600 truncate">
                 {{ author.followersCount }} followers
                 <span v-if="author.expertise?.length">
-                  • {{ author.expertise.slice(0, 2).join(', ') }}
+                  • {{ author.expertise.slice(0, 2).join(", ") }}
                   <span v-if="author.expertise.length > 2">+{{ author.expertise.length - 2 }}</span>
                 </span>
               </div>
@@ -179,10 +182,6 @@ watch(() => props.modelValue, (newValue) => {
     </Transition>
 
     <!-- Overlay to close dropdown when clicking outside -->
-    <div
-      v-if="showResults"
-      class="fixed inset-0 z-40"
-      @click="showResults = false"
-    />
+    <div v-if="showResults" class="fixed inset-0 z-40" @click="showResults = false" />
   </div>
 </template>

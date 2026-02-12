@@ -191,13 +191,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             label: 'text-[#666]',
           }"
         />
-        <UButton
-          label="Create an account"
-          type="submit"
-          size="xl"
-          block
-          class="rounded-[12px]"
-        />
+        <UButton label="Create an account" type="submit" size="xl" block class="rounded-[12px]" />
       </UForm>
     </div>
     <div class="hidden lg:flex justify-center items-center">

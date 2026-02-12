@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 interface ActivityItem {
   id: string | number;
-  type: 'user-interaction' | 'system' | 'milestone';
+  type: "user-interaction" | "system" | "milestone";
   userName?: string;
   userAvatar?: string;
   action: string;
@@ -21,13 +21,13 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  title: 'Recent Activity',
+  title: "Recent Activity",
   showViewAll: true,
   maxItems: undefined,
 });
 
 defineEmits<{
-  'view-all': [];
+  "view-all": [];
 }>();
 
 const displayedActivities = computed(() => {
@@ -38,51 +38,51 @@ const displayedActivities = computed(() => {
 const defaultActivities: ActivityItem[] = [
   {
     id: 1,
-    type: 'user-interaction',
-    userName: 'Sarah Johnson',
-    userAvatar: 'https://github.com/benjamincanac.png',
-    action: 'liked your',
-    target: 'Classic Beef Burger',
+    type: "user-interaction",
+    userName: "Sarah Johnson",
+    userAvatar: "https://github.com/benjamincanac.png",
+    action: "liked your",
+    target: "Classic Beef Burger",
     timestamp: new Date(Date.now() - 2 * 60 * 1000), // 2 minutes ago
   },
   {
     id: 2,
-    type: 'system',
-    action: 'Your recipe',
-    target: 'Vegetarian Pasta',
+    type: "system",
+    action: "Your recipe",
+    target: "Vegetarian Pasta",
     timestamp: new Date(Date.now() - 60 * 60 * 1000), // 1 hour ago
-    icon: 'i-lucide-check',
+    icon: "i-lucide-check",
     iconSize: 16,
-    iconClass: 'text-green-600',
-    iconWrapper: 'p-2 bg-green-100 rounded-full',
+    iconClass: "text-green-600",
+    iconWrapper: "p-2 bg-green-100 rounded-full",
   },
   {
     id: 3,
-    type: 'user-interaction',
-    userName: 'Mike Chen',
-    userAvatar: 'https://github.com/atinux.png',
-    action: 'commented on your',
-    target: 'Chocolate Cake',
+    type: "user-interaction",
+    userName: "Mike Chen",
+    userAvatar: "https://github.com/atinux.png",
+    action: "commented on your",
+    target: "Chocolate Cake",
     timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
   },
   {
     id: 4,
-    type: 'milestone',
-    action: 'Your recipes reached',
-    target: '15K total views',
+    type: "milestone",
+    action: "Your recipes reached",
+    target: "15K total views",
     timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
-    icon: 'i-lucide-trending-up',
+    icon: "i-lucide-trending-up",
     iconSize: 16,
-    iconClass: 'text-blue-600',
-    iconWrapper: 'p-2 bg-blue-100 rounded-full',
+    iconClass: "text-blue-600",
+    iconWrapper: "p-2 bg-blue-100 rounded-full",
   },
   {
     id: 5,
-    type: 'user-interaction',
-    userName: 'Emma Wilson',
-    userAvatar: 'https://github.com/richardtallent.png',
-    action: 'started following you',
-    target: '',
+    type: "user-interaction",
+    userName: "Emma Wilson",
+    userAvatar: "https://github.com/richardtallent.png",
+    action: "started following you",
+    target: "",
     timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
   },
 ];
@@ -100,10 +100,10 @@ function formatTimeAgo(timestamp: Date | string): string {
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffMins < 1) return 'just now';
-  if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  if (diffMins < 1) return "just now";
+  if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? "s" : ""} ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
 
   return date.toLocaleDateString();
 }
@@ -114,7 +114,13 @@ function formatTimeAgo(timestamp: Date | string): string {
     <template #header>
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-semibold">{{ title }}</h2>
-        <UButton v-if="showViewAll" variant="ghost" size="sm" label="View All" @click="$emit('view-all')" />
+        <UButton
+          v-if="showViewAll"
+          variant="ghost"
+          size="sm"
+          label="View All"
+          @click="$emit('view-all')"
+        />
       </div>
     </template>
     <div class="space-y-4">
@@ -125,11 +131,7 @@ function formatTimeAgo(timestamp: Date | string): string {
       >
         <!-- Activity Icon/Avatar -->
         <template v-if="activity.type === 'user-interaction'">
-          <UAvatar
-            :src="activity.userAvatar"
-            :alt="activity.userName"
-            size="sm"
-          />
+          <UAvatar :src="activity.userAvatar" :alt="activity.userName" size="sm" />
         </template>
         <template v-else>
           <div :class="activity.iconWrapper">

@@ -232,13 +232,11 @@ const ChartComponent = defineComponent({
         return h(
           "div",
           { class: "flex items-center justify-center h-full text-gray-500" },
-          "No data available"
+          "No data available",
         );
       }
 
-      const maxValue = Math.max(
-        ...props.data.datasets.flatMap((d: any) => d.data)
-      );
+      const maxValue = Math.max(...props.data.datasets.flatMap((d: any) => d.data));
 
       // Create grid lines
       const gridLines = [0, 0.25, 0.5, 0.75, 1].map((fraction, index) =>
@@ -246,55 +244,53 @@ const ChartComponent = defineComponent({
           key: `grid-${index}`,
           class: "absolute left-0 right-0 h-px bg-gray-200",
           style: { top: `${(1 - fraction) * 100}%` },
-        })
+        }),
       );
 
       // Create datasets
-      const datasets = props.data.datasets.map(
-        (dataset: any, datasetIndex: number) => {
-          const points = dataset.data
-            .map((value: number, index: number) => {
-              const x = (index / (dataset.data.length - 1)) * 100;
-              const y = ((maxValue - value) / maxValue) * 100;
-              return `${x}%,${y}%`;
-            })
-            .join(" ");
-
-          const circles = dataset.data.map((value: number, index: number) => {
+      const datasets = props.data.datasets.map((dataset: any, datasetIndex: number) => {
+        const points = dataset.data
+          .map((value: number, index: number) => {
             const x = (index / (dataset.data.length - 1)) * 100;
             const y = ((maxValue - value) / maxValue) * 100;
-            return h("circle", {
-              key: `circle-${datasetIndex}-${index}`,
-              cx: `${x}%`,
-              cy: `${y}%`,
-              r: "4",
-              fill: dataset.color,
-            });
-          });
+            return `${x}%,${y}%`;
+          })
+          .join(" ");
 
-          return h(
-            "svg",
-            {
-              key: `dataset-${datasetIndex}`,
-              class: "absolute inset-0 w-full h-full",
-              style: { pointerEvents: "none" },
-            },
-            [
-              h("polyline", {
-                points,
-                fill: "none",
-                stroke: dataset.color,
-                "stroke-width": "2",
-              }),
-              ...circles,
-            ]
-          );
-        }
-      );
+        const circles = dataset.data.map((value: number, index: number) => {
+          const x = (index / (dataset.data.length - 1)) * 100;
+          const y = ((maxValue - value) / maxValue) * 100;
+          return h("circle", {
+            key: `circle-${datasetIndex}-${index}`,
+            cx: `${x}%`,
+            cy: `${y}%`,
+            r: "4",
+            fill: dataset.color,
+          });
+        });
+
+        return h(
+          "svg",
+          {
+            key: `dataset-${datasetIndex}`,
+            class: "absolute inset-0 w-full h-full",
+            style: { pointerEvents: "none" },
+          },
+          [
+            h("polyline", {
+              points,
+              fill: "none",
+              stroke: dataset.color,
+              "stroke-width": "2",
+            }),
+            ...circles,
+          ],
+        );
+      });
 
       // Create x-axis labels
       const xLabels = props.data.labels.map((label: string, index: number) =>
-        h("span", { key: `label-${index}` }, label)
+        h("span", { key: `label-${index}` }, label),
       );
 
       return h("div", { class: "relative w-full h-full" }, [
@@ -311,7 +307,7 @@ const ChartComponent = defineComponent({
             h("span", {}, Math.round(maxValue * 0.5).toString()),
             h("span", {}, Math.round(maxValue * 0.25).toString()),
             h("span", {}, "0"),
-          ]
+          ],
         ),
         // Chart area
         h("div", { class: "ml-8 h-full" }, [
@@ -324,7 +320,7 @@ const ChartComponent = defineComponent({
                 class:
                   "absolute bottom-0 left-0 right-0 flex justify-between text-xs text-gray-500",
               },
-              xLabels
+              xLabels,
             ),
           ]),
         ]),
@@ -380,7 +376,7 @@ function exportReport() {
     "Recipe,Views,Likes,Comments,Growth,Rating",
     ...topRecipes.map(
       (recipe) =>
-        `${recipe.title},${recipe.views},${recipe.likes},${recipe.comments},${recipe.growth}%,${recipe.rating}`
+        `${recipe.title},${recipe.views},${recipe.likes},${recipe.comments},${recipe.growth}%,${recipe.rating}`,
     ),
   ].join("\n");
 
@@ -390,9 +386,7 @@ function exportReport() {
   link.setAttribute("href", url);
   link.setAttribute(
     "download",
-    `analytics_report_${selectedPeriod.value}_${
-      new Date().toISOString().split("T")[0]
-    }.csv`
+    `analytics_report_${selectedPeriod.value}_${new Date().toISOString().split("T")[0]}.csv`,
   );
   link.style.visibility = "hidden";
   document.body.appendChild(link);
@@ -409,9 +403,7 @@ function exportReport() {
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8"
       >
         <div class="flex-1">
-          <h1
-            class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2"
-          >
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
             Analytics Dashboard
           </h1>
           <p class="text-base sm:text-lg text-gray-600">
@@ -466,19 +458,11 @@ function exportReport() {
                             ? 'i-lucide-trending-up'
                             : 'i-lucide-trending-down'
                         "
-                        :class="
-                          analytics.viewsChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.viewsChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         size="16"
                       />
                       <span
-                        :class="
-                          analytics.viewsChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.viewsChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         class="text-sm"
                       >
                         {{ Math.abs(analytics.viewsChange) }}%
@@ -500,19 +484,11 @@ function exportReport() {
                             ? 'i-lucide-trending-up'
                             : 'i-lucide-trending-down'
                         "
-                        :class="
-                          analytics.likesChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.likesChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         size="16"
                       />
                       <span
-                        :class="
-                          analytics.likesChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.likesChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         class="text-sm"
                       >
                         {{ Math.abs(analytics.likesChange) }}%
@@ -524,9 +500,7 @@ function exportReport() {
                 <UCard variant="outline" class="rounded-[12px]">
                   <div class="text-center">
                     <p class="text-[#666] text-sm">Engagement Rate</p>
-                    <p class="text-2xl font-bold">
-                      {{ analytics.engagementRate }}%
-                    </p>
+                    <p class="text-2xl font-bold">{{ analytics.engagementRate }}%</p>
                     <div class="flex items-center justify-center gap-1 mt-1">
                       <UIcon
                         :name="
@@ -534,19 +508,11 @@ function exportReport() {
                             ? 'i-lucide-trending-up'
                             : 'i-lucide-trending-down'
                         "
-                        :class="
-                          analytics.engagementChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.engagementChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         size="16"
                       />
                       <span
-                        :class="
-                          analytics.engagementChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.engagementChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         class="text-sm"
                       >
                         {{ Math.abs(analytics.engagementChange) }}%
@@ -568,19 +534,11 @@ function exportReport() {
                             ? 'i-lucide-trending-up'
                             : 'i-lucide-trending-down'
                         "
-                        :class="
-                          analytics.followersChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.followersChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         size="16"
                       />
                       <span
-                        :class="
-                          analytics.followersChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.followersChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         class="text-sm"
                       >
                         {{ Math.abs(analytics.followersChange) }}%
@@ -602,19 +560,11 @@ function exportReport() {
                             ? 'i-lucide-trending-up'
                             : 'i-lucide-trending-down'
                         "
-                        :class="
-                          analytics.recipesChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.recipesChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         size="16"
                       />
                       <span
-                        :class="
-                          analytics.recipesChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.recipesChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         class="text-sm"
                       >
                         {{ Math.abs(analytics.recipesChange) }}%
@@ -636,19 +586,11 @@ function exportReport() {
                             ? 'i-lucide-trending-up'
                             : 'i-lucide-trending-down'
                         "
-                        :class="
-                          analytics.ratingChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.ratingChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         size="16"
                       />
                       <span
-                        :class="
-                          analytics.ratingChange >= 0
-                            ? 'text-green-500'
-                            : 'text-red-500'
-                        "
+                        :class="analytics.ratingChange >= 0 ? 'text-green-500' : 'text-red-500'"
                         class="text-sm"
                       >
                         {{ Math.abs(analytics.ratingChange) }}
@@ -685,15 +627,8 @@ function exportReport() {
               <UCard variant="outline" class="rounded-[12px]">
                 <template #header>
                   <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-semibold">
-                      Top Performing Recipes
-                    </h2>
-                    <UButton
-                      label="View All"
-                      variant="ghost"
-                      size="sm"
-                      to="/author/recipes"
-                    />
+                    <h2 class="text-lg font-semibold">Top Performing Recipes</h2>
+                    <UButton label="View All" variant="ghost" size="sm" to="/author/recipes" />
                   </div>
                 </template>
                 <div class="space-y-4">
@@ -709,9 +644,7 @@ function exportReport() {
                     />
                     <div class="flex-1">
                       <h3 class="font-medium">{{ recipe.title }}</h3>
-                      <div
-                        class="flex items-center gap-4 mt-1 text-sm text-[#666]"
-                      >
+                      <div class="flex items-center gap-4 mt-1 text-sm text-[#666]">
                         <span>{{ recipe.views.toLocaleString() }} views</span>
                         <span>•</span>
                         <span>{{ recipe.likes }} likes</span>
@@ -721,14 +654,8 @@ function exportReport() {
                     </div>
                     <div class="text-right">
                       <div class="flex items-center gap-1 mb-1">
-                        <UIcon
-                          name="i-lucide-star"
-                          size="14"
-                          class="text-yellow-500"
-                        />
-                        <span class="text-sm font-medium">{{
-                          recipe.rating
-                        }}</span>
+                        <UIcon name="i-lucide-star" size="14" class="text-yellow-500" />
+                        <span class="text-sm font-medium">{{ recipe.rating }}</span>
                       </div>
                       <UBadge
                         :color="recipe.growth >= 0 ? 'success' : 'error'"
@@ -778,11 +705,7 @@ function exportReport() {
                         </td>
                         <td class="py-3 px-4">
                           <div class="flex items-center gap-1">
-                            <UIcon
-                              name="i-lucide-star"
-                              size="14"
-                              class="text-yellow-500"
-                            />
+                            <UIcon name="i-lucide-star" size="14" class="text-yellow-500" />
                             {{ category.avgRating }}
                           </div>
                         </td>
@@ -792,8 +715,7 @@ function exportReport() {
                             variant="soft"
                             size="sm"
                           >
-                            {{ category.growth >= 0 ? "+" : ""
-                            }}{{ category.growth }}%
+                            {{ category.growth >= 0 ? "+" : "" }}{{ category.growth }}%
                           </UBadge>
                         </td>
                       </tr>
@@ -806,19 +728,14 @@ function exportReport() {
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <UCard variant="outline" class="rounded-[12px]">
                   <template #header>
-                    <h2 class="text-lg font-semibold">
-                      Content Status Distribution
-                    </h2>
+                    <h2 class="text-lg font-semibold">Content Status Distribution</h2>
                   </template>
                   <div class="space-y-4">
                     <div class="flex items-center justify-between">
                       <span class="text-sm">Published</span>
                       <div class="flex items-center gap-2">
                         <div class="w-32 bg-gray-200 rounded-full h-2">
-                          <div
-                            class="bg-green-500 h-2 rounded-full"
-                            style="width: 75%"
-                          ></div>
+                          <div class="bg-green-500 h-2 rounded-full" style="width: 75%"></div>
                         </div>
                         <span class="text-sm font-medium">75%</span>
                       </div>
@@ -827,10 +744,7 @@ function exportReport() {
                       <span class="text-sm">Draft</span>
                       <div class="flex items-center gap-2">
                         <div class="w-32 bg-gray-200 rounded-full h-2">
-                          <div
-                            class="bg-yellow-500 h-2 rounded-full"
-                            style="width: 20%"
-                          ></div>
+                          <div class="bg-yellow-500 h-2 rounded-full" style="width: 20%"></div>
                         </div>
                         <span class="text-sm font-medium">20%</span>
                       </div>
@@ -839,10 +753,7 @@ function exportReport() {
                       <span class="text-sm">Archived</span>
                       <div class="flex items-center gap-2">
                         <div class="w-32 bg-gray-200 rounded-full h-2">
-                          <div
-                            class="bg-gray-500 h-2 rounded-full"
-                            style="width: 5%"
-                          ></div>
+                          <div class="bg-gray-500 h-2 rounded-full" style="width: 5%"></div>
                         </div>
                         <span class="text-sm font-medium">5%</span>
                       </div>
@@ -898,9 +809,7 @@ function exportReport() {
                             :style="{ width: ageGroup.percentage + '%' }"
                           ></div>
                         </div>
-                        <span class="text-sm font-medium"
-                          >{{ ageGroup.percentage }}%</span
-                        >
+                        <span class="text-sm font-medium">{{ ageGroup.percentage }}%</span>
                       </div>
                     </div>
                   </div>
@@ -926,9 +835,7 @@ function exportReport() {
                             :style="{ width: gender.percentage + '%' }"
                           ></div>
                         </div>
-                        <span class="text-sm font-medium"
-                          >{{ gender.percentage }}%</span
-                        >
+                        <span class="text-sm font-medium">{{ gender.percentage }}%</span>
                       </div>
                     </div>
                   </div>
@@ -946,9 +853,7 @@ function exportReport() {
                       class="flex items-center justify-between"
                     >
                       <span class="text-sm">{{ location.country }}</span>
-                      <span class="text-sm font-medium"
-                        >{{ location.percentage }}%</span
-                      >
+                      <span class="text-sm font-medium">{{ location.percentage }}%</span>
                     </div>
                   </div>
                 </UCard>
@@ -960,24 +865,12 @@ function exportReport() {
                   <h2 class="text-lg font-semibold">Device Breakdown</h2>
                 </template>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div
-                    v-for="device in devices"
-                    :key="device.type"
-                    class="text-center"
-                  >
+                  <div v-for="device in devices" :key="device.type" class="text-center">
                     <div class="p-4 rounded-lg bg-gray-50">
-                      <UIcon
-                        :name="device.icon"
-                        size="32"
-                        class="mb-2 text-[#666]"
-                      />
+                      <UIcon :name="device.icon" size="32" class="mb-2 text-[#666]" />
                       <h3 class="font-medium">{{ device.type }}</h3>
-                      <p class="text-2xl font-bold mt-2">
-                        {{ device.percentage }}%
-                      </p>
-                      <p class="text-sm text-[#666]">
-                        {{ device.views.toLocaleString() }} views
-                      </p>
+                      <p class="text-2xl font-bold mt-2">{{ device.percentage }}%</p>
+                      <p class="text-sm text-[#666]">{{ device.views.toLocaleString() }} views</p>
                     </div>
                   </div>
                 </div>
@@ -997,23 +890,15 @@ function exportReport() {
                   <div class="space-y-4">
                     <div class="flex items-center justify-between">
                       <span class="text-sm text-[#666]">Avg. Time on Page</span>
-                      <span class="font-medium">{{
-                        engagement.avgTimeOnPage
-                      }}</span>
+                      <span class="font-medium">{{ engagement.avgTimeOnPage }}</span>
                     </div>
                     <div class="flex items-center justify-between">
                       <span class="text-sm text-[#666]">Avg. Scroll Depth</span>
-                      <span class="font-medium"
-                        >{{ engagement.avgScrollDepth }}%</span
-                      >
+                      <span class="font-medium">{{ engagement.avgScrollDepth }}%</span>
                     </div>
                     <div class="flex items-center justify-between">
-                      <span class="text-sm text-[#666]"
-                        >Return Visitor Rate</span
-                      >
-                      <span class="font-medium"
-                        >{{ engagement.returnVisitorRate }}%</span
-                      >
+                      <span class="text-sm text-[#666]">Return Visitor Rate</span>
+                      <span class="font-medium">{{ engagement.returnVisitorRate }}%</span>
                     </div>
                   </div>
                 </UCard>
@@ -1025,23 +910,15 @@ function exportReport() {
                   <div class="space-y-4">
                     <div class="flex items-center justify-between">
                       <span class="text-sm text-[#666]">Bounce Rate</span>
-                      <span class="font-medium"
-                        >{{ engagement.bounceRate }}%</span
-                      >
+                      <span class="font-medium">{{ engagement.bounceRate }}%</span>
                     </div>
                     <div class="flex items-center justify-between">
-                      <span class="text-sm text-[#666]"
-                        >Comments per Recipe</span
-                      >
-                      <span class="font-medium">{{
-                        engagement.commentsPerRecipe
-                      }}</span>
+                      <span class="text-sm text-[#666]">Comments per Recipe</span>
+                      <span class="font-medium">{{ engagement.commentsPerRecipe }}</span>
                     </div>
                     <div class="flex items-center justify-between">
                       <span class="text-sm text-[#666]">Share Rate</span>
-                      <span class="font-medium"
-                        >{{ engagement.shareRate }}%</span
-                      >
+                      <span class="font-medium">{{ engagement.shareRate }}%</span>
                     </div>
                   </div>
                 </UCard>
@@ -1051,16 +928,11 @@ function exportReport() {
                     <h2 class="text-lg font-semibold">Engagement Score</h2>
                   </template>
                   <div class="text-center">
-                    <div class="text-4xl font-bold text-primary-500 mb-2">
-                      8.5
-                    </div>
+                    <div class="text-4xl font-bold text-primary-500 mb-2">8.5</div>
                     <p class="text-sm text-[#666]">Out of 10</p>
                     <div class="mt-4">
                       <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          class="bg-primary-500 h-2 rounded-full"
-                          style="width: 85%"
-                        ></div>
+                        <div class="bg-primary-500 h-2 rounded-full" style="width: 85%"></div>
                       </div>
                     </div>
                   </div>
@@ -1073,15 +945,9 @@ function exportReport() {
                   <h2 class="text-lg font-semibold">Engagement Trends</h2>
                 </template>
                 <div class="h-64">
-                  <div
-                    class="flex items-center justify-center h-full text-[#666]"
-                  >
+                  <div class="flex items-center justify-center h-full text-[#666]">
                     <div class="text-center">
-                      <UIcon
-                        name="i-lucide-line-chart"
-                        size="48"
-                        class="mx-auto mb-2"
-                      />
+                      <UIcon name="i-lucide-line-chart" size="48" class="mx-auto mb-2" />
                       <p>Engagement trends chart will be displayed here</p>
                     </div>
                   </div>

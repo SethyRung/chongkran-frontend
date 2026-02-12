@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Recipe, Author } from '~/shared/types'
+import type { Recipe, Author } from "~/shared/types";
 
 type Props = {
   recipe: Recipe & {
@@ -8,31 +8,31 @@ type Props = {
   };
 };
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 // Computed properties
-const author = computed(() => props.recipe.author)
+const author = computed(() => props.recipe.author);
 const currentUserId = computed(() => {
   // Get current user ID from auth state
   // This would come from your auth store/composable
-  return null // Replace with actual user ID
-})
+  return null; // Replace with actual user ID
+});
 
 const difficultyColor = computed(() => {
   const colors = {
-    easy: 'green',
-    medium: 'yellow',
-    hard: 'red'
-  }
-  return colors[props.recipe.difficulty] || 'gray'
-})
+    easy: "green",
+    medium: "yellow",
+    hard: "red",
+  };
+  return colors[props.recipe.difficulty] || "gray";
+});
 
 // Methods
 const formatNumber = (num: number) => {
-  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'
-  if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
-  return num.toString()
-}
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+  return num.toString();
+};
 </script>
 
 <template>
@@ -51,12 +51,7 @@ const formatNumber = (num: number) => {
       <!-- Overlay badges -->
       <div class="absolute top-3 left-3 flex gap-2">
         <UBadge :label="recipe.category" variant="soft" color="primary" size="sm" />
-        <UBadge
-          :label="recipe.difficulty"
-          variant="soft"
-          :color="difficultyColor"
-          size="sm"
-        />
+        <UBadge :label="recipe.difficulty" variant="soft" :color="difficultyColor" size="sm" />
       </div>
 
       <!-- Stats overlay -->

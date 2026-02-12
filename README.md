@@ -83,12 +83,14 @@ SENTRY_AUTH_TOKEN=Your-Sentry-Auth-Token
 Before running the frontend, ensure the backend is running:
 
 #### Option A: Docker (Recommended)
+
 ```sh
 cd ../Chongkran-Backend
 docker-compose up -d
 ```
 
 #### Option B: Local Development
+
 ```sh
 cd ../Chongkran-Backend
 pnpm install

@@ -172,9 +172,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         />
         <p class="text-sm text-center text-[#666]">
           Don't have an ccount?
-          <NuxtLink to="/auth/sign-up" class="underline text-neutral-900"
-            >Sign up</NuxtLink
-          >
+          <NuxtLink to="/auth/sign-up" class="underline text-neutral-900">Sign up</NuxtLink>
         </p>
       </UForm>
     </div>

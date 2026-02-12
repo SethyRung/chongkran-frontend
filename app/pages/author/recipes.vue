@@ -155,60 +155,44 @@ const filteredRecipes = computed(() => {
     filtered = filtered.filter(
       (recipe) =>
         recipe.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        recipe.description
-          .toLowerCase()
-          .includes(searchQuery.value.toLowerCase())
+        recipe.description.toLowerCase().includes(searchQuery.value.toLowerCase()),
     );
   }
 
   // Status filter
   if (statusFilter.value !== "all") {
-    filtered = filtered.filter(
-      (recipe) => recipe.status === statusFilter.value
-    );
+    filtered = filtered.filter((recipe) => recipe.status === statusFilter.value);
   }
 
   // Category filter
   if (categoryFilter.value.length > 0) {
-    filtered = filtered.filter((recipe) =>
-      categoryFilter.value.includes(recipe.category)
-    );
+    filtered = filtered.filter((recipe) => categoryFilter.value.includes(recipe.category));
   }
 
   // Difficulty filter
   if (difficultyFilter.value.length > 0) {
-    filtered = filtered.filter((recipe) =>
-      difficultyFilter.value.includes(recipe.difficulty)
-    );
+    filtered = filtered.filter((recipe) => difficultyFilter.value.includes(recipe.difficulty));
   }
 
   // Date range filter
   if (dateFrom.value) {
     const fromDate = new Date(dateFrom.value);
-    filtered = filtered.filter(
-      (recipe) => new Date(recipe.createdAt) >= fromDate
-    );
+    filtered = filtered.filter((recipe) => new Date(recipe.createdAt) >= fromDate);
   }
 
   if (dateTo.value) {
     const toDate = new Date(dateTo.value);
     toDate.setHours(23, 59, 59, 999); // End of day
-    filtered = filtered.filter(
-      (recipe) => new Date(recipe.createdAt) <= toDate
-    );
+    filtered = filtered.filter((recipe) => new Date(recipe.createdAt) <= toDate);
   }
 
   // Sort recipes
   filtered = [...filtered].sort((a, b) => {
     switch (sortBy.value) {
       case "createdAt":
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       case "createdAt_asc":
-        return (
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       case "views":
         return b.views - a.views;
       case "likes":
@@ -221,9 +205,7 @@ const filteredRecipes = computed(() => {
   return filtered;
 });
 
-const totalPages = computed(() =>
-  Math.ceil(filteredRecipes.value.length / itemsPerPage.value)
-);
+const totalPages = computed(() => Math.ceil(filteredRecipes.value.length / itemsPerPage.value));
 
 function getRecipeActions(recipe: any): DropdownMenuItem[][] {
   return [
@@ -305,10 +287,7 @@ function exportRecipes() {
   const link = document.createElement("a");
   const url = URL.createObjectURL(blob);
   link.setAttribute("href", url);
-  link.setAttribute(
-    "download",
-    `recipes_${new Date().toISOString().split("T")[0]}.csv`
-  );
+  link.setAttribute("download", `recipes_${new Date().toISOString().split("T")[0]}.csv`);
   link.style.visibility = "hidden";
   document.body.appendChild(link);
   link.click();
@@ -335,14 +314,10 @@ onMounted(async () => {
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8"
       >
         <div class="flex-1">
-          <h1
-            class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2"
-          >
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
             My Recipes
           </h1>
-          <p class="text-base sm:text-lg text-gray-600">
-            Manage all your recipes in one place
-          </p>
+          <p class="text-base sm:text-lg text-gray-600">Manage all your recipes in one place</p>
         </div>
         <div class="flex items-center gap-2 sm:gap-4">
           <UButton
@@ -356,9 +331,7 @@ onMounted(async () => {
       </div>
 
       <!-- Stats Overview -->
-      <div
-        class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8"
-      >
+      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <div
           class="bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100"
         >
@@ -434,9 +407,7 @@ onMounted(async () => {
       <UCard>
         <template #header>
           <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold">
-              Recipes ({{ filteredRecipes.length }})
-            </h3>
+            <h3 class="text-lg font-semibold">Recipes ({{ filteredRecipes.length }})</h3>
             <div class="flex items-center gap-2">
               <UButton
                 icon="i-lucide-download"
@@ -500,11 +471,7 @@ onMounted(async () => {
 
         <!-- Empty State -->
         <div v-if="filteredRecipes.length === 0" class="text-center py-12">
-          <UIcon
-            name="i-lucide-inbox"
-            size="48"
-            class="mx-auto mb-4 text-[#666]"
-          />
+          <UIcon name="i-lucide-inbox" size="48" class="mx-auto mb-4 text-[#666]" />
           <p class="text-[#666]">No recipes found</p>
           <UButton
             label="Create your first recipe"
@@ -519,7 +486,7 @@ onMounted(async () => {
           <div
             v-for="recipe in filteredRecipes.slice(
               (currentPage - 1) * itemsPerPage,
-              currentPage * itemsPerPage
+              currentPage * itemsPerPage,
             )"
             :key="recipe.id"
             class="border rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -541,9 +508,7 @@ onMounted(async () => {
                 </div>
                 <div class="flex items-center gap-3 mb-3">
                   <UBadge
-                    :color="
-                      recipe.status === 'published' ? 'success' : 'warning'
-                    "
+                    :color="recipe.status === 'published' ? 'success' : 'warning'"
                     variant="soft"
                     size="sm"
                   >
@@ -583,10 +548,7 @@ onMounted(async () => {
                       :to="`/recipes/${recipe.id}`"
                       class="h-8 w-8"
                     />
-                    <UDropdownMenu
-                      :items="getRecipeActions(recipe)"
-                      :content="{ align: 'end' }"
-                    >
+                    <UDropdownMenu :items="getRecipeActions(recipe)" :content="{ align: 'end' }">
                       <UButton
                         icon="i-lucide-more-vertical"
                         variant="ghost"
@@ -602,17 +564,10 @@ onMounted(async () => {
           </div>
 
           <!-- Mobile Pagination -->
-          <div
-            class="flex items-center justify-between px-4 py-3 bg-white border-t rounded-lg"
-          >
+          <div class="flex items-center justify-between px-4 py-3 bg-white border-t rounded-lg">
             <div class="text-sm text-[#666]">
               Showing
-              {{
-                Math.min(
-                  (currentPage - 1) * itemsPerPage + 1,
-                  filteredRecipes.length
-                )
-              }}
+              {{ Math.min((currentPage - 1) * itemsPerPage + 1, filteredRecipes.length) }}
               to
               {{ Math.min(currentPage * itemsPerPage, filteredRecipes.length) }}
               of {{ filteredRecipes.length }} recipes
@@ -626,9 +581,7 @@ onMounted(async () => {
                 class="h-8 w-8"
                 @click="currentPage--"
               />
-              <span class="text-sm text-[#666]"
-                >{{ currentPage }} of {{ totalPages }}</span
-              >
+              <span class="text-sm text-[#666]">{{ currentPage }} of {{ totalPages }}</span>
               <UButton
                 icon="i-lucide-chevron-right"
                 variant="ghost"
@@ -642,10 +595,7 @@ onMounted(async () => {
         </div>
 
         <!-- Desktop Table -->
-        <div
-          v-if="filteredRecipes.length > 0"
-          class="hidden lg:block overflow-x-auto"
-        >
+        <div v-if="filteredRecipes.length > 0" class="hidden lg:block overflow-x-auto">
           <UTable
             :data="filteredRecipes"
             :columns="columns"
@@ -661,8 +611,7 @@ onMounted(async () => {
               thead: 'bg-gray-50',
               th: 'text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
               td: 'whitespace-nowrap text-sm text-gray-900',
-              pagination:
-                'flex items-center justify-between px-4 py-3 bg-white border-t',
+              pagination: 'flex items-center justify-between px-4 py-3 bg-white border-t',
             }"
             @update:pagination="handlePaginationUpdate"
           >
@@ -723,10 +672,7 @@ onMounted(async () => {
                   :to="`/recipes/${row.id}`"
                   class="h-8 w-8"
                 />
-                <UDropdownMenu
-                  :items="getRecipeActions(row)"
-                  :content="{ align: 'end' }"
-                >
+                <UDropdownMenu :items="getRecipeActions(row)" :content="{ align: 'end' }">
                   <UButton
                     icon="i-lucide-more-vertical"
                     variant="ghost"

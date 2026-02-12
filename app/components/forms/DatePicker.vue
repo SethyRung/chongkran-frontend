@@ -11,14 +11,7 @@ type UI = {
 
 type DatePickerProps = {
   label?: string;
-  color?:
-    | "primary"
-    | "secondary"
-    | "success"
-    | "info"
-    | "warning"
-    | "error"
-    | "neutral";
+  color?: "primary" | "secondary" | "success" | "info" | "warning" | "error" | "neutral";
   variant?: "link" | "solid" | "outline" | "soft" | "subtle" | "ghost";
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   square?: boolean;
@@ -73,11 +66,7 @@ const buttonSize = computed(() => props.size || formGroupSize.value);
 <template>
   <UPopover>
     <UButton v-bind="props" :size="buttonSize">
-      {{
-        modelValue
-          ? df.format(modelValue.toDate(getLocalTimeZone()))
-          : "Select a date"
-      }}
+      {{ modelValue ? df.format(modelValue.toDate(getLocalTimeZone())) : "Select a date" }}
     </UButton>
     <template #content>
       <UCalendar v-model="modelValue" class="p-2" />

@@ -3,10 +3,7 @@ import type { Response } from "#shared/types";
 import type { NitroFetchOptions } from "nitropack";
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const ERROR_MESSAGES = [
-    "Token has expired. Please login again.",
-    "Unauthorized access.",
-  ];
+  const ERROR_MESSAGES = ["Token has expired. Please login again.", "Unauthorized access."];
   const REFRESH_TOKEN_PATH = "/auth/refresh";
   const config = useRuntimeConfig();
   const baseURL = config.public.apiBaseUrl;
@@ -76,7 +73,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                   | "delete"
                   | "connect"
                   | "trace"
-                >
+                >,
               );
             } else handleAuthError();
           } catch {

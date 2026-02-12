@@ -21,10 +21,8 @@ const sortOptions = ref(["Date", "Name"]);
 const filterOptions = computed<CommandPaletteItem[]>(() =>
   categories.value.map((category) => ({
     labeL: category.name,
-    suffix: recipes.value
-      .filter((recipe) => recipe.category === category.id)
-      .length.toString(),
-  }))
+    suffix: recipes.value.filter((recipe) => recipe.category === category.id).length.toString(),
+  })),
 );
 
 const filterBy = ref<string>();
@@ -36,13 +34,10 @@ const {
   status: categoriesStatus,
   data: categoriesRes,
   execute: categoriesExecute,
-} = await useAsyncData(
-  () => useApi<Paginated<Category>>("/categories", { method: "GET" }),
-  {
-    lazy: true,
-    immediate: false,
-  }
-);
+} = await useAsyncData(() => useApi<Paginated<Category>>("/categories", { method: "GET" }), {
+  lazy: true,
+  immediate: false,
+});
 
 const {
   status: recipesStatus,
@@ -57,21 +52,17 @@ const {
   {
     lazy: true,
     immediate: false,
-  }
+  },
 );
 
-const categories = computed<Category[]>(
-  () => categoriesRes.value?.data.content ?? []
-);
+const categories = computed<Category[]>(() => categoriesRes.value?.data.content ?? []);
 
 const recipes = computed<Recipe[]>(
   () =>
     recipesRes.value?.data.content.map((recipe) => ({
       ...recipe,
-      category:
-        categories.value.find((category) => category.id === recipe.id)?.name ??
-        "",
-    })) ?? []
+      category: categories.value.find((category) => category.id === recipe.id)?.name ?? "",
+    })) ?? [],
 );
 
 const totalPage = computed<number>(() => recipesRes.value?.data.total ?? 0);
@@ -138,25 +129,13 @@ onMounted(() => {
             />
           </template>
         </UPopover>
-        <USelect
-          :items="sortOptions"
-          default-value="Date"
-          variant="ghost"
-          size="sm"
-          class="w-20"
-        />
+        <USelect :items="sortOptions" default-value="Date" variant="ghost" size="sm" class="w-20" />
       </div>
     </div>
 
     <div class="grid grid-cols-[repeat(auto-fit,_minmax(288px,_1fr))] gap-4">
-      <template
-        v-if="categoriesStatus === 'success' && recipesStatus === 'success'"
-      >
-        <RecipeCard
-          v-for="recipe in recipes"
-          :key="recipe.id"
-          :recipe="recipe"
-        />
+      <template v-if="categoriesStatus === 'success' && recipesStatus === 'success'">
+        <RecipeCard v-for="recipe in recipes" :key="recipe.id" :recipe="recipe" />
       </template>
       <template v-else>
         <div
@@ -165,9 +144,7 @@ onMounted(() => {
           class="group w-full p-6 space-y-3 bg-white border border-gray-200 rounded-lg shadow-sm"
         >
           <div class="space-y-3">
-            <USkeleton
-              class="w-full h-60 group-hover:scale-105 transition-all"
-            />
+            <USkeleton class="w-full h-60 group-hover:scale-105 transition-all" />
             <USkeleton class="w-3/4 h-8 mb-2" />
             <USkeleton class="w-24 h-6" />
           </div>

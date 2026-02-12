@@ -1,54 +1,54 @@
 <script lang="ts" setup>
-import type { Author } from '~/shared/types'
+import type { Author } from "~/shared/types";
 
 interface Props {
-  author: Author
-  compact?: boolean
+  author: Author;
+  compact?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  compact: false
-})
+  compact: false,
+});
 
-const { followUser, unfollowUser, isLoading } = useFollow()
-const { user } = useAuth()
+const { followUser, unfollowUser, isLoading } = useFollow();
+const { user } = useAuth();
 
 // Computed properties
-const currentUserId = computed(() => user.value?.id)
+const currentUserId = computed(() => user.value?.id);
 
 // Methods
 const formatNumber = (num: number) => {
-  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'
-  if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
-  return num.toString()
-}
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+  return num.toString();
+};
 
 const handleFollowClick = async () => {
-  if (!props.author || isLoading.value) return
+  if (!props.author || isLoading.value) return;
 
-  const originalValue = props.author.isFollowing || false
+  const originalValue = props.author.isFollowing || false;
 
   // Optimistic update
-  props.author.isFollowing = !originalValue
+  props.author.isFollowing = !originalValue;
   if (props.author.followersCount !== undefined) {
-    props.author.followersCount += originalValue ? -1 : 1
+    props.author.followersCount += originalValue ? -1 : 1;
   }
 
   try {
     if (originalValue) {
-      await unfollowUser(props.author.id)
+      await unfollowUser(props.author.id);
     } else {
-      await followUser(props.author.id)
+      await followUser(props.author.id);
     }
   } catch (error) {
     // Revert on error
-    props.author.isFollowing = originalValue
+    props.author.isFollowing = originalValue;
     if (props.author.followersCount !== undefined) {
-      props.author.followersCount += originalValue ? 1 : -1
+      props.author.followersCount += originalValue ? 1 : -1;
     }
-    console.error('Follow/unfollow failed:', error)
+    console.error("Follow/unfollow failed:", error);
   }
-}
+};
 </script>
 
 <template>
@@ -76,11 +76,13 @@ const handleFollowClick = async () => {
 
         <!-- Author Info -->
         <div class="flex-1 min-w-0">
-          <h3 class="font-semibold text-gray-900 truncate group-hover:text-primary-600 transition-colors">
+          <h3
+            class="font-semibold text-gray-900 truncate group-hover:text-primary-600 transition-colors"
+          >
             {{ author.firstName }} {{ author.lastName }}
           </h3>
           <p v-if="author.expertise?.length" class="text-sm text-gray-600 truncate">
-            {{ author.expertise.slice(0, 2).join(', ') }}
+            {{ author.expertise.slice(0, 2).join(", ") }}
             <span v-if="author.expertise.length > 2">+{{ author.expertise.length - 2 }}</span>
           </p>
         </div>
@@ -96,10 +98,7 @@ const handleFollowClick = async () => {
       </div>
 
       <!-- Bio -->
-      <p
-        v-if="author.bio && !compact"
-        class="text-sm text-gray-600 line-clamp-2 mb-4"
-      >
+      <p v-if="author.bio && !compact" class="text-sm text-gray-600 line-clamp-2 mb-4">
         {{ author.bio }}
       </p>
 
@@ -107,15 +106,21 @@ const handleFollowClick = async () => {
       <div class="flex items-center justify-between mb-4">
         <div class="flex gap-4 text-sm">
           <div class="text-center">
-            <div class="font-semibold text-gray-900">{{ formatNumber(author.followersCount || 0) }}</div>
+            <div class="font-semibold text-gray-900">
+              {{ formatNumber(author.followersCount || 0) }}
+            </div>
             <div class="text-gray-600">Followers</div>
           </div>
           <div class="text-center">
-            <div class="font-semibold text-gray-900">{{ formatNumber(author.recipesCount || 0) }}</div>
+            <div class="font-semibold text-gray-900">
+              {{ formatNumber(author.recipesCount || 0) }}
+            </div>
             <div class="text-gray-600">Recipes</div>
           </div>
           <div v-if="!compact" class="text-center">
-            <div class="font-semibold text-gray-900">{{ formatNumber(author.totalViews || 0) }}</div>
+            <div class="font-semibold text-gray-900">
+              {{ formatNumber(author.totalViews || 0) }}
+            </div>
             <div class="text-gray-600">Views</div>
           </div>
         </div>

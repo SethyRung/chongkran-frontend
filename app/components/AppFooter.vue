@@ -27,12 +27,10 @@ const contactItems = reactive<{ label: string; to: string }[]>([
     class="px-8 py-6 rounded-t-2xl grid grid-cols-1 lg:grid-cols-2 gap-10 bg-stone-900 text-white"
   >
     <div class="space-y-5">
-      <h1 class="text-4xl font-semibold">
-        CHONG<span class="text-primary-500">KRAN</span>
-      </h1>
+      <h1 class="text-4xl font-semibold">CHONG<span class="text-primary-500">KRAN</span></h1>
       <p class="text-xl text-gray-300">
-        Join Chongkran now and embark on a culinary journey to explore, create,
-        and savor amazing recipes!
+        Join Chongkran now and embark on a culinary journey to explore, create, and savor amazing
+        recipes!
       </p>
     </div>
     <div class="grid grid-cols-1 gap-10 md:grid-cols-2">
@@ -65,9 +63,7 @@ const contactItems = reactive<{ label: string; to: string }[]>([
         </div>
       </div>
     </div>
-    <p
-      class="text-gray-300 self-center lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3"
-    >
+    <p class="text-gray-300 self-center lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3">
       Copyright © {{ new Date().getFullYear() }} Chongkran. All rights reserved.
     </p>
   </footer>

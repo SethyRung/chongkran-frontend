@@ -94,12 +94,7 @@ const fetchAuthors = async () => {
       expertise: selectedExpertise.value || undefined,
     };
 
-    const response = await getAuthors(
-      params.page,
-      params.limit,
-      params.search,
-      params.expertise
-    );
+    const response = await getAuthors(params.page, params.limit, params.search, params.expertise);
 
     authors.value = response.content;
     totalAuthors.value = response.total;
@@ -161,17 +156,12 @@ useSeoMeta({
 </script>
 
 <template>
-  <div
-    class="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50"
-  >
+  <div class="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
     <div class="container mx-auto px-4 py-8">
       <header v-motion-slide-visible-once-bottom class="text-center mb-12">
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          Discover Amazing Authors
-        </h1>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Discover Amazing Authors</h1>
         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          Explore talented recipe creators and follow your favorites to get
-          inspired
+          Explore talented recipe creators and follow your favorites to get inspired
         </p>
       </header>
 
@@ -203,12 +193,7 @@ useSeoMeta({
           </div>
 
           <div class="lg:w-48">
-            <USelectMenu
-              v-model="sortBy"
-              :options="sortOptions"
-              placeholder="Sort by"
-              size="lg"
-            />
+            <USelectMenu v-model="sortBy" :options="sortOptions" placeholder="Sort by" size="lg" />
           </div>
         </div>
 
@@ -261,44 +246,27 @@ useSeoMeta({
           v-if="popularAuthors.length"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          <AuthorCard
-            v-for="author in popularAuthors"
-            :key="author.id"
-            :author="author"
-            compact
-          />
+          <AuthorCard v-for="author in popularAuthors" :key="author.id" :author="author" compact />
         </div>
 
         <div v-else class="text-center py-8">
-          <UIcon
-            name="i-lucide-users"
-            class="w-16 h-16 text-gray-300 mx-auto mb-4"
-          />
+          <UIcon name="i-lucide-users" class="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <p class="text-gray-500">No popular authors found</p>
         </div>
       </section>
 
       <section v-motion-slide-visible-once-bottom :delay="300">
-        <div
-          v-if="searchQuery || selectedExpertise"
-          class="flex items-center justify-between mb-6"
-        >
+        <div v-if="searchQuery || selectedExpertise" class="flex items-center justify-between mb-6">
           <h2 class="text-2xl font-bold text-gray-900">
             Search Results
-            <span
-              v-if="totalAuthors > 0"
-              class="text-lg font-normal text-gray-600 ml-2"
-            >
+            <span v-if="totalAuthors > 0" class="text-lg font-normal text-gray-600 ml-2">
               ({{ totalAuthors }} found)
             </span>
           </h2>
         </div>
 
         <div v-if="isLoading" class="flex items-center justify-center py-12">
-          <UIcon
-            name="i-lucide-loader-2"
-            class="w-8 h-8 animate-spin text-primary-500"
-          />
+          <UIcon name="i-lucide-loader-2" class="w-8 h-8 animate-spin text-primary-500" />
         </div>
 
         <UAlert
@@ -313,29 +281,16 @@ useSeoMeta({
           v-else-if="authors.length"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          <AuthorCard
-            v-for="author in authors"
-            :key="author.id"
-            :author="author"
-          />
+          <AuthorCard v-for="author in authors" :key="author.id" :author="author" />
         </div>
 
         <div v-else class="text-center py-16">
-          <UIcon
-            name="i-lucide-search-x"
-            class="w-16 h-16 text-gray-300 mx-auto mb-4"
-          />
-          <h3 class="text-xl font-semibold text-gray-900 mb-2">
-            No authors found
-          </h3>
+          <UIcon name="i-lucide-search-x" class="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">No authors found</h3>
           <p class="text-gray-600 mb-6">
             Try adjusting your search or filters to find more authors.
           </p>
-          <UButton
-            variant="outline"
-            label="Clear filters"
-            @click="clearAllFilters"
-          />
+          <UButton variant="outline" label="Clear filters" @click="clearAllFilters" />
         </div>
 
         <UPagination
@@ -355,9 +310,7 @@ useSeoMeta({
         :delay="400"
         class="mt-16"
       >
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">
-          Browse by Expertise
-        </h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Browse by Expertise</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <UButton
             v-for="expertise in expertiseOptions"

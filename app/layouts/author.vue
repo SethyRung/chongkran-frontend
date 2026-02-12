@@ -41,11 +41,7 @@ const isMobileMenuOpen = ref(false);
     >
       <template #header="{ collapsed }">
         <UIcon name="i-lucide-cooking-pot" size="24" class="text-primary-500" />
-        <NuxtLink
-          v-if="!collapsed"
-          to="/"
-          class="font-bold text-primary-500 text-lg"
-        >
+        <NuxtLink v-if="!collapsed" to="/" class="font-bold text-primary-500 text-lg">
           Chongkran
         </NuxtLink>
       </template>
@@ -122,11 +118,7 @@ const isMobileMenuOpen = ref(false);
             <div class="p-4 border-b">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <UIcon
-                    name="i-lucide-cooking-pot"
-                    size="24"
-                    class="text-primary-500"
-                  />
+                  <UIcon name="i-lucide-cooking-pot" size="24" class="text-primary-500" />
                   <NuxtLink
                     to="/"
                     class="font-bold text-primary-500 text-lg"
@@ -177,9 +169,7 @@ const isMobileMenuOpen = ref(false);
         </div>
 
         <!-- Mobile bottom navigation -->
-        <div
-          class="fixed bottom-0 left-0 right-0 bg-white border-t lg:hidden z-30"
-        >
+        <div class="fixed bottom-0 left-0 right-0 bg-white border-t lg:hidden z-30">
           <div class="grid grid-cols-4 gap-1 p-2">
             <NuxtLink
               v-for="item in navigationItems"

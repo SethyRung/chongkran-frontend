@@ -14,10 +14,7 @@ export default defineNuxtRouteMiddleware(() => {
   }
 
   // Check if user has author or admin role
-  if (
-    userProfile.value.role !== "author" &&
-    userProfile.value.role !== "admin"
-  ) {
+  if (userProfile.value.role !== "author" && userProfile.value.role !== "admin") {
     // If user is normal user, redirect to home page
     return navigateTo("/");
   }

@@ -209,11 +209,7 @@ const formatNumber = (num: number) => {
             icon="i-lucide-settings"
             label="Settings"
           />
-          <UButton
-            to="/author/create"
-            icon="i-lucide-plus"
-            label="New Recipe"
-          />
+          <UButton to="/author/create" icon="i-lucide-plus" label="New Recipe" />
         </div>
       </div>
 
@@ -235,10 +231,12 @@ const formatNumber = (num: number) => {
             <div
               :class="[
                 'flex items-center gap-1 text-sm font-medium',
-                stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                stat.trend === 'up' ? 'text-green-600' : 'text-red-600',
               ]"
             >
-              <UIcon :name="stat.trend === 'up' ? 'i-lucide-trending-up' : 'i-lucide-trending-down'" />
+              <UIcon
+                :name="stat.trend === 'up' ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
+              />
               {{ stat.change }}%
             </div>
           </div>
@@ -256,12 +254,7 @@ const formatNumber = (num: number) => {
               <span>Goal Progress</span>
               <span>{{ stat.progress }}%</span>
             </div>
-            <UProgress
-              :value="stat.progress"
-              :color="stat.color"
-              size="sm"
-              class="h-2"
-            />
+            <UProgress :value="stat.progress" :color="stat.color" size="sm" class="h-2" />
           </div>
         </div>
       </section>
@@ -369,11 +362,7 @@ const formatNumber = (num: number) => {
                 <div class="space-y-4">
                   <h3 class="font-medium text-gray-900">Engagement Breakdown</h3>
                   <div class="space-y-3">
-                    <div
-                      v-for="metric in engagementMetrics"
-                      :key="metric.type"
-                      class="space-y-2"
-                    >
+                    <div v-for="metric in engagementMetrics" :key="metric.type" class="space-y-2">
                       <div class="flex justify-between text-sm">
                         <span class="text-gray-600">{{ metric.label }}</span>
                         <span class="font-medium">{{ metric.value }}</span>
@@ -406,11 +395,7 @@ const formatNumber = (num: number) => {
 
             <div class="p-6">
               <div class="space-y-4">
-                <div
-                  v-for="activity in activityFeed"
-                  :key="activity.id"
-                  class="flex gap-3"
-                >
+                <div v-for="activity in activityFeed" :key="activity.id" class="flex gap-3">
                   <div class="flex-shrink-0">
                     <div
                       v-if="activity.type === 'user'"
@@ -433,9 +418,9 @@ const formatNumber = (num: number) => {
                   <div class="flex-1 min-w-0">
                     <div class="text-sm text-gray-900">
                       <span v-if="activity.user" class="font-medium">{{ activity.user }}</span>
-                      {{ ' ' }}
+                      {{ " " }}
                       <span>{{ activity.action }}</span>
-                      {{ ' ' }}
+                      {{ " " }}
                       <span v-if="activity.target" class="font-medium">{{ activity.target }}</span>
                     </div>
                     <div class="text-xs text-gray-500">{{ activity.time }}</div>
@@ -458,11 +443,7 @@ const formatNumber = (num: number) => {
               </div>
 
               <div class="space-y-3">
-                <div
-                  v-for="tip in growthTips"
-                  :key="tip.id"
-                  class="flex gap-3"
-                >
+                <div v-for="tip in growthTips" :key="tip.id" class="flex gap-3">
                   <UIcon :name="tip.icon" class="w-5 h-5 text-primary-200 flex-shrink-0 mt-0.5" />
                   <p class="text-sm text-primary-100">{{ tip.text }}</p>
                 </div>

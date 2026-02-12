@@ -143,9 +143,7 @@ const formatTrend = (value: number, trend: string) => {
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8"
       >
         <div class="flex-1">
-          <h1
-            class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2"
-          >
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
             Welcome back, {{ getUserName }}! 👋
           </h1>
           <p class="text-base sm:text-lg text-gray-600">
@@ -164,9 +162,7 @@ const formatTrend = (value: number, trend: string) => {
       </div>
 
       <!-- KPI Grid - Responsive Layout -->
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8"
-      >
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <div
           v-for="kpi in kpiData"
           :key="kpi.id"
@@ -178,11 +174,7 @@ const formatTrend = (value: number, trend: string) => {
               <div
                 :class="`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center bg-${kpi.color}-100`"
               >
-                <UIcon
-                  :name="kpi.icon"
-                  :class="`text-${kpi.color}-600`"
-                  :size="24"
-                />
+                <UIcon :name="kpi.icon" :class="`text-${kpi.color}-600`" :size="24" />
               </div>
               <UBadge
                 :color="kpi.trend === 'up' ? 'success' : 'error'"
@@ -191,11 +183,7 @@ const formatTrend = (value: number, trend: string) => {
                 class="flex items-center gap-1"
               >
                 <UIcon
-                  :name="
-                    kpi.trend === 'up'
-                      ? 'i-lucide-trending-up'
-                      : 'i-lucide-trending-down'
-                  "
+                  :name="kpi.trend === 'up' ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
                   size="12"
                 />
                 {{ formatTrend(kpi.change, kpi.trend) }}
@@ -206,19 +194,13 @@ const formatTrend = (value: number, trend: string) => {
               <p class="text-xs sm:text-sm font-medium text-gray-600">
                 {{ kpi.title }}
               </p>
-              <p
-                class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900"
-              >
+              <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                 {{
                   typeof kpi.value === "number" && kpi.value % 1 !== 0
                     ? kpi.value.toFixed(1)
                     : kpi.value
                 }}
-                <span
-                  v-if="kpi.title === 'Engagement Rate'"
-                  class="text-sm sm:text-lg"
-                  >%</span
-                >
+                <span v-if="kpi.title === 'Engagement Rate'" class="text-sm sm:text-lg">%</span>
               </p>
             </div>
 
@@ -250,12 +232,8 @@ const formatTrend = (value: number, trend: string) => {
             <div class="p-6 border-b border-gray-100">
               <div class="flex items-center justify-between">
                 <div>
-                  <h2 class="text-xl font-semibold text-gray-900">
-                    Recent Content
-                  </h2>
-                  <p class="text-sm text-gray-600 mt-1">
-                    Your latest recipe performance
-                  </p>
+                  <h2 class="text-xl font-semibold text-gray-900">Recent Content</h2>
+                  <p class="text-sm text-gray-600 mt-1">Your latest recipe performance</p>
                 </div>
                 <UButton
                   label="View All"
@@ -283,9 +261,7 @@ const formatTrend = (value: number, trend: string) => {
                     />
                     <div
                       :class="`absolute bottom-1 right-1 w-3 h-3 rounded-full border-2 border-white ${
-                        item.status === 'published'
-                          ? 'bg-green-500'
-                          : 'bg-yellow-500'
+                        item.status === 'published' ? 'bg-green-500' : 'bg-yellow-500'
                       }`"
                     ></div>
                   </div>
@@ -296,15 +272,11 @@ const formatTrend = (value: number, trend: string) => {
                     </h3>
                     <p class="text-sm text-gray-600">{{ item.category }}</p>
                     <div class="flex items-center gap-4 mt-2">
-                      <div
-                        class="flex items-center gap-1 text-sm text-gray-500"
-                      >
+                      <div class="flex items-center gap-1 text-sm text-gray-500">
                         <UIcon name="i-lucide-eye" size="14" />
                         {{ formatNumber(item.views) }}
                       </div>
-                      <div
-                        class="flex items-center gap-1 text-sm text-gray-500"
-                      >
+                      <div class="flex items-center gap-1 text-sm text-gray-500">
                         <UIcon name="i-lucide-heart" size="14" />
                         {{ item.likes }}
                       </div>
@@ -319,11 +291,7 @@ const formatTrend = (value: number, trend: string) => {
                       class="mb-2"
                     >
                       <UIcon
-                        :name="
-                          item.trend >= 0
-                            ? 'i-lucide-trending-up'
-                            : 'i-lucide-trending-down'
-                        "
+                        :name="item.trend >= 0 ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
                         size="12"
                         class="mr-1"
                       />
@@ -348,33 +316,19 @@ const formatTrend = (value: number, trend: string) => {
               <div class="relative z-10">
                 <div class="flex items-center justify-between mb-4">
                   <div>
-                    <p class="text-blue-100 text-sm font-medium">
-                      Monthly Goal
-                    </p>
-                    <p class="text-2xl font-bold">
-                      {{ performanceMetrics.completionRate }}%
-                    </p>
+                    <p class="text-blue-100 text-sm font-medium">Monthly Goal</p>
+                    <p class="text-2xl font-bold">{{ performanceMetrics.completionRate }}%</p>
                   </div>
-                  <UIcon
-                    name="i-lucide-target"
-                    size="32"
-                    class="text-blue-200"
-                  />
+                  <UIcon name="i-lucide-target" size="32" class="text-blue-200" />
                 </div>
 
                 <div class="mb-4">
                   <div class="flex justify-between text-sm mb-2">
                     <span class="text-blue-100"
-                      >{{
-                        formatNumber(performanceMetrics.currentViews)
-                      }}
-                      views</span
+                      >{{ formatNumber(performanceMetrics.currentViews) }} views</span
                     >
                     <span class="text-blue-100"
-                      >{{
-                        formatNumber(performanceMetrics.monthlyGoal)
-                      }}
-                      goal</span
+                      >{{ formatNumber(performanceMetrics.monthlyGoal) }} goal</span
                     >
                   </div>
                   <div class="w-full bg-white/20 rounded-full h-2">
@@ -401,20 +355,12 @@ const formatTrend = (value: number, trend: string) => {
             <div
               class="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-sm border border-gray-100"
             >
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">
-                Quick Stats
-              </h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Stats</h3>
               <div class="space-y-4">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
-                    <div
-                      class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center"
-                    >
-                      <UIcon
-                        name="i-lucide-book-open"
-                        size="20"
-                        class="text-green-600"
-                      />
+                    <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                      <UIcon name="i-lucide-book-open" size="20" class="text-green-600" />
                     </div>
                     <div>
                       <p class="text-sm text-gray-600">New Recipes</p>
@@ -423,11 +369,7 @@ const formatTrend = (value: number, trend: string) => {
                       </p>
                     </div>
                   </div>
-                  <UIcon
-                    name="i-lucide-chevron-right"
-                    size="16"
-                    class="text-gray-400"
-                  />
+                  <UIcon name="i-lucide-chevron-right" size="16" class="text-gray-400" />
                 </div>
 
                 <div class="flex items-center justify-between">
@@ -435,11 +377,7 @@ const formatTrend = (value: number, trend: string) => {
                     <div
                       class="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center"
                     >
-                      <UIcon
-                        name="i-lucide-star"
-                        size="20"
-                        class="text-yellow-600"
-                      />
+                      <UIcon name="i-lucide-star" size="20" class="text-yellow-600" />
                     </div>
                     <div>
                       <p class="text-sm text-gray-600">Avg Rating</p>
@@ -448,11 +386,7 @@ const formatTrend = (value: number, trend: string) => {
                       </p>
                     </div>
                   </div>
-                  <UIcon
-                    name="i-lucide-chevron-right"
-                    size="16"
-                    class="text-gray-400"
-                  />
+                  <UIcon name="i-lucide-chevron-right" size="16" class="text-gray-400" />
                 </div>
               </div>
             </div>
@@ -466,21 +400,13 @@ const formatTrend = (value: number, trend: string) => {
             class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
           >
             <div class="p-6 border-b border-gray-100">
-              <h2 class="text-xl font-semibold text-gray-900">
-                Recent Activity
-              </h2>
-              <p class="text-sm text-gray-600 mt-1">
-                What's happening with your content
-              </p>
+              <h2 class="text-xl font-semibold text-gray-900">Recent Activity</h2>
+              <p class="text-sm text-gray-600 mt-1">What's happening with your content</p>
             </div>
 
             <div class="p-6">
               <div class="space-y-4">
-                <div
-                  v-for="activity in activityFeed"
-                  :key="activity.id"
-                  class="flex gap-3"
-                >
+                <div v-for="activity in activityFeed" :key="activity.id" class="flex gap-3">
                   <div
                     v-if="activity.type === 'user'"
                     class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"
@@ -495,18 +421,12 @@ const formatTrend = (value: number, trend: string) => {
                     v-else
                     :class="`w-10 h-10 rounded-xl flex items-center justify-center bg-${activity.color}-100`"
                   >
-                    <UIcon
-                      :name="activity.icon"
-                      :class="`text-${activity.color}-600`"
-                      size="20"
-                    />
+                    <UIcon :name="activity.icon" :class="`text-${activity.color}-600`" size="20" />
                   </div>
 
                   <div class="flex-1 min-w-0">
                     <p class="text-sm text-gray-900">
-                      <span v-if="activity.user" class="font-medium">{{
-                        activity.user
-                      }}</span>
+                      <span v-if="activity.user" class="font-medium">{{ activity.user }}</span>
                       <span class="text-gray-600">{{ activity.action }}</span>
                       <span class="font-medium">{{ activity.target }}</span>
                     </p>
@@ -530,9 +450,7 @@ const formatTrend = (value: number, trend: string) => {
           <div
             class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-gray-100 p-6"
           >
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">
-              Quick Actions
-            </h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
             <div class="space-y-2">
               <UButton
                 icon="i-lucide-bar-chart-3"
@@ -579,7 +497,8 @@ const formatTrend = (value: number, trend: string) => {
 }
 
 .hover\:shadow-xl:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 

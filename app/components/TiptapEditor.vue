@@ -101,21 +101,13 @@ function getLink() {
         <UButton
           icon="i-lucide-corner-up-left"
           variant="ghost"
-          :color="
-            tiptapEditor?.can().chain().focus().undo().run()
-              ? 'primary'
-              : 'neutral'
-          "
+          :color="tiptapEditor?.can().chain().focus().undo().run() ? 'primary' : 'neutral'"
           @click="tiptapEditor?.chain().focus().undo().run()"
         />
         <UButton
           icon="i-lucide-corner-up-right"
           variant="ghost"
-          :color="
-            tiptapEditor?.can().chain().focus().redo().run()
-              ? 'primary'
-              : 'neutral'
-          "
+          :color="tiptapEditor?.can().chain().focus().redo().run() ? 'primary' : 'neutral'"
           @click="tiptapEditor?.chain().focus().redo().run()"
         />
         <USeparator orientation="vertical" class="h-6" />
@@ -137,11 +129,7 @@ function getLink() {
                 v-for="level in HeadingList"
                 :key="level"
                 variant="ghost"
-                :color="
-                  getTypography() === `i-lucide-heading-${level}`
-                    ? 'primary'
-                    : 'neutral'
-                "
+                :color="getTypography() === `i-lucide-heading-${level}` ? 'primary' : 'neutral'"
                 :icon="`i-lucide-heading-${level}`"
                 @click="changeTypography(level)"
               >
@@ -163,27 +151,21 @@ function getLink() {
                 icon="i-lucide-list"
                 label="Bullet List"
                 variant="ghost"
-                :color="
-                  getSelectedList() === 'bulletList' ? 'primary' : 'neutral'
-                "
+                :color="getSelectedList() === 'bulletList' ? 'primary' : 'neutral'"
                 @click="tiptapEditor?.chain().focus().toggleBulletList().run()"
               />
               <UButton
                 icon="i-lucide-list-ordered"
                 label="Ordered List"
                 variant="ghost"
-                :color="
-                  getSelectedList() === 'orderedList' ? 'primary' : 'neutral'
-                "
+                :color="getSelectedList() === 'orderedList' ? 'primary' : 'neutral'"
                 @click="tiptapEditor?.chain().focus().toggleOrderedList().run()"
               />
               <UButton
                 icon="i-lucide-list-collapse"
                 label="Task List"
                 variant="ghost"
-                :color="
-                  getSelectedList() === 'orderedList' ? 'primary' : 'neutral'
-                "
+                :color="getSelectedList() === 'orderedList' ? 'primary' : 'neutral'"
                 @click="tiptapEditor?.chain().focus().toggleOrderedList().run()"
               />
             </div>
@@ -317,9 +299,7 @@ function getLink() {
           :key="align"
           :icon="`i-lucide-align-${align}`"
           variant="ghost"
-          :color="
-            tiptapEditor?.isActive({ textAlign: align }) ? 'primary' : 'neutral'
-          "
+          :color="tiptapEditor?.isActive({ textAlign: align }) ? 'primary' : 'neutral'"
           @click="tiptapEditor?.chain().focus().setTextAlign(align).run()"
         />
       </div>

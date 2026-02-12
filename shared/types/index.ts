@@ -11,25 +11,25 @@ export type UserProfile = {
 
 // Author Type (extends UserProfile)
 export interface Author extends UserProfile {
-  role: 'author'
-  bio?: string
-  expertise?: string[]
-  avatar?: string
-  website?: string
-  instagram?: string
-  youtube?: string
-  tiktok?: string
-  followersCount?: number
-  followingCount?: number
-  recipesCount?: number
-  totalViews?: number
-  totalLikes?: number
-  isFollowing?: boolean
+  role: "author";
+  bio?: string;
+  expertise?: string[];
+  avatar?: string;
+  website?: string;
+  instagram?: string;
+  youtube?: string;
+  tiktok?: string;
+  followersCount?: number;
+  followingCount?: number;
+  recipesCount?: number;
+  totalViews?: number;
+  totalLikes?: number;
+  isFollowing?: boolean;
   socialLinks?: {
-    twitter?: string
-    facebook?: string
-    linkedin?: string
-  }
+    twitter?: string;
+    facebook?: string;
+    linkedin?: string;
+  };
 }
 
 // Recipe Types
@@ -60,38 +60,38 @@ export type Ingredient = {
 
 // Author Statistics
 export interface AuthorStats {
-  authorId: string
-  followersCount: number
-  followingCount: number
-  recipesCount: number
-  totalViews: number
-  totalLikes: number
-  averageDifficulty: number
-  engagementRate?: number
-  recentViews?: number
-  recentLikes?: number
+  authorId: string;
+  followersCount: number;
+  followingCount: number;
+  recipesCount: number;
+  totalViews: number;
+  totalLikes: number;
+  averageDifficulty: number;
+  engagementRate?: number;
+  recentViews?: number;
+  recentLikes?: number;
 }
 
 // Follow System Types
 export interface Follow {
-  id: string
-  follower: string | Author
-  following: string | Author
-  createdAt: string
+  id: string;
+  follower: string | Author;
+  following: string | Author;
+  createdAt: string;
 }
 
 export interface FollowStats {
-  followersCount: number
-  followingCount: number
+  followersCount: number;
+  followingCount: number;
 }
 
 export interface FollowRequest {
-  id: string
-  requester: string | Author
-  target: string | Author
-  status: 'pending' | 'accepted' | 'rejected'
-  createdAt: string
-  updatedAt: string
+  id: string;
+  requester: string | Author;
+  target: string | Author;
+  status: "pending" | "accepted" | "rejected";
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Category Type
@@ -123,4 +123,4 @@ export type Response<T> = {
 };
 
 // Type alias for backward compatibility
-export type PaginatedResponse<T> = Paginated<T>
+export type PaginatedResponse<T> = Paginated<T>;

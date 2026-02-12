@@ -79,9 +79,7 @@ const navigationItems = reactive<NavigationMenuItem[]>([
       title: 'text-primary-500',
     }"
   >
-    <template #title>
-      <UIcon name="i-lucide-cooking-pot" size="24" /> Chongkran
-    </template>
+    <template #title> <UIcon name="i-lucide-cooking-pot" size="24" /> Chongkran </template>
     <UNavigationMenu :items="navigationItems" />
     <template #right>
       <UDropdownMenu v-if="isAuthenticated" :items="profileItems">
@@ -96,11 +94,7 @@ const navigationItems = reactive<NavigationMenuItem[]>([
       <UButton v-else label="Log in" variant="outline" to="/auth" />
     </template>
     <template #body>
-      <UNavigationMenu
-        :items="navigationItems"
-        orientation="vertical"
-        class="-mx-2.5"
-      />
+      <UNavigationMenu :items="navigationItems" orientation="vertical" class="-mx-2.5" />
     </template>
   </UHeader>
 </template>

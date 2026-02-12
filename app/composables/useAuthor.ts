@@ -10,12 +10,7 @@ export const useAuthor = () => {
   };
 
   // Get all authors with pagination and filtering
-  const getAuthors = async (
-    page = 1,
-    limit = 10,
-    search?: string,
-    expertise?: string
-  ) => {
+  const getAuthors = async (page = 1, limit = 10, search?: string, expertise?: string) => {
     isLoading.value = true;
     clearError();
     try {
@@ -228,9 +223,7 @@ export const useAuthor = () => {
     }
   };
 
-  const getAuthorAnalytics = async (params?: {
-    period?: "week" | "month" | "year";
-  }) => {
+  const getAuthorAnalytics = async (params?: { period?: "week" | "month" | "year" }) => {
     isLoading.value = true;
     clearError();
     try {

@@ -160,11 +160,7 @@ async function saveSettings() {
 }
 
 function confirmDeleteAccount() {
-  if (
-    confirm(
-      "Are you sure you want to delete your account? This action cannot be undone."
-    )
-  ) {
+  if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
     // Implement account deletion logic
     toast.add({
       title: "Account Deletion",
@@ -193,7 +189,7 @@ function exportData() {
   link.setAttribute("href", url);
   link.setAttribute(
     "download",
-    `chongkran-settings-${new Date().toISOString().split("T")[0]}.json`
+    `chongkran-settings-${new Date().toISOString().split("T")[0]}.json`,
   );
   link.style.visibility = "hidden";
   document.body.appendChild(link);
@@ -227,9 +223,7 @@ onMounted(async () => {
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8"
       >
         <div class="flex-1">
-          <h1
-            class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2"
-          >
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
             Settings
           </h1>
           <p class="text-base sm:text-lg text-gray-600">
@@ -296,12 +290,8 @@ onMounted(async () => {
                       />
                     </div>
                     <div>
-                      <p class="text-sm text-[#666] mb-2">
-                        Upload a new profile photo
-                      </p>
-                      <p class="text-xs text-[#666]">
-                        JPG, PNG or GIF. Max size of 5MB.
-                      </p>
+                      <p class="text-sm text-[#666] mb-2">Upload a new profile photo</p>
+                      <p class="text-xs text-[#666]">JPG, PNG or GIF. Max size of 5MB.</p>
                       <input
                         ref="profilePhotoInput"
                         type="file"
@@ -321,12 +311,7 @@ onMounted(async () => {
                     :state="profileState"
                     class="grid grid-cols-1 md:grid-cols-2 gap-6"
                   >
-                    <UFormField
-                      label="Display Name"
-                      name="displayName"
-                      required
-                      size="xl"
-                    >
+                    <UFormField label="Display Name" name="displayName" required size="xl">
                       <UInput
                         v-model="profileState.displayName"
                         placeholder="Your display name"
@@ -363,12 +348,7 @@ onMounted(async () => {
                       />
                     </UFormField>
 
-                    <UFormField
-                      label="Bio"
-                      name="bio"
-                      size="xl"
-                      class="md:col-span-2"
-                    >
+                    <UFormField label="Bio" name="bio" size="xl" class="md:col-span-2">
                       <UTextarea
                         v-model="profileState.bio"
                         placeholder="Tell us about yourself and your cooking style..."
@@ -421,11 +401,7 @@ onMounted(async () => {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-4">
                 <div class="flex items-center gap-3">
-                  <UIcon
-                    name="i-lucide-instagram"
-                    size="20"
-                    class="text-pink-500"
-                  />
+                  <UIcon name="i-lucide-instagram" size="20" class="text-pink-500" />
                   <UInput
                     v-model="socialLinks.instagram"
                     placeholder="Instagram username"
@@ -434,11 +410,7 @@ onMounted(async () => {
                   />
                 </div>
                 <div class="flex items-center gap-3">
-                  <UIcon
-                    name="i-lucide-twitter"
-                    size="20"
-                    class="text-blue-400"
-                  />
+                  <UIcon name="i-lucide-twitter" size="20" class="text-blue-400" />
                   <UInput
                     v-model="socialLinks.twitter"
                     placeholder="Twitter username"
@@ -447,11 +419,7 @@ onMounted(async () => {
                   />
                 </div>
                 <div class="flex items-center gap-3">
-                  <UIcon
-                    name="i-lucide-facebook"
-                    size="20"
-                    class="text-blue-600"
-                  />
+                  <UIcon name="i-lucide-facebook" size="20" class="text-blue-600" />
                   <UInput
                     v-model="socialLinks.facebook"
                     placeholder="Facebook profile URL"
@@ -462,11 +430,7 @@ onMounted(async () => {
               </div>
               <div class="space-y-4">
                 <div class="flex items-center gap-3">
-                  <UIcon
-                    name="i-lucide-youtube"
-                    size="20"
-                    class="text-red-600"
-                  />
+                  <UIcon name="i-lucide-youtube" size="20" class="text-red-600" />
                   <UInput
                     v-model="socialLinks.youtube"
                     placeholder="YouTube channel URL"
@@ -484,11 +448,7 @@ onMounted(async () => {
                   />
                 </div>
                 <div class="flex items-center gap-3">
-                  <UIcon
-                    name="i-lucide-linkedin"
-                    size="20"
-                    class="text-blue-700"
-                  />
+                  <UIcon name="i-lucide-linkedin" size="20" class="text-blue-700" />
                   <UInput
                     v-model="socialLinks.linkedin"
                     placeholder="LinkedIn profile URL"
@@ -515,15 +475,9 @@ onMounted(async () => {
               <div>
                 <h3 class="font-medium mb-4">Email Notifications</h3>
                 <div class="space-y-4">
-                  <div
-                    class="flex items-center justify-between p-4 rounded-lg border"
-                  >
+                  <div class="flex items-center justify-between p-4 rounded-lg border">
                     <div class="flex items-center gap-3">
-                      <UIcon
-                        name="i-lucide-mail"
-                        size="20"
-                        class="text-blue-500"
-                      />
+                      <UIcon name="i-lucide-mail" size="20" class="text-blue-500" />
                       <div>
                         <p class="font-medium">General Email Updates</p>
                         <p class="text-sm text-[#666]">
@@ -533,15 +487,9 @@ onMounted(async () => {
                     </div>
                     <UToggle v-model="notifications.email" size="lg" />
                   </div>
-                  <div
-                    class="flex items-center justify-between p-4 rounded-lg border"
-                  >
+                  <div class="flex items-center justify-between p-4 rounded-lg border">
                     <div class="flex items-center gap-3">
-                      <UIcon
-                        name="i-lucide-heart"
-                        size="20"
-                        class="text-red-500"
-                      />
+                      <UIcon name="i-lucide-heart" size="20" class="text-red-500" />
                       <div>
                         <p class="font-medium">Likes on Your Recipes</p>
                         <p class="text-sm text-[#666]">
@@ -551,15 +499,9 @@ onMounted(async () => {
                     </div>
                     <UToggle v-model="notifications.likes" size="lg" />
                   </div>
-                  <div
-                    class="flex items-center justify-between p-4 rounded-lg border"
-                  >
+                  <div class="flex items-center justify-between p-4 rounded-lg border">
                     <div class="flex items-center gap-3">
-                      <UIcon
-                        name="i-lucide-message-circle"
-                        size="20"
-                        class="text-green-500"
-                      />
+                      <UIcon name="i-lucide-message-circle" size="20" class="text-green-500" />
                       <div>
                         <p class="font-medium">New Comments</p>
                         <p class="text-sm text-[#666]">
@@ -576,33 +518,19 @@ onMounted(async () => {
               <div>
                 <h3 class="font-medium mb-4">Social Notifications</h3>
                 <div class="space-y-4">
-                  <div
-                    class="flex items-center justify-between p-4 rounded-lg border"
-                  >
+                  <div class="flex items-center justify-between p-4 rounded-lg border">
                     <div class="flex items-center gap-3">
-                      <UIcon
-                        name="i-lucide-user-plus"
-                        size="20"
-                        class="text-purple-500"
-                      />
+                      <UIcon name="i-lucide-user-plus" size="20" class="text-purple-500" />
                       <div>
                         <p class="font-medium">New Followers</p>
-                        <p class="text-sm text-[#666]">
-                          Get notified when someone follows you
-                        </p>
+                        <p class="text-sm text-[#666]">Get notified when someone follows you</p>
                       </div>
                     </div>
                     <UToggle v-model="notifications.newFollowers" size="lg" />
                   </div>
-                  <div
-                    class="flex items-center justify-between p-4 rounded-lg border"
-                  >
+                  <div class="flex items-center justify-between p-4 rounded-lg border">
                     <div class="flex items-center gap-3">
-                      <UIcon
-                        name="i-lucide-at-sign"
-                        size="20"
-                        class="text-blue-500"
-                      />
+                      <UIcon name="i-lucide-at-sign" size="20" class="text-blue-500" />
                       <div>
                         <p class="font-medium">Recipe Mentions</p>
                         <p class="text-sm text-[#666]">
@@ -618,15 +546,9 @@ onMounted(async () => {
               <!-- Summary Notifications -->
               <div>
                 <h3 class="font-medium mb-4">Summary Reports</h3>
-                <div
-                  class="flex items-center justify-between p-4 rounded-lg border"
-                >
+                <div class="flex items-center justify-between p-4 rounded-lg border">
                   <div class="flex items-center gap-3">
-                    <UIcon
-                      name="i-lucide-bar-chart-3"
-                      size="20"
-                      class="text-orange-500"
-                    />
+                    <UIcon name="i-lucide-bar-chart-3" size="20" class="text-orange-500" />
                     <div>
                       <p class="font-medium">Weekly Performance Summary</p>
                       <p class="text-sm text-[#666]">
@@ -655,33 +577,19 @@ onMounted(async () => {
               <div>
                 <h3 class="font-medium mb-4">Profile Visibility</h3>
                 <div class="space-y-4">
-                  <div
-                    class="flex items-center justify-between p-4 rounded-lg border"
-                  >
+                  <div class="flex items-center justify-between p-4 rounded-lg border">
                     <div class="flex items-center gap-3">
-                      <UIcon
-                        name="i-lucide-globe"
-                        size="20"
-                        class="text-green-500"
-                      />
+                      <UIcon name="i-lucide-globe" size="20" class="text-green-500" />
                       <div>
                         <p class="font-medium">Public Profile</p>
-                        <p class="text-sm text-[#666]">
-                          Make your profile visible to other users
-                        </p>
+                        <p class="text-sm text-[#666]">Make your profile visible to other users</p>
                       </div>
                     </div>
                     <UToggle v-model="privacy.publicProfile" size="lg" />
                   </div>
-                  <div
-                    class="flex items-center justify-between p-4 rounded-lg border"
-                  >
+                  <div class="flex items-center justify-between p-4 rounded-lg border">
                     <div class="flex items-center gap-3">
-                      <UIcon
-                        name="i-lucide-search"
-                        size="20"
-                        class="text-blue-500"
-                      />
+                      <UIcon name="i-lucide-search" size="20" class="text-blue-500" />
                       <div>
                         <p class="font-medium">Search Engine Indexing</p>
                         <p class="text-sm text-[#666]">
@@ -698,15 +606,9 @@ onMounted(async () => {
               <div>
                 <h3 class="font-medium mb-4">Contact Information</h3>
                 <div class="space-y-4">
-                  <div
-                    class="flex items-center justify-between p-4 rounded-lg border"
-                  >
+                  <div class="flex items-center justify-between p-4 rounded-lg border">
                     <div class="flex items-center gap-3">
-                      <UIcon
-                        name="i-lucide-mail"
-                        size="20"
-                        class="text-red-500"
-                      />
+                      <UIcon name="i-lucide-mail" size="20" class="text-red-500" />
                       <div>
                         <p class="font-medium">Show Email Address</p>
                         <p class="text-sm text-[#666]">
@@ -716,20 +618,12 @@ onMounted(async () => {
                     </div>
                     <UToggle v-model="privacy.showEmail" size="lg" />
                   </div>
-                  <div
-                    class="flex items-center justify-between p-4 rounded-lg border"
-                  >
+                  <div class="flex items-center justify-between p-4 rounded-lg border">
                     <div class="flex items-center gap-3">
-                      <UIcon
-                        name="i-lucide-message-square"
-                        size="20"
-                        class="text-purple-500"
-                      />
+                      <UIcon name="i-lucide-message-square" size="20" class="text-purple-500" />
                       <div>
                         <p class="font-medium">Allow Messages</p>
-                        <p class="text-sm text-[#666]">
-                          Allow other users to send you messages
-                        </p>
+                        <p class="text-sm text-[#666]">Allow other users to send you messages</p>
                       </div>
                     </div>
                     <UToggle v-model="privacy.allowMessages" size="lg" />
@@ -740,15 +634,9 @@ onMounted(async () => {
               <!-- Activity Settings -->
               <div>
                 <h3 class="font-medium mb-4">Activity Settings</h3>
-                <div
-                  class="flex items-center justify-between p-4 rounded-lg border"
-                >
+                <div class="flex items-center justify-between p-4 rounded-lg border">
                   <div class="flex items-center gap-3">
-                    <UIcon
-                      name="i-lucide-activity"
-                      size="20"
-                      class="text-orange-500"
-                    />
+                    <UIcon name="i-lucide-activity" size="20" class="text-orange-500" />
                     <div>
                       <p class="font-medium">Show Activity Status</p>
                       <p class="text-sm text-[#666]">
@@ -785,11 +673,7 @@ onMounted(async () => {
                     @click="appearance.theme = 'light'"
                   >
                     <div class="text-center">
-                      <UIcon
-                        name="i-lucide-sun"
-                        size="32"
-                        class="mx-auto mb-2 text-yellow-500"
-                      />
+                      <UIcon name="i-lucide-sun" size="32" class="mx-auto mb-2 text-yellow-500" />
                       <p class="font-medium">Light</p>
                     </div>
                   </div>
@@ -801,11 +685,7 @@ onMounted(async () => {
                     @click="appearance.theme = 'dark'"
                   >
                     <div class="text-center">
-                      <UIcon
-                        name="i-lucide-moon"
-                        size="32"
-                        class="mx-auto mb-2 text-blue-500"
-                      />
+                      <UIcon name="i-lucide-moon" size="32" class="mx-auto mb-2 text-blue-500" />
                       <p class="font-medium">Dark</p>
                     </div>
                   </div>
@@ -817,11 +697,7 @@ onMounted(async () => {
                     @click="appearance.theme = 'system'"
                   >
                     <div class="text-center">
-                      <UIcon
-                        name="i-lucide-monitor"
-                        size="32"
-                        class="mx-auto mb-2 text-gray-500"
-                      />
+                      <UIcon name="i-lucide-monitor" size="32" class="mx-auto mb-2 text-gray-500" />
                       <p class="font-medium">System</p>
                     </div>
                   </div>
@@ -894,38 +770,22 @@ onMounted(async () => {
                 </div>
               </template>
               <div class="space-y-4">
-                <div
-                  class="flex items-center justify-between p-4 rounded-lg border"
-                >
+                <div class="flex items-center justify-between p-4 rounded-lg border">
                   <div class="flex items-center gap-3">
-                    <UIcon
-                      name="i-lucide-shield-check"
-                      size="20"
-                      class="text-green-500"
-                    />
+                    <UIcon name="i-lucide-shield-check" size="20" class="text-green-500" />
                     <div>
                       <p class="font-medium">Two-Factor Authentication</p>
-                      <p class="text-sm text-[#666]">
-                        Add an extra layer of security
-                      </p>
+                      <p class="text-sm text-[#666]">Add an extra layer of security</p>
                     </div>
                   </div>
                   <UButton label="Enable" variant="outline" size="sm" />
                 </div>
-                <div
-                  class="flex items-center justify-between p-4 rounded-lg border"
-                >
+                <div class="flex items-center justify-between p-4 rounded-lg border">
                   <div class="flex items-center gap-3">
-                    <UIcon
-                      name="i-lucide-key"
-                      size="20"
-                      class="text-blue-500"
-                    />
+                    <UIcon name="i-lucide-key" size="20" class="text-blue-500" />
                     <div>
                       <p class="font-medium">Change Password</p>
-                      <p class="text-sm text-[#666]">
-                        Update your account password
-                      </p>
+                      <p class="text-sm text-[#666]">Update your account password</p>
                     </div>
                   </div>
                   <UButton label="Change" variant="outline" size="sm" />
@@ -939,36 +799,19 @@ onMounted(async () => {
                 <h3 class="text-lg font-semibold">Connected Accounts</h3>
               </template>
               <div class="space-y-4">
-                <div
-                  class="flex items-center justify-between p-4 rounded-lg border"
-                >
+                <div class="flex items-center justify-between p-4 rounded-lg border">
                   <div class="flex items-center gap-3">
-                    <UIcon
-                      name="i-lucide-google"
-                      size="20"
-                      class="text-red-500"
-                    />
+                    <UIcon name="i-lucide-google" size="20" class="text-red-500" />
                     <div>
                       <p class="font-medium">Google</p>
                       <p class="text-sm text-[#666]">Connected</p>
                     </div>
                   </div>
-                  <UButton
-                    label="Disconnect"
-                    variant="outline"
-                    size="sm"
-                    color="error"
-                  />
+                  <UButton label="Disconnect" variant="outline" size="sm" color="error" />
                 </div>
-                <div
-                  class="flex items-center justify-between p-4 rounded-lg border"
-                >
+                <div class="flex items-center justify-between p-4 rounded-lg border">
                   <div class="flex items-center gap-3">
-                    <UIcon
-                      name="i-lucide-github"
-                      size="20"
-                      class="text-gray-800"
-                    />
+                    <UIcon name="i-lucide-github" size="20" class="text-gray-800" />
                     <div>
                       <p class="font-medium">GitHub</p>
                       <p class="text-sm text-[#666]">Not connected</p>
@@ -983,20 +826,12 @@ onMounted(async () => {
             <UCard class="border-red-200">
               <template #header>
                 <div class="flex items-center gap-2">
-                  <UIcon
-                    name="i-lucide-alert-triangle"
-                    size="20"
-                    class="text-red-600"
-                  />
-                  <h2 class="text-lg font-semibold text-red-600">
-                    Danger Zone
-                  </h2>
+                  <UIcon name="i-lucide-alert-triangle" size="20" class="text-red-600" />
+                  <h2 class="text-lg font-semibold text-red-600">Danger Zone</h2>
                 </div>
               </template>
               <div class="space-y-4">
-                <div
-                  class="flex items-center justify-between p-4 bg-red-50 rounded-lg"
-                >
+                <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg">
                   <div>
                     <p class="font-medium text-red-800">Delete Account</p>
                     <p class="text-sm text-red-600">
