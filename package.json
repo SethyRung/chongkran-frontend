@@ -8,8 +8,10 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
   "dependencies": {
     "@nuxt/image": "^2.0.0",
@@ -30,17 +32,18 @@
     "@vueuse/motion": "^3.0.3",
     "@vueuse/nuxt": "^14.2.1",
     "nuxt": "^4.3.1",
+    "oxfmt": "^0.32.0",
+    "oxlint": "^1.47.0",
     "vue": "^3.5.28"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.90",
     "@iconify-json/material-symbols": "^1.2.55",
     "@iconify-json/simple-icons": "^1.2.70",
-    "@nuxt/eslint": "^1.15.1",
-    "eslint": "^10.0.0",
     "typescript": "^5.9.3"
   },
   "overrides": {
     "@vercel/nft": "^0.27.4"
-  }
+  },
+  "packageManager": "pnpm@10.29.3+sha512.498e1fb4cca5aa06c1dcf2611e6fafc50972ffe7189998c409e90de74566444298ffe43e6cd2acdc775ba1aa7cc5e092a8b7054c811ba8c5770f84693d33d2dc"
 }

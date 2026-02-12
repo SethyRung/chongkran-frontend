@@ -1,7 +1,7 @@
 onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@sentry/cli'
-  - '@tailwindcss/oxide'
+  - "@parcel/watcher"
+  - "@sentry/cli"
+  - "@tailwindcss/oxide"
   - esbuild
   - sharp
   - unrs-resolver
