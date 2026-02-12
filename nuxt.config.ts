@@ -10,10 +10,6 @@ export default defineNuxtConfig({
     "@sentry/nuxt/module",
   ],
 
-  app: {
-    pageTransition: { name: "page", mode: "out-in" },
-  },
-
   css: ["~/assets/css/main.css", "~/assets/css/tailwind.css"],
 
   future: {
@@ -21,10 +17,8 @@ export default defineNuxtConfig({
   },
 
   colorMode: {
-    preference: "light",
+    preference: "system",
   },
-
-  compatibilityDate: "2024-11-27",
 
   runtimeConfig: {
     public: {
