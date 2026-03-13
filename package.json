@@ -14,36 +14,25 @@
     "fmt:check": "oxfmt --check"
   },
   "dependencies": {
-    "@nuxt/image": "^2.0.0",
-    "@nuxt/ui": "^4.4.0",
-    "@sentry/nuxt": "^10.38.0",
-    "@tiptap/extension-highlight": "^3.19.0",
-    "@tiptap/extension-image": "^3.19.0",
-    "@tiptap/extension-subscript": "^3.19.0",
-    "@tiptap/extension-superscript": "^3.19.0",
-    "@tiptap/extension-task-item": "^3.19.0",
-    "@tiptap/extension-task-list": "^3.19.0",
-    "@tiptap/extension-text-align": "^3.19.0",
-    "@tiptap/extension-typography": "^3.19.0",
-    "@tiptap/extension-underline": "^3.19.0",
-    "@tiptap/pm": "^3.19.0",
-    "@tiptap/starter-kit": "^3.19.0",
-    "@tiptap/vue-3": "^3.19.0",
-    "@vueuse/motion": "^3.0.3",
+    "@nuxt/ui": "^4.5.1",
+    "@pinia/nuxt": "^0.11.3",
+    "@tailwindcss/vite": "^4.2.1",
+    "@vueuse/core": "^14.2.1",
     "@vueuse/nuxt": "^14.2.1",
     "nuxt": "^4.3.1",
-    "oxfmt": "^0.32.0",
-    "oxlint": "^1.47.0",
-    "vue": "^3.5.28"
+    "pinia": "^3.0.4",
+    "tailwindcss": "^4.2.1",
+    "v-calendar": "^2.4.2",
+    "vue": "latest",
+    "vue-router": "latest",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.90",
-    "@iconify-json/material-symbols": "^1.2.55",
-    "@iconify-json/simple-icons": "^1.2.70",
-    "typescript": "^5.9.3"
+    "@iconify-json/lucide": "^1.2.96",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0"
   },
   "overrides": {
-    "@vercel/nft": "^0.27.4"
-  },
-  "packageManager": "pnpm@10.29.3+sha512.498e1fb4cca5aa06c1dcf2611e6fafc50972ffe7189998c409e90de74566444298ffe43e6cd2acdc775ba1aa7cc5e092a8b7054c811ba8c5770f84693d33d2dc"
+    "vue": "latest"
+  }
 }

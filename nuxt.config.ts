@@ -1,23 +1,14 @@
+import tailwindcss from "@tailwindcss/vite";
+
 export default defineNuxtConfig({
-  devtools: { enabled: true },
-
-  modules: [
-    "@nuxt/ui",
-    "@nuxt/image",
-    "@vueuse/nuxt",
-    "@vueuse/motion/nuxt",
-    "@sentry/nuxt/module",
-  ],
-
-  css: ["~/assets/css/main.css", "~/assets/css/tailwind.css"],
-
-  compatibilityDate: "2026-02-13",
   future: {
     compatibilityVersion: 4,
   },
-
-  colorMode: {
-    preference: "system",
+  compatibilityDate: "2026-03-01",
+  css: ["~/assets/css/main.css"],
+  modules: ["@nuxt/ui", "@pinia/nuxt", "@vueuse/nuxt"],
+  vite: {
+    plugins: [tailwindcss()],
   },
 
   runtimeConfig: {
@@ -25,22 +16,6 @@ export default defineNuxtConfig({
       apiBaseUrl: "",
       atMaxAge: "",
       rtMaxAge: "",
-      sentry: {
-        dns: "",
-      },
     },
-  },
-
-  sentry: {
-    sourceMapsUploadOptions: {
-      org: "sethy-rung",
-      project: "chongkran",
-    },
-    autoInjectServerSentry: "top-level-import",
-    enabled: process.env.ENV === "production",
-  },
-
-  sourcemap: {
-    client: "hidden",
   },
 });

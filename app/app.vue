@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-useHead({
-  title: "Chongkran",
-});
-</script>
-
 <template>
   <UApp>
     <NuxtLayout>
