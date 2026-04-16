@@ -6,7 +6,7 @@ const year = computed(() => new Date().getFullYear());
   <UFooter class="border-t border-muted py-8">
     <template #left>
       <div class="flex items-center gap-2">
-        <UIcon name="i-heroicons-fire" class="text-primary size-6" />
+        <UIcon name="i-lucide:cooking-pot" class="text-primary size-6" />
         <span class="font-semibold">Chongkran</span>
       </div>
     </template>

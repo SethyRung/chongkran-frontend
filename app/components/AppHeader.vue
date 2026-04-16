@@ -16,10 +16,8 @@ function isActive(to: string) {
 <template>
   <UHeader class="border-b border-muted">
     <template #title>
-      <NuxtLink to="/" class="flex items-center gap-2">
-        <UIcon name="i-lucide:cooking-pot" class="text-primary size-8" />
-        <span class="text-xl font-bold">Chongkran</span>
-      </NuxtLink>
+      <UIcon name="i-lucide:cooking-pot" class="text-primary size-8" />
+      <span class="text-xl font-bold">Chongkran</span>
     </template>
 
     <template #default>
@@ -40,8 +38,7 @@ function isActive(to: string) {
       <div class="flex items-center gap-3">
         <UButton icon="i-lucide:search" color="neutral" variant="ghost" />
         <UColorModeButton />
-        <UButton to="/auth/login" variant="ghost" size="sm">Login</UButton>
-        <UButton to="/auth/signup" size="sm">Sign Up</UButton>
+        <UButton to="/auth/login">Login</UButton>
       </div>
     </template>
   </UHeader>
