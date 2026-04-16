@@ -17,7 +17,7 @@ function isActive(to: string) {
   <UHeader class="border-b border-muted">
     <template #title>
       <NuxtLink to="/" class="flex items-center gap-2">
-        <UIcon name="i-heroicons-fire" class="text-primary size-8" />
+        <UIcon name="i-lucide:cooking-pot" class="text-primary size-8" />
         <span class="text-xl font-bold">Chongkran</span>
       </NuxtLink>
     </template>
