@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { NavigationMenuItem } from "@nuxt/ui";
+
 const route = useRoute();
 
-const navigation = [
+const navigation: NavigationMenuItem[] = [
   { label: "Home", to: "/" },
   { label: "Recipes", to: "/recipes" },
   { label: "Categories", to: "/categories" },
@@ -21,17 +23,12 @@ function isActive(to: string) {
     </template>
 
     <template #default>
-      <nav class="hidden md:flex items-center gap-6">
-        <NuxtLink
-          v-for="item in navigation"
-          :key="item.to"
-          :to="item.to"
-          class="text-sm font-medium transition-colors"
-          :class="[isActive(item.to) ? 'text-primary' : 'text-muted hover:text-default']"
-        >
-          {{ item.label }}
-        </NuxtLink>
-      </nav>
+      <UNavigationMenu
+        :items="navigation"
+        :ui="{
+          link: 'before:bg-transparent',
+        }"
+      />
     </template>
 
     <template #right>
@@ -40,6 +37,16 @@ function isActive(to: string) {
         <UColorModeButton />
         <UButton to="/auth/login">Login</UButton>
       </div>
+    </template>
+
+    <template #body>
+      <UNavigationMenu
+        :items="navigation"
+        orientation="vertical"
+        :ui="{
+          link: 'h-10',
+        }"
+      />
     </template>
   </UHeader>
 </template>
