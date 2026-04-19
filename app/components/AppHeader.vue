@@ -3,16 +3,16 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 
 const route = useRoute();
 
-const navigation: NavigationMenuItem[] = [
-  { label: "Home", to: "/" },
-  { label: "Recipes", to: "/recipes" },
-  { label: "Categories", to: "/categories" },
-];
-
 function isActive(to: string) {
   if (to === "/") return route.path === "/";
   return route.path.startsWith(to);
 }
+
+const navigation = computed<NavigationMenuItem[]>(() => [
+  { label: "Home", active: isActive("/"), to: "/" },
+  { label: "Recipes", active: isActive("/recipes"), to: "/recipes" },
+  { label: "Categories", active: isActive("/categories"), to: "/categories" },
+]);
 </script>
 
 <template>
@@ -35,7 +35,7 @@ function isActive(to: string) {
       <div class="flex items-center gap-3">
         <UButton icon="i-lucide:search" color="neutral" variant="ghost" />
         <UColorModeButton />
-        <UButton to="/auth/login">Login</UButton>
+        <UButton to="/auth">Login</UButton>
       </div>
     </template>
 
