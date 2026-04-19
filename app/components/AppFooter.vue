@@ -20,7 +20,6 @@ const year = computed(() => new Date().getFullYear());
         <NuxtLink to="https://sethyrung.com" class="text-sm text-muted hover:text-default">
           About
         </NuxtLink>
-        <NuxtLink to="/contact" class="text-sm text-muted hover:text-default"> Contact </NuxtLink>
       </div>
     </template>
   </UFooter>

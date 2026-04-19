@@ -147,7 +147,7 @@ const stats = ref([
         },
         {
           label: 'Start Cooking',
-          to: '/auth/signup',
+          to: '/auth',
           color: 'neutral',
           variant: 'subtle',
           trailingIcon: 'i-lucide-chef-hat',
@@ -248,13 +248,7 @@ const stats = ref([
             </p>
           </div>
           <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <UButton
-              to="/auth/signup"
-              color="neutral"
-              variant="solid"
-              size="lg"
-              icon="i-lucide-user-plus"
-            >
+            <UButton to="/auth" color="neutral" variant="solid" size="lg" icon="i-lucide-user-plus">
               Become an Author
             </UButton>
             <UButton to="/recipes" variant="soft" size="lg" trailing-icon="i-lucide-arrow-right">

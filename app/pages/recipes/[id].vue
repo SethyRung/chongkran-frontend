@@ -228,10 +228,7 @@ function shareRecipe() {
                 size="xl"
               />
               <div>
-                <NuxtLink
-                  :to="`/authors/${author._id}`"
-                  class="font-semibold hover:text-primary transition-colors"
-                >
+                <NuxtLink to="#" class="font-semibold hover:text-primary transition-colors">
                   {{ author.firstName }} {{ author.lastName }}
                 </NuxtLink>
                 <p class="text-sm text-muted">
