@@ -1,5 +1,5 @@
-import { H3Event } from "h3";
-import { NitroFetchRequest, NitroFetchOptions } from "nitropack";
+import type { H3Event } from "h3";
+import type { NitroFetchRequest, NitroFetchOptions } from "nitropack";
 
 export function proxy<T>(
   event: H3Event,
@@ -23,14 +23,14 @@ export function proxy<T>(
       },
     });
   } catch {
-    return {
-      status: {
-        code: ApiResponseCode.InternalError,
-        message: "An error occurred while processing the request.",
-        requestId: crypto.randomUUID(),
-        requestTime: Date.now(),
-      },
-      data: null,
-    } as ApiResponse<T>;
+    return Promise.resolve(
+      createResponse<T>(
+        {
+          code: ApiResponseCode.InternalError,
+          message: "An error occurred while processing the request.",
+        },
+        null as any,
+      ),
+    );
   }
 }

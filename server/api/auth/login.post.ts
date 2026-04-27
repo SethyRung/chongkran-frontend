@@ -1,4 +1,4 @@
-import { AuthResponse } from "#server/types";
+import type { AuthResponse } from "#server/types";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
