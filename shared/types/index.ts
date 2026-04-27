@@ -1,21 +1,34 @@
-export interface ApiStatus {
-  code: string;
-  message: string;
-  requestId: string;
-  requestTime: number;
+export enum ApiResponseCode {
+  Success = "SUCCESS",
+  Error = "ERROR",
+  NotFound = "NOT_FOUND",
+  ValidationError = "VALIDATION_ERROR",
+  Unauthorized = "UNAUTHORIZED",
+  Forbidden = "FORBIDDEN",
+  InvalidRequest = "INVALID_REQUEST",
+  InternalError = "INTERNAL_ERROR",
 }
 
 export interface ApiResponse<T> {
-  status: ApiStatus;
+  status: {
+    code: ApiResponseCode;
+    message: string;
+    requestId: string;
+    requestTime: number;
+  };
   data: T;
+  meta?: PaginationMeta;
 }
 
-export interface PaginatedData<T> {
-  items: T[];
+export interface PaginationMeta {
   total: number;
-  page: number;
   limit: number;
-  totalPages: number;
+  offset: number;
+}
+
+export enum CookieName {
+  AccessToken = "access_token",
+  RefreshToken = "refresh_token",
 }
 
 export interface User {
