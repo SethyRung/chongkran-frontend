@@ -31,6 +31,12 @@ export enum CookieName {
   RefreshToken = "refresh_token",
 }
 
+export enum Role {
+  Admin = "admin",
+  Author = "author",
+  User = "user",
+}
+
 export interface User {
   _id: string;
   firstName: string;
