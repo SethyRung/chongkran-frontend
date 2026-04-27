@@ -10,12 +10,19 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-
   runtimeConfig: {
+    jwt: {
+      access: {
+        secret: "",
+        expiresIn: "",
+      },
+      refresh: {
+        secret: "",
+        expiresIn: "",
+      },
+    },
     public: {
-      apiBaseUrl: "",
-      atMaxAge: "",
-      rtMaxAge: "",
+      baseURL: "",
     },
   },
 });

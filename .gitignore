@@ -23,7 +23,8 @@ logs
 .env.*
 !.env.example
 
-.github
 AGENTS.md
+opencode.json
+.github
 .claude
 CLAUDE.md
