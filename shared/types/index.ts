@@ -38,7 +38,7 @@ export enum Role {
 }
 
 export interface User {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -50,7 +50,7 @@ export interface User {
 }
 
 export interface Author {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   avatar?: string;
@@ -65,7 +65,7 @@ export interface Ingredient {
 }
 
 export interface Recipe {
-  _id: string;
+  id: string;
   title: string;
   description: string;
   ingredients: Ingredient[];
@@ -89,7 +89,7 @@ export interface RecipeWithAuthor extends Omit<Recipe, "author" | "category"> {
 }
 
 export interface Category {
-  _id: string;
+  id: string;
   name: string;
   description?: string;
   createdAt: string;
@@ -97,7 +97,7 @@ export interface Category {
 }
 
 export interface Review {
-  _id: string;
+  id: string;
   user: string | User;
   recipe: string;
   rating: number;
