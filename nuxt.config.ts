@@ -21,8 +21,6 @@ export default defineNuxtConfig({
         expiresIn: "",
       },
     },
-    public: {
-      baseURL: "",
-    },
+    baseURL: "",
   },
 });

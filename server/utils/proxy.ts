@@ -16,7 +16,7 @@ export function proxy<T>(
   try {
     return $fetch<ApiResponse<T>>(req, {
       ...opts,
-      baseURL: config.public.baseURL,
+      baseURL: config.baseURL,
       headers: {
         ...opts.headers,
         Authorization: token ? `Bearer ${token}` : "",
