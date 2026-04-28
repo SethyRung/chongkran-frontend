@@ -1,7 +1,7 @@
 import type { H3Event } from "h3";
 import type { NitroFetchRequest, NitroFetchOptions } from "nitropack";
 
-export function proxy<T>(
+export async function proxy<T>(
   event: H3Event,
   req: NitroFetchRequest,
   opts: NitroFetchOptions<
@@ -11,9 +11,9 @@ export function proxy<T>(
 ) {
   const config = useRuntimeConfig();
 
-  const token = getCookie(event, CookieName.AccessToken);
+  function makeRequest(accessToken?: string) {
+    const token = accessToken ?? getCookie(event, CookieName.AccessToken);
 
-  try {
     return $fetch<ApiResponse<T>>(req, {
       ...opts,
       baseURL: config.baseURL,
@@ -22,15 +22,27 @@ export function proxy<T>(
         Authorization: token ? `Bearer ${token}` : "",
       },
     });
+  }
+
+  try {
+    const res = await makeRequest();
+
+    if (res.status.code === ApiResponseCode.Unauthorized) {
+      const refreshed = await refreshToken(event);
+
+      if (refreshed.status.code === ApiResponseCode.Success) {
+        return makeRequest(refreshed.data?.accessToken);
+      }
+    }
+
+    return res;
   } catch {
-    return Promise.resolve(
-      createResponse<T>(
-        {
-          code: ApiResponseCode.InternalError,
-          message: "An error occurred while processing the request.",
-        },
-        null as any,
-      ),
+    return createResponse<T>(
+      {
+        code: ApiResponseCode.InternalError,
+        message: "An error occurred while processing the request.",
+      },
+      null as any,
     );
   }
 }
