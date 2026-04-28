@@ -1,23 +1,25 @@
 import { appendResponseHeader } from "h3";
+import type { NitroFetchRequest, NitroFetchOptions } from "nitropack";
 
-export async function useApi<T>(
-  url: string,
-  options?: { method?: any; body?: any; query?: any; headers?: Record<string, string> },
+export function useApi<T>(
+  req: NitroFetchRequest,
+  opts: NitroFetchOptions<
+    NitroFetchRequest,
+    "get" | "post" | "put" | "delete" | "patch" | "options" | "head"
+  > = {},
 ) {
   const event = useRequestEvent();
   const headers = useRequestHeaders(["cookie"]);
 
-  const res = await $fetch.raw<T>(url, {
-    ...options,
-    headers: { ...headers, ...options?.headers },
+  return $fetch<ApiResponse<T>>(req, {
+    ...opts,
+    headers: { ...headers, ...opts.headers },
+    onResponse(context) {
+      if (!event) return;
+      const cookies = context.response.headers.getSetCookie();
+      for (const cookie of cookies) {
+        appendResponseHeader(event, "set-cookie", cookie);
+      }
+    },
   });
-
-  if (event) {
-    const cookies = res.headers.getSetCookie();
-    for (const cookie of cookies) {
-      appendResponseHeader(event, "set-cookie", cookie);
-    }
-  }
-
-  return res._data;
 }
