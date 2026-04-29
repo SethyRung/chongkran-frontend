@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormSubmitEvent } from "@nuxt/ui";
 import { z } from "zod";
 
 const toast = useToast();
@@ -6,7 +7,7 @@ const emit = defineEmits<{
   success: [email: string];
 }>();
 
-const signupSchema = z
+const schema = z
   .object({
     firstName: z.string().min(2, "First name must be at least 2 characters"),
     lastName: z.string().min(2, "Last name must be at least 2 characters"),
@@ -19,9 +20,9 @@ const signupSchema = z
     path: ["confirmPassword"],
   });
 
-type SignupSchema = z.output<typeof signupSchema>;
+type Schema = z.output<typeof schema>;
 
-const signupState = reactive<Partial<SignupSchema>>({
+const state = reactive<Partial<Schema>>({
   firstName: "",
   lastName: "",
   email: "",
@@ -29,49 +30,60 @@ const signupState = reactive<Partial<SignupSchema>>({
   confirmPassword: "",
 });
 
-const signupForm = ref();
-const isLoading = ref(false);
+const loading = ref(false);
 
-async function onSubmit() {
-  const valid = await signupForm.value?.validate();
-  if (!valid) return;
-
-  isLoading.value = true;
-
+async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    toast.add({
-      title: "Account created!",
-      description: "Please log in with your new account.",
-      color: "success",
-      icon: "i-lucide-check-circle",
+    loading.value = true;
+
+    const { data } = event;
+
+    const res = await useApi("/api/auth/signup", {
+      method: "POST",
+      body: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+      },
     });
 
-    emit("success", signupState.email || "");
-  } catch (error: any) {
+    if (res.status.code === ApiResponseCode.Success) {
+      toast.add({
+        title: "Account created!",
+        description: "Please log in with your new account.",
+        color: "success",
+        icon: "i-lucide-check-circle",
+      });
+
+      emit("success", data.email);
+    } else {
+      toast.add({
+        title: "Signup failed",
+        description: res.status.message || "Please try again.",
+        color: "error",
+        icon: "i-lucide-alert-circle",
+      });
+    }
+  } catch {
     toast.add({
       title: "Signup failed",
-      description: error.data?.message || "Please try again.",
+      description: "Please try again.",
       color: "error",
       icon: "i-lucide-alert-circle",
     });
   } finally {
-    isLoading.value = false;
+    loading.value = false;
   }
 }
 </script>
 
 <template>
-  <UForm
-    ref="signupForm"
-    :schema="signupSchema"
-    :state="signupState"
-    class="space-y-6"
-    @submit="onSubmit"
-  >
+  <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
     <div class="flex gap-6">
       <UFormField name="firstName" label="First name" required class="flex-1">
         <UInput
-          v-model="signupState.firstName"
+          v-model="state.firstName"
           icon="i-lucide-user"
           placeholder="John"
           autocomplete="given-name"
@@ -82,7 +94,7 @@ async function onSubmit() {
 
       <UFormField name="lastName" label="Last name" required class="flex-1">
         <UInput
-          v-model="signupState.lastName"
+          v-model="state.lastName"
           placeholder="Doe"
           autocomplete="family-name"
           size="xl"
@@ -93,7 +105,7 @@ async function onSubmit() {
 
     <UFormField name="email" label="Email" required>
       <UInput
-        v-model="signupState.email"
+        v-model="state.email"
         type="email"
         icon="i-lucide-mail"
         placeholder="you@example.com"
@@ -105,7 +117,7 @@ async function onSubmit() {
 
     <UFormField name="password" label="Password" required>
       <UInput
-        v-model="signupState.password"
+        v-model="state.password"
         type="password"
         placeholder="••••••••"
         icon="i-lucide-lock"
@@ -117,7 +129,7 @@ async function onSubmit() {
 
     <UFormField name="confirmPassword" label="Confirm password" required>
       <UInput
-        v-model="signupState.confirmPassword"
+        v-model="state.confirmPassword"
         type="password"
         placeholder="••••••••"
         icon="i-lucide:lock"
@@ -131,6 +143,6 @@ async function onSubmit() {
       <UCheckbox label="I agree to the Terms of Service and Privacy Policy" required />
     </UFormField>
 
-    <UButton type="submit" label="Create account" :loading="isLoading" block size="xl" />
+    <UButton type="submit" label="Create account" :loading="loading" block size="xl" />
   </UForm>
 </template>

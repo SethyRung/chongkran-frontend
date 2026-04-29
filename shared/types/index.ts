@@ -45,8 +45,6 @@ export interface User {
   role: "admin" | "author" | "user";
   avatar?: string;
   bio?: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Author {

@@ -1,71 +1,76 @@
 <script setup lang="ts">
+import type { FormSubmitEvent } from "@nuxt/ui";
 import { z } from "zod";
 
 const toast = useToast();
 
-const loginSchema = z.object({
+const schema = z.object({
   email: z.email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-type LoginSchema = z.output<typeof loginSchema>;
+type Schema = z.output<typeof schema>;
 
-const loginState = reactive<Partial<LoginSchema>>({
+const state = reactive<Partial<Schema>>({
   email: "",
   password: "",
 });
 
-const loginForm = ref();
-const isLoading = ref(false);
+const loading = ref(false);
+const user = useUser();
 
-async function onSubmit() {
-  const valid = await loginForm.value?.validate();
-  if (!valid) return;
-
-  isLoading.value = true;
-
+async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    toast.add({
-      title: "Welcome back!",
-      description: "You have been logged in successfully.",
-      color: "success",
-      icon: "i-lucide-check-circle",
+    loading.value = true;
+
+    const { data } = event;
+
+    const res = await useApi("/api/auth/login", {
+      method: "POST",
+      body: { email: data.email, password: data.password },
     });
 
-    await navigateTo("/");
-  } catch (error: any) {
+    if (res.status.code === ApiResponseCode.Success) {
+      const res = await useApi("/api/auth/me");
+
+      if (res.status.code === ApiResponseCode.Success) {
+        user.value = res.data;
+      }
+
+      toast.add({
+        title: "Welcome back!",
+        description: "You have been logged in successfully.",
+        color: "success",
+        icon: "i-lucide-check-circle",
+      });
+
+      await navigateTo("/");
+    } else {
+      toast.add({
+        title: "Login failed",
+        description: res.status.message || "Please check your credentials.",
+        color: "error",
+        icon: "i-lucide-alert-circle",
+      });
+    }
+  } catch {
     toast.add({
       title: "Login failed",
-      description: error.data?.message || "Please check your credentials.",
+      description: "Please check your credentials.",
       color: "error",
       icon: "i-lucide-alert-circle",
     });
   } finally {
-    isLoading.value = false;
+    loading.value = false;
   }
 }
-
-function setEmail(email: string) {
-  loginState.email = email;
-  loginState.password = "";
-}
-
-defineExpose({
-  setEmail,
-});
 </script>
 
 <template>
-  <UForm
-    ref="loginForm"
-    :schema="loginSchema"
-    :state="loginState"
-    class="space-y-6"
-    @submit="onSubmit"
-  >
+  <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
     <UFormField name="email" label="Email" required>
       <UInput
-        v-model="loginState.email"
+        v-model="state.email"
         type="email"
         placeholder="you@example.com"
         icon="i-lucide-mail"
@@ -77,7 +82,7 @@ defineExpose({
 
     <UFormField name="password" label="Password" required>
       <UInput
-        v-model="loginState.password"
+        v-model="state.password"
         type="password"
         placeholder="••••••••"
         icon="i-lucide-lock"
@@ -92,7 +97,7 @@ defineExpose({
       <ULink to="/auth" variant="soft" color="neutral"> Forgot password? </ULink>
     </div>
 
-    <UButton label="Sign in" type="submit" :loading="isLoading" block size="xl" />
+    <UButton label="Sign in" type="submit" :loading="loading" block size="xl" />
 
     <USeparator label="OR" />
 

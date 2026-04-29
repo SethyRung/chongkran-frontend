@@ -4,16 +4,14 @@ definePageMeta({
 });
 
 const tabs = [
-  { label: "Login", value: "login" },
-  { label: "Sign up", value: "signup" },
+  { label: "Login", value: "login" as const, slot: "login" as const },
+  { label: "Sign up", value: "signup" as const, slot: "signup" as const },
 ];
 
-const mode = ref<"login" | "signup">("login");
-const loginFormRef = ref();
+const mode = ref<(typeof tabs)[number]["value"]>("login");
 
-function onSignupSuccess(email: string) {
+function onSignupSuccess() {
   mode.value = "login";
-  loginFormRef.value?.setEmail(email);
 }
 
 defineShortcuts({
@@ -53,10 +51,11 @@ defineShortcuts({
             content: 'pt-6',
           }"
         >
-          <template #content>
-            <AuthLoginForm v-if="mode === 'login'" ref="loginFormRef" />
-
-            <AuthSignupForm v-else @success="onSignupSuccess" />
+          <template #login>
+            <AuthLoginForm />
+          </template>
+          <template #signup>
+            <AuthSignupForm @success="onSignupSuccess" />
           </template>
         </UTabs>
       </UCard>

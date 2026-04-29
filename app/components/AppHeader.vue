@@ -2,6 +2,7 @@
 import type { NavigationMenuItem } from "@nuxt/ui";
 
 const route = useRoute();
+const user = useUser();
 
 function isActive(to: string) {
   if (to === "/") return route.path === "/";
@@ -13,6 +14,23 @@ const navigation = computed<NavigationMenuItem[]>(() => [
   { label: "Recipes", active: isActive("/recipes"), to: "/recipes" },
   { label: "Categories", active: isActive("/categories"), to: "/categories" },
 ]);
+
+const userMenuItems = computed(() => [
+  { label: "Profile", icon: "i-lucide:user", to: "/profile" },
+  {
+    label: "Logout",
+    icon: "i-lucide:log-out",
+    onSelect: logout,
+  },
+]);
+
+async function logout() {
+  const res = await useApi("/api/auth/logout");
+  if (res.status.code === ApiResponseCode.Success) {
+    user.value = null;
+    await navigateTo("/auth");
+  }
+}
 </script>
 
 <template>
@@ -35,7 +53,31 @@ const navigation = computed<NavigationMenuItem[]>(() => [
       <div class="flex items-center gap-3">
         <UButton icon="i-lucide:search" color="neutral" variant="ghost" />
         <UColorModeButton />
-        <UButton to="/auth">Login</UButton>
+
+        <UDropdownMenu v-if="user" :items="userMenuItems">
+          <UButton
+            trailing-icon="i-lucide:chevron-down"
+            color="neutral"
+            variant="ghost"
+            :ui="{
+              trailingIcon: 'hidden md:block',
+            }"
+          >
+            <UUser
+              :name="`${user.firstName} ${user.lastName}`"
+              :avatar="{
+                src: user.avatar,
+                loading: 'lazy',
+              }"
+              :ui="{
+                root: 'cursor-pointer',
+                wrapper: 'hidden md:block',
+              }"
+            />
+          </UButton>
+        </UDropdownMenu>
+
+        <UButton v-else to="/auth">Login</UButton>
       </div>
     </template>
 
