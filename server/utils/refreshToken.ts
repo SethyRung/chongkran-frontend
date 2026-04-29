@@ -19,8 +19,6 @@ export async function refreshToken(event: H3Event) {
       body: { refreshToken },
     });
 
-    console.info("Refresh response: ", res);
-
     if (res.status.code === ApiResponseCode.Success && res.data) {
       const isProduction = !import.meta.dev;
 
@@ -39,6 +37,9 @@ export async function refreshToken(event: H3Event) {
         path: "/",
         maxAge: expiresInToSeconds(config.jwt.refresh.expiresIn),
       });
+    } else {
+      deleteCookie(event, CookieName.AccessToken);
+      deleteCookie(event, CookieName.RefreshToken);
     }
 
     return res;
