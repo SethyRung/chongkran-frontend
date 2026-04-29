@@ -1,9 +1,7 @@
-const PUBLIC_ROUTES = ["/", "/auth", "/recipes", "/categories"];
+const PUBLIC_ROUTES = ["/auth", "/recipes", "/categories"];
 
 export default defineNuxtRouteMiddleware((to) => {
-  if (
-    PUBLIC_ROUTES.some((route) => (route === "/" && route === to.path) || to.path.startsWith(route))
-  ) {
+  if (PUBLIC_ROUTES.some((route) => to.path === "/" || to.path.startsWith(route))) {
     return;
   }
 
