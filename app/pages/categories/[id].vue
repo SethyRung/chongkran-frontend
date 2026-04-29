@@ -25,7 +25,7 @@ const sortOptions = [
 const selectedSort = ref((route.query.sort as string) || "newest");
 
 const category = ref<Category | null>({
-  _id: categoryId,
+  id: categoryId,
   name: "Pasta",
   description:
     "Italian pasta dishes from classic spaghetti to creative modern recipes. Explore traditional recipes from various regions of Italy as well as modern fusion dishes.",
@@ -88,13 +88,13 @@ const categoryInfo = computed(() => categoriesWithNames[categoryId] || categorie
 
 const allRecipes = ref<Recipe[]>([
   {
-    _id: "1",
+    id: "1",
     title: "Classic Spaghetti Carbonara",
     description: "A traditional Italian pasta dish made with eggs, cheese, pancetta, and pepper.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a1",
+      id: "a1",
       firstName: "Marco",
       lastName: "Rossi",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marco",
@@ -102,22 +102,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Italian", "Pasta"],
     image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600",
     cookTime: 30,
-    likes: ["u1", "u2", "u3"],
+    likes: 3,
     views: 1250,
     difficulty: "medium",
     status: "approved",
-    category: { _id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
+    category: { id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-15",
     updatedAt: "2024-01-15",
   },
   {
-    _id: "7",
+    id: "7",
     title: "Creamy Fettuccine Alfredo",
     description: "Rich and creamy pasta with parmesan cheese and butter.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a1",
+      id: "a1",
       firstName: "Marco",
       lastName: "Rossi",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marco",
@@ -125,22 +125,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Italian", "Creamy"],
     image: "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=600",
     cookTime: 25,
-    likes: ["u1", "u2"],
+    likes: 2,
     views: 980,
     difficulty: "easy",
     status: "approved",
-    category: { _id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
+    category: { id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-10",
     updatedAt: "2024-01-10",
   },
   {
-    _id: "8",
+    id: "8",
     title: "Penne Arrabbiata",
     description: "Spicy pasta with garlic, tomatoes, and red chili peppers.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a5",
+      id: "a5",
       firstName: "Giulia",
       lastName: "Bianchi",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Giulia",
@@ -148,22 +148,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Italian", "Spicy"],
     image: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600",
     cookTime: 20,
-    likes: ["u1", "u3", "u4"],
+    likes: 3,
     views: 1450,
     difficulty: "easy",
     status: "approved",
-    category: { _id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
+    category: { id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-20",
     updatedAt: "2024-01-20",
   },
   {
-    _id: "9",
+    id: "9",
     title: "Lasagna Bolognese",
     description: "Layered pasta with rich meat ragù, béchamel, and parmesan.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a1",
+      id: "a1",
       firstName: "Marco",
       lastName: "Rossi",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marco",
@@ -171,22 +171,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Italian", "Bake"],
     image: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?w=600",
     cookTime: 90,
-    likes: ["u1", "u2", "u3", "u4", "u5", "u6", "u7"],
+    likes: 7,
     views: 2800,
     difficulty: "hard",
     status: "approved",
-    category: { _id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
+    category: { id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-05",
     updatedAt: "2024-01-05",
   },
   {
-    _id: "10",
+    id: "10",
     title: "Gnocchi with Pesto",
     description: "Soft potato dumplings with fresh basil pesto and pine nuts.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a5",
+      id: "a5",
       firstName: "Giulia",
       lastName: "Bianchi",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Giulia",
@@ -194,22 +194,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Italian", "Vegetarian"],
     image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600",
     cookTime: 35,
-    likes: ["u1", "u2", "u3"],
+    likes: 3,
     views: 1100,
     difficulty: "medium",
     status: "approved",
-    category: { _id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
+    category: { id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-25",
     updatedAt: "2024-01-25",
   },
   {
-    _id: "11",
+    id: "11",
     title: "Ravioli with Ricotta and Spinach",
     description: "Handmade pasta filled with ricotta cheese and fresh spinach.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a6",
+      id: "a6",
       firstName: "Elena",
       lastName: "Romano",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Elena",
@@ -217,11 +217,11 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Italian", "Handmade"],
     image: "https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=600",
     cookTime: 60,
-    likes: ["u1", "u2", "u3", "u4", "u5"],
+    likes: 5,
     views: 1650,
     difficulty: "hard",
     status: "approved",
-    category: { _id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
+    category: { id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-18",
     updatedAt: "2024-01-18",
   },
@@ -252,7 +252,7 @@ const filteredRecipes = computed(() => {
       recipes.sort((a, b) => b.views - a.views);
       break;
     case "liked":
-      recipes.sort((a, b) => b.likes.length - a.likes.length);
+      recipes.sort((a, b) => (b.likes || 0) - (a.likes || 0));
       break;
   }
 
@@ -373,7 +373,7 @@ watch(currentPage, updateFilters);
         v-if="paginatedRecipes.length > 0"
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        <RecipeCard v-for="recipe in paginatedRecipes" :key="recipe._id" :recipe="recipe" />
+        <RecipeCard v-for="recipe in paginatedRecipes" :key="recipe.id" :recipe="recipe" />
       </div>
 
       <div v-else class="text-center py-16">

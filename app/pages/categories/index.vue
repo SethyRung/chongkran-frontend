@@ -1,56 +1,56 @@
 <script lang="ts" setup>
 const categories = ref<Category[]>([
   {
-    _id: "c1",
+    id: "c1",
     name: "Pasta",
     description: "Italian pasta dishes from classic spaghetti to creative modern recipes",
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
   },
   {
-    _id: "c2",
+    id: "c2",
     name: "Asian",
     description: "Flavors from across Asia including Thai, Chinese, Japanese, and Khmer cuisine",
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
   },
   {
-    _id: "c3",
+    id: "c3",
     name: "American",
     description: "Classic American comfort food and modern favorites",
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
   },
   {
-    _id: "c4",
+    id: "c4",
     name: "Indian",
     description: "Rich and aromatic Indian curries, biryanis, and traditional dishes",
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
   },
   {
-    _id: "c5",
+    id: "c5",
     name: "Desserts",
     description: "Sweet treats from cakes and cookies to puddings and pastries",
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
   },
   {
-    _id: "c6",
+    id: "c6",
     name: "Healthy",
     description: "Nutritious recipes for a balanced lifestyle without sacrificing flavor",
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
   },
   {
-    _id: "c7",
+    id: "c7",
     name: "Quick & Easy",
     description: "Simple recipes ready in 30 minutes or less for busy days",
     createdAt: "2024-01-01",
     updatedAt: "2024-01-01",
   },
   {
-    _id: "c8",
+    id: "c8",
     name: "Vegetarian",
     description: "Plant-based recipes full of flavor and creativity",
     createdAt: "2024-01-01",
@@ -92,8 +92,8 @@ const categoryStats: Record<string, { recipes: number; authors: number }> = {
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <NuxtLink
           v-for="category in categories"
-          :key="category._id"
-          :to="`/categories/${category._id}`"
+          :key="category.id"
+          :to="`/categories/${category.id}`"
           class="group h-full"
         >
           <UCard
@@ -105,7 +105,7 @@ const categoryStats: Record<string, { recipes: number; authors: number }> = {
             <div class="relative aspect-4/3 overflow-hidden rounded-t-lg">
               <img
                 :src="
-                  categoryImages[category._id] ||
+                  categoryImages[category.id] ||
                   'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600'
                 "
                 :alt="category.name"
@@ -123,11 +123,11 @@ const categoryStats: Record<string, { recipes: number; authors: number }> = {
                 <div class="flex items-center gap-3 text-sm text-white/80">
                   <span class="flex items-center gap-1">
                     <UIcon name="i-lucide-book-open" class="size-3.5" />
-                    {{ categoryStats[category._id]?.recipes || 0 }} recipes
+                    {{ categoryStats[category.id]?.recipes || 0 }} recipes
                   </span>
                   <span class="flex items-center gap-1">
                     <UIcon name="i-lucide-users" class="size-3.5" />
-                    {{ categoryStats[category._id]?.authors || 0 }} authors
+                    {{ categoryStats[category.id]?.authors || 0 }} authors
                   </span>
                 </div>
               </div>

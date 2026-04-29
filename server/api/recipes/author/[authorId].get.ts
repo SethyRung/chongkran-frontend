@@ -3,7 +3,7 @@ import type { RecipeResponse } from "#server/types";
 export default defineEventHandler(async (event) => {
   const authorId = getRouterParam(event, "authorId");
   const query = getQuery(event);
-  const page = Number(query.page) || 1;
+  const offset = Number(query.offset) || 0;
   const limit = Number(query.limit) || 10;
 
   if (!authorId) {
@@ -17,6 +17,6 @@ export default defineEventHandler(async (event) => {
   }
 
   return proxy<RecipeResponse[]>(event, `/recipes/author/${authorId}`, {
-    query: { page, limit },
+    query: { offset, limit },
   });
 });

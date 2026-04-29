@@ -3,7 +3,7 @@ const route = useRoute();
 const recipeId = route.params.id as string;
 
 const recipe = ref<Recipe>({
-  _id: recipeId,
+  id: recipeId,
   title: "Classic Spaghetti Carbonara",
   description:
     "A traditional Italian pasta dish made with eggs, cheese, pancetta, and pepper. This Roman classic is rich, creamy, and absolutely delicious. Perfect for a weeknight dinner or special occasion.",
@@ -26,7 +26,7 @@ const recipe = ref<Recipe>({
     "Serve immediately with extra cheese and black pepper on top.",
   ],
   author: {
-    _id: "a1",
+    id: "a1",
     firstName: "Marco",
     lastName: "Rossi",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marco",
@@ -37,12 +37,12 @@ const recipe = ref<Recipe>({
   tags: ["Italian", "Pasta", "Quick", "Classic", "Roman"],
   image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=1200",
   cookTime: 30,
-  likes: ["u1", "u2", "u3", "u4", "u5"],
+  likes: 0,
   views: 1250,
   difficulty: "medium",
   status: "approved",
   category: {
-    _id: "c1",
+    id: "c1",
     name: "Pasta",
     description: "Italian pasta dishes",
     createdAt: "",
@@ -126,7 +126,7 @@ function shareRecipe() {
           </span>
           <span class="flex items-center gap-1">
             <UIcon name="i-heroicons-heart" class="size-5" />
-            {{ recipe.likes.length }} likes
+            {{ recipe.likes || 0 }} likes
           </span>
           <span class="flex items-center gap-1">
             <UIcon name="i-heroicons-eye" class="size-5" />
@@ -250,7 +250,7 @@ function shareRecipe() {
                 <dt class="text-muted">Category</dt>
                 <dd>
                   <NuxtLink
-                    :to="`/recipes?category=${category._id}`"
+                    :to="`/recipes?category=${category.id}`"
                     class="text-primary hover:underline"
                   >
                     {{ category.name }}

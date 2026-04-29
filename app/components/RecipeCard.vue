@@ -1,6 +1,6 @@
 <script lang="ts">
 interface RecipeCardProps {
-  recipe: Recipe | RecipeWithAuthor;
+  recipe: Recipe;
 }
 </script>
 <script setup lang="ts">
@@ -9,7 +9,7 @@ const props = defineProps<RecipeCardProps>();
 const router = useRouter();
 
 function navigateToRecipe() {
-  router.push(`/recipes/${props.recipe._id}`);
+  router.push(`/recipes/${props.recipe.id}`);
 }
 
 const authorName = computed(() => {
@@ -82,11 +82,11 @@ const formatCookTime = (minutes: number) => {
       </UBadge>
 
       <div
-        v-if="recipe.likes.length > 0"
+        v-if="recipe.likes && recipe.likes > 0"
         class="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 text-xs text-white backdrop-blur-sm"
       >
         <UIcon name="i-lucide-heart" class="size-3 fill-current" />
-        <span>{{ recipe.likes.length }}</span>
+        <span>{{ recipe.likes }}</span>
       </div>
     </div>
 

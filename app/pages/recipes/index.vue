@@ -8,12 +8,12 @@ const selectedDifficulty = ref((route.query.difficulty as string) || "");
 const currentPage = ref(Number(route.query.page) || 1);
 
 const categories = ref<Category[]>([
-  { _id: "all", name: "All Categories", createdAt: "", updatedAt: "" },
-  { _id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
-  { _id: "c2", name: "Asian", createdAt: "", updatedAt: "" },
-  { _id: "c3", name: "American", createdAt: "", updatedAt: "" },
-  { _id: "c4", name: "Indian", createdAt: "", updatedAt: "" },
-  { _id: "c5", name: "Desserts", createdAt: "", updatedAt: "" },
+  { id: "all", name: "All Categories", createdAt: "", updatedAt: "" },
+  { id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
+  { id: "c2", name: "Asian", createdAt: "", updatedAt: "" },
+  { id: "c3", name: "American", createdAt: "", updatedAt: "" },
+  { id: "c4", name: "Indian", createdAt: "", updatedAt: "" },
+  { id: "c5", name: "Desserts", createdAt: "", updatedAt: "" },
 ]);
 
 const difficultyOptions = [
@@ -25,13 +25,13 @@ const difficultyOptions = [
 
 const allRecipes = ref<Recipe[]>([
   {
-    _id: "1",
+    id: "1",
     title: "Classic Spaghetti Carbonara",
     description: "A traditional Italian pasta dish made with eggs, cheese, pancetta, and pepper.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a1",
+      id: "a1",
       firstName: "Marco",
       lastName: "Rossi",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marco",
@@ -39,22 +39,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Italian", "Pasta"],
     image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600",
     cookTime: 30,
-    likes: ["u1", "u2", "u3"],
+    likes: 3,
     views: 1250,
     difficulty: "medium",
     status: "approved",
-    category: { _id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
+    category: { id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-15",
     updatedAt: "2024-01-15",
   },
   {
-    _id: "2",
+    id: "2",
     title: "Khmer Green Curry",
     description: "Aromatic and creamy Khmer curry with vegetables and your choice of protein.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a2",
+      id: "a2",
       firstName: "Suki",
       lastName: "Tanaka",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Suki",
@@ -62,22 +62,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Khmer", "Curry"],
     image: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600",
     cookTime: 45,
-    likes: ["u1", "u4"],
+    likes: 2,
     views: 890,
     difficulty: "medium",
     status: "approved",
-    category: { _id: "c2", name: "Asian", createdAt: "", updatedAt: "" },
+    category: { id: "c2", name: "Asian", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-10",
     updatedAt: "2024-01-10",
   },
   {
-    _id: "3",
+    id: "3",
     title: "Classic Beef Burger",
     description: "Juicy homemade beef burger with all the classic toppings.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a3",
+      id: "a3",
       firstName: "John",
       lastName: "Smith",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
@@ -85,22 +85,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["American", "Grill"],
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600",
     cookTime: 25,
-    likes: ["u2", "u3", "u4", "u5"],
+    likes: 4,
     views: 2100,
     difficulty: "easy",
     status: "approved",
-    category: { _id: "c3", name: "American", createdAt: "", updatedAt: "" },
+    category: { id: "c3", name: "American", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-20",
     updatedAt: "2024-01-20",
   },
   {
-    _id: "4",
+    id: "4",
     title: "Chicken Tikka Masala",
     description: "Creamy tomato-based curry with tender pieces of marinated chicken.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a4",
+      id: "a4",
       firstName: "Priya",
       lastName: "Patel",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya",
@@ -108,22 +108,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Indian", "Curry"],
     image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600",
     cookTime: 60,
-    likes: ["u1", "u2", "u3", "u4", "u5", "u6"],
+    likes: 6,
     views: 3200,
     difficulty: "hard",
     status: "approved",
-    category: { _id: "c4", name: "Indian", createdAt: "", updatedAt: "" },
+    category: { id: "c4", name: "Indian", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-18",
     updatedAt: "2024-01-18",
   },
   {
-    _id: "5",
+    id: "5",
     title: "Chocolate Lava Cake",
     description: "Decadent chocolate cake with a molten center that oozes when cut.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a1",
+      id: "a1",
       firstName: "Marco",
       lastName: "Rossi",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marco",
@@ -131,22 +131,22 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Dessert", "Chocolate"],
     image: "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600",
     cookTime: 20,
-    likes: ["u1", "u2"],
+    likes: 2,
     views: 1500,
     difficulty: "medium",
     status: "approved",
-    category: { _id: "c5", name: "Desserts", createdAt: "", updatedAt: "" },
+    category: { id: "c5", name: "Desserts", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-22",
     updatedAt: "2024-01-22",
   },
   {
-    _id: "6",
+    id: "6",
     title: "Pad Khmer",
     description: "Classic Khmer stir-fried rice noodles with shrimp, tofu, and peanuts.",
     ingredients: [],
     steps: [],
     author: {
-      _id: "a2",
+      id: "a2",
       firstName: "Suki",
       lastName: "Tanaka",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Suki",
@@ -154,11 +154,11 @@ const allRecipes = ref<Recipe[]>([
     tags: ["Khmer", "Noodles"],
     image: "https://images.unsplash.com/photo-1559314809-0d155014e29e?w=600",
     cookTime: 35,
-    likes: ["u3", "u4", "u5"],
+    likes: 3,
     views: 1800,
     difficulty: "medium",
     status: "approved",
-    category: { _id: "c2", name: "Asian", createdAt: "", updatedAt: "" },
+    category: { id: "c2", name: "Asian", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-12",
     updatedAt: "2024-01-12",
   },
@@ -177,7 +177,7 @@ const filteredRecipes = computed(() => {
   if (selectedCategory.value) {
     recipes = recipes.filter((r) => {
       const cat = r.category as Category;
-      return cat._id === selectedCategory.value;
+      return cat.id === selectedCategory.value;
     });
   }
 
@@ -271,7 +271,7 @@ watch(currentPage, updateFilters);
         v-if="paginatedRecipes.length > 0"
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        <RecipeCard v-for="recipe in paginatedRecipes" :key="recipe._id" :recipe="recipe" />
+        <RecipeCard v-for="recipe in paginatedRecipes" :key="recipe.id" :recipe="recipe" />
       </div>
 
       <div v-else class="text-center py-16">

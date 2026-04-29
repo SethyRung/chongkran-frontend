@@ -10,7 +10,7 @@ const categoryIcons = {
 
 const featuredRecipes = ref<Recipe[]>([
   {
-    _id: "1",
+    id: "1",
     title: "Classic Spaghetti Carbonara",
     description: "A traditional Italian pasta dish made with eggs, cheese, pancetta, and pepper.",
     ingredients: [
@@ -20,7 +20,7 @@ const featuredRecipes = ref<Recipe[]>([
     ],
     steps: ["Cook pasta", "Prepare sauce", "Combine"],
     author: {
-      _id: "a1",
+      id: "a1",
       firstName: "Marco",
       lastName: "Rossi",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marco",
@@ -28,16 +28,16 @@ const featuredRecipes = ref<Recipe[]>([
     tags: ["Italian", "Pasta", "Quick"],
     image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600",
     cookTime: 30,
-    likes: ["u1", "u2", "u3"],
+    likes: 3,
     views: 1250,
     difficulty: "medium",
     status: "approved",
-    category: { _id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
+    category: { id: "c1", name: "Pasta", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-15",
     updatedAt: "2024-01-15",
   },
   {
-    _id: "2",
+    id: "2",
     title: "Khmer Green Curry",
     description: "Aromatic and creamy Khmer curry with vegetables and your choice of protein.",
     ingredients: [
@@ -46,7 +46,7 @@ const featuredRecipes = ref<Recipe[]>([
     ],
     steps: ["Prepare curry paste", "Cook protein", "Add vegetables"],
     author: {
-      _id: "a2",
+      id: "a2",
       firstName: "Suki",
       lastName: "Tanaka",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Suki",
@@ -54,16 +54,16 @@ const featuredRecipes = ref<Recipe[]>([
     tags: ["Khmer", "Curry", "Spicy"],
     image: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600",
     cookTime: 45,
-    likes: ["u1", "u4"],
+    likes: 2,
     views: 890,
     difficulty: "medium",
     status: "approved",
-    category: { _id: "c2", name: "Asian", createdAt: "", updatedAt: "" },
+    category: { id: "c2", name: "Asian", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-10",
     updatedAt: "2024-01-10",
   },
   {
-    _id: "3",
+    id: "3",
     title: "Classic Beef Burger",
     description: "Juicy homemade beef burger with all the classic toppings.",
     ingredients: [
@@ -72,7 +72,7 @@ const featuredRecipes = ref<Recipe[]>([
     ],
     steps: ["Form patties", "Grill burgers", "Assemble"],
     author: {
-      _id: "a3",
+      id: "a3",
       firstName: "John",
       lastName: "Smith",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
@@ -80,16 +80,16 @@ const featuredRecipes = ref<Recipe[]>([
     tags: ["American", "Grill", "Comfort Food"],
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600",
     cookTime: 25,
-    likes: ["u2", "u3", "u4", "u5"],
+    likes: 4,
     views: 2100,
     difficulty: "easy",
     status: "approved",
-    category: { _id: "c3", name: "American", createdAt: "", updatedAt: "" },
+    category: { id: "c3", name: "American", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-20",
     updatedAt: "2024-01-20",
   },
   {
-    _id: "4",
+    id: "4",
     title: "Chicken Tikka Masala",
     description: "Creamy tomato-based curry with tender pieces of marinated chicken.",
     ingredients: [
@@ -98,7 +98,7 @@ const featuredRecipes = ref<Recipe[]>([
     ],
     steps: ["Marinate chicken", "Grill chicken", "Prepare sauce"],
     author: {
-      _id: "a4",
+      id: "a4",
       firstName: "Priya",
       lastName: "Patel",
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya",
@@ -106,23 +106,23 @@ const featuredRecipes = ref<Recipe[]>([
     tags: ["Indian", "Curry", "Popular"],
     image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600",
     cookTime: 60,
-    likes: ["u1", "u2", "u3", "u4", "u5", "u6"],
+    likes: 6,
     views: 3200,
     difficulty: "hard",
     status: "approved",
-    category: { _id: "c4", name: "Indian", createdAt: "", updatedAt: "" },
+    category: { id: "c4", name: "Indian", createdAt: "", updatedAt: "" },
     createdAt: "2024-01-18",
     updatedAt: "2024-01-18",
   },
 ]);
 
 const categories = ref<Category[]>([
-  { _id: "c1", name: "Pasta", description: "Italian pasta dishes", createdAt: "", updatedAt: "" },
-  { _id: "c2", name: "Asian", description: "Asian cuisine", createdAt: "", updatedAt: "" },
-  { _id: "c3", name: "American", description: "American classics", createdAt: "", updatedAt: "" },
-  { _id: "c4", name: "Indian", description: "Indian dishes", createdAt: "", updatedAt: "" },
-  { _id: "c5", name: "Desserts", description: "Sweet treats", createdAt: "", updatedAt: "" },
-  { _id: "c6", name: "Salads", description: "Fresh and healthy", createdAt: "", updatedAt: "" },
+  { id: "c1", name: "Pasta", description: "Italian pasta dishes", createdAt: "", updatedAt: "" },
+  { id: "c2", name: "Asian", description: "Asian cuisine", createdAt: "", updatedAt: "" },
+  { id: "c3", name: "American", description: "American classics", createdAt: "", updatedAt: "" },
+  { id: "c4", name: "Indian", description: "Indian dishes", createdAt: "", updatedAt: "" },
+  { id: "c5", name: "Desserts", description: "Sweet treats", createdAt: "", updatedAt: "" },
+  { id: "c6", name: "Salads", description: "Fresh and healthy", createdAt: "", updatedAt: "" },
 ]);
 
 const stats = ref([
@@ -185,8 +185,8 @@ const stats = ref([
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <NuxtLink
           v-for="category in categories"
-          :key="category._id"
-          :to="`/recipes?category=${category._id}`"
+          :key="category.id"
+          :to="`/recipes?category=${category.id}`"
           class="size-full"
         >
           <UCard
@@ -230,7 +230,7 @@ const stats = ref([
       ]"
     >
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <RecipeCard v-for="recipe in featuredRecipes" :key="recipe._id" :recipe="recipe" />
+        <RecipeCard v-for="recipe in featuredRecipes" :key="recipe.id" :recipe="recipe" />
       </div>
     </UPageSection>
 

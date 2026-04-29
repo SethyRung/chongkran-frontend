@@ -25,6 +25,7 @@ logs
 
 AGENTS.md
 opencode.json
+.opencode
 .github
 .claude
 CLAUDE.md

@@ -26,6 +26,11 @@ export interface PaginationMeta {
   offset: number;
 }
 
+export interface PaginationQuery {
+  offset: number;
+  limit: number;
+}
+
 export enum CookieName {
   AccessToken = "access_token",
   RefreshToken = "refresh_token",
@@ -45,6 +50,14 @@ export interface User {
   role: "admin" | "author" | "user";
   avatar?: string;
   bio?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  expertise?: string[];
+  followersCount?: number;
+  followingCount?: number;
+  recipesCount?: number;
+  totalViews?: number;
+  totalLikes?: number;
 }
 
 export interface Author {
@@ -53,8 +66,9 @@ export interface Author {
   lastName: string;
   avatar?: string;
   bio?: string;
-  recipesCount?: number;
+  expertise?: string[];
   followersCount?: number;
+  recipesCount?: number;
 }
 
 export interface Ingredient {
@@ -65,17 +79,17 @@ export interface Ingredient {
 export interface Recipe {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   ingredients: Ingredient[];
   steps: string[];
   author: string | Author;
   tags: string[];
   image: string;
   cookTime: number;
-  likes: string[];
-  views: number;
+  likes?: number;
+  views?: number;
   difficulty: "easy" | "medium" | "hard";
-  status: "pending" | "approved" | "rejected";
+  status?: "pending" | "approved" | "rejected";
   category: string | Category;
   createdAt: string;
   updatedAt: string;
@@ -96,10 +110,62 @@ export interface Category {
 
 export interface Review {
   id: string;
-  user: string | User;
-  recipe: string;
+  recipeId: string;
+  userId: string;
   rating: number;
   comment: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Favorite {
+  id: string;
+  recipeId: string;
+  userId: string;
+  createdAt: string;
+}
+
+export interface FollowStats {
+  followersCount: number;
+  followingCount: number;
+}
+
+export interface MealPlanRecipeEntry {
+  recipeId: string;
+  day: string;
+  mealType: string;
+}
+
+export interface MealPlan {
+  id: string;
+  userId: string;
+  title: string;
+  recipes: MealPlanRecipeEntry[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ShoppingItem {
+  name: string;
+  quantity: string;
+  checked: boolean;
+}
+
+export interface ShoppingList {
+  id: string;
+  userId: string;
+  items: ShoppingItem[];
+  createdAt: string;
+}
+
+export interface AuthorRequest {
+  id: string;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatar?: string;
+  };
+  status: "pending" | "approved" | "rejected";
 }
