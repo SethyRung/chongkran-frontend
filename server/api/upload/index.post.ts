@@ -1,7 +1,7 @@
 import type { UploadResponse } from "#server/types";
 
 export default defineEventHandler(async (event) => {
-  const body = await readMultipartFormData(event);
+  const body = await readRawBody(event, false);
 
   if (!body) {
     return createResponse(
