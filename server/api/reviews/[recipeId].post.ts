@@ -1,4 +1,4 @@
-import type { CreateReviewDto, ReviewResponse } from "#server/types";
+import type { CreateReviewDto, RecipeResponse } from "#server/types";
 
 export default defineEventHandler(async (event) => {
   const recipeId = getRouterParam(event, "recipeId");
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody<CreateReviewDto>(event);
 
-  return proxy<ReviewResponse>(event, `/reviews/${recipeId}`, {
+  return proxy<RecipeResponse>(event, `/recipes/${recipeId}/reviews`, {
     method: "post",
     body,
   });

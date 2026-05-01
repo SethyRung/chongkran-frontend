@@ -1,3 +1,5 @@
+import type { ReviewResponse } from "./review";
+
 export type IngredientDto = {
   name: string;
   quantity: string;
@@ -10,6 +12,9 @@ export type RecipeResponse = {
   ingredients: IngredientDto[];
   steps: string[];
   author: string;
+  authorName?: string;
+  authorAvatar?: string;
+  authorBio?: string;
   tags: string[];
   image: string;
   cookTime: number;
@@ -18,6 +23,7 @@ export type RecipeResponse = {
   difficulty: "easy" | "medium" | "hard";
   status?: "pending" | "approved" | "rejected";
   category: string;
+  reviews?: ReviewResponse[];
   createdAt: string;
   updatedAt: string;
 };

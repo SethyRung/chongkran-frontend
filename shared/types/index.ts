@@ -58,6 +58,8 @@ export interface User {
   recipesCount?: number;
   totalViews?: number;
   totalLikes?: number;
+  favoriteRecipes?: string[];
+  authorRequestStatus?: "pending" | "approved" | "rejected";
 }
 
 export interface Author {
@@ -83,6 +85,9 @@ export interface Recipe {
   ingredients: Ingredient[];
   steps: string[];
   author: string | Author;
+  authorName?: string;
+  authorAvatar?: string;
+  authorBio?: string;
   tags: string[];
   image: string;
   cookTime: number;
@@ -91,6 +96,7 @@ export interface Recipe {
   difficulty: "easy" | "medium" | "hard";
   status?: "pending" | "approved" | "rejected";
   category: string | Category;
+  reviews?: Review[];
   createdAt: string;
   updatedAt: string;
 }
@@ -110,19 +116,13 @@ export interface Category {
 
 export interface Review {
   id: string;
-  recipeId: string;
   userId: string;
+  userName?: string;
+  userAvatar?: string;
   rating: number;
   comment: string;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface Favorite {
-  id: string;
-  recipeId: string;
-  userId: string;
-  createdAt: string;
 }
 
 export interface FollowStats {
@@ -156,16 +156,4 @@ export interface ShoppingList {
   userId: string;
   items: ShoppingItem[];
   createdAt: string;
-}
-
-export interface AuthorRequest {
-  id: string;
-  user: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    avatar?: string;
-  };
-  status: "pending" | "approved" | "rejected";
 }

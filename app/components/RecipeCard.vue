@@ -13,17 +13,11 @@ function navigateToRecipe() {
 }
 
 const authorName = computed(() => {
-  if (typeof props.recipe.author === "string") {
-    return "Unknown Author";
-  }
-  return `${props.recipe.author.firstName} ${props.recipe.author.lastName}`;
+  return props.recipe.authorName ?? "Unknown Author";
 });
 
 const authorAvatar = computed(() => {
-  if (typeof props.recipe.author === "string") {
-    return undefined;
-  }
-  return props.recipe.author.avatar;
+  return props.recipe.authorAvatar;
 });
 
 const categoryName = computed(() => {

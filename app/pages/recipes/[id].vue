@@ -1,62 +1,31 @@
 <script lang="ts" setup>
-const route = useRoute();
-const recipeId = route.params.id as string;
+import type { RecipeResponse } from "#server/types";
 
-const recipe = ref<Recipe>({
-  id: recipeId,
-  title: "Classic Spaghetti Carbonara",
-  description:
-    "A traditional Italian pasta dish made with eggs, cheese, pancetta, and pepper. This Roman classic is rich, creamy, and absolutely delicious. Perfect for a weeknight dinner or special occasion.",
-  ingredients: [
-    { name: "Spaghetti", quantity: "400g" },
-    { name: "Pancetta or Guanciale", quantity: "200g" },
-    { name: "Eggs", quantity: "4 large" },
-    { name: "Pecorino Romano cheese", quantity: "100g, finely grated" },
-    { name: "Parmesan cheese", quantity: "50g, finely grated" },
-    { name: "Black pepper", quantity: "2 tsp, freshly ground" },
-    { name: "Salt", quantity: "to taste" },
-  ],
-  steps: [
-    "Bring a large pot of salted water to a boil. Add the spaghetti and cook according to package directions until al dente. Reserve 1 cup of pasta water before draining.",
-    "While the pasta cooks, cut the pancetta into small cubes. Cook in a large skillet over medium heat until crispy, about 8-10 minutes. Remove from heat.",
-    "In a bowl, whisk together the eggs, egg yolks, grated Pecorino, and Parmesan. Season with plenty of black pepper.",
-    "Add the hot, drained pasta to the skillet with the pancetta. Toss to coat in the rendered fat.",
-    "Remove the pan from the heat completely. Pour the egg mixture over the pasta and toss vigorously. The residual heat will cook the eggs into a creamy sauce.",
-    "If the sauce is too thick, add a splash of the reserved pasta water to loosen it.",
-    "Serve immediately with extra cheese and black pepper on top.",
-  ],
-  author: {
-    id: "a1",
-    firstName: "Marco",
-    lastName: "Rossi",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marco",
-    bio: "Italian chef passionate about traditional Roman cuisine",
-    recipesCount: 25,
-    followersCount: 1200,
+const route = useRoute();
+const recipeId = computed(() => route.params.id as string);
+
+const { data: recipeRes } = await useFetchApi<ApiResponse<RecipeResponse>>(
+  `/api/recipes/${recipeId.value}`,
+  {
+    lazy: true,
   },
-  tags: ["Italian", "Pasta", "Quick", "Classic", "Roman"],
-  image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=1200",
-  cookTime: 30,
-  likes: 0,
-  views: 1250,
-  difficulty: "medium",
-  status: "approved",
-  category: {
-    id: "c1",
-    name: "Pasta",
-    description: "Italian pasta dishes",
-    createdAt: "",
-    updatedAt: "",
-  },
-  createdAt: "2024-01-15",
-  updatedAt: "2024-01-15",
+);
+
+const recipe = computed<Recipe | null>(() => {
+  if (recipeRes.value?.status.code === ApiResponseCode.Success) {
+    return recipeRes.value.data;
+  }
+  return null;
 });
 
-const author = computed(() => recipe.value.author as Author);
-const category = computed(() => recipe.value.category as Category);
+const category = computed(() => {
+  if (!recipe.value) return null;
+  if (typeof recipe.value.category === "string") return null;
+  return recipe.value.category;
+});
 
 const difficultyColor = computed(() => {
-  switch (recipe.value.difficulty) {
+  switch (recipe.value?.difficulty) {
     case "easy":
       return "success";
     case "medium":
@@ -69,6 +38,7 @@ const difficultyColor = computed(() => {
 });
 
 const formattedCookTime = computed(() => {
+  if (!recipe.value) return "";
   const time = recipe.value.cookTime;
   if (time < 60) return `${time} minutes`;
   const hours = Math.floor(time / 60);
@@ -79,6 +49,7 @@ const formattedCookTime = computed(() => {
 });
 
 const formattedDate = computed(() => {
+  if (!recipe.value) return "";
   return new Date(recipe.value.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -94,6 +65,7 @@ function toggleLike() {
 }
 
 function shareRecipe() {
+  if (!recipe.value) return;
   if (navigator.share) {
     void navigator.share({
       title: recipe.value.title,
@@ -109,7 +81,7 @@ function shareRecipe() {
 
 <template>
   <UPage class="pb-16">
-    <div class="relative h-64 md:h-96 w-full mb-8">
+    <div v-if="recipe" class="relative h-64 md:h-96 w-full mb-8">
       <img :src="recipe.image" :alt="recipe.title" class="w-full h-full object-cover" />
       <div class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
       <UContainer class="absolute bottom-0 left-0 right-0 pb-6">
@@ -137,7 +109,7 @@ function shareRecipe() {
     </div>
 
     <UContainer>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div v-if="recipe" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-8">
           <UCard>
             <p class="text-default leading-relaxed">
@@ -222,17 +194,13 @@ function shareRecipe() {
               <span class="text-sm text-muted">Recipe by</span>
             </template>
             <div class="flex items-center gap-4">
-              <UAvatar
-                :src="author.avatar"
-                :alt="`${author.firstName} ${author.lastName}`"
-                size="xl"
-              />
+              <UAvatar :src="recipe.authorAvatar" :alt="recipe.authorName" size="xl" />
               <div>
                 <NuxtLink to="#" class="font-semibold hover:text-primary transition-colors">
-                  {{ author.firstName }} {{ author.lastName }}
+                  {{ recipe.authorName }}
                 </NuxtLink>
                 <p class="text-sm text-muted">
-                  {{ author.recipesCount }} recipes · {{ author.followersCount }} followers
+                  {{ recipe.authorBio }}
                 </p>
               </div>
             </div>
@@ -250,11 +218,13 @@ function shareRecipe() {
                 <dt class="text-muted">Category</dt>
                 <dd>
                   <NuxtLink
+                    v-if="category"
                     :to="`/recipes?category=${category.id}`"
                     class="text-primary hover:underline"
                   >
                     {{ category.name }}
                   </NuxtLink>
+                  <span v-else class="text-muted">—</span>
                 </dd>
               </div>
               <div class="flex justify-between">
@@ -272,6 +242,13 @@ function shareRecipe() {
             </dl>
           </UCard>
         </div>
+      </div>
+
+      <div v-else class="text-center py-16">
+        <UIcon name="i-heroicons-exclamation-circle" class="size-12 mx-auto mb-4 text-muted" />
+        <h3 class="text-lg font-medium mb-2">Recipe not found</h3>
+        <p class="text-muted mb-4">The recipe you are looking for does not exist.</p>
+        <UButton to="/recipes" label="Browse Recipes" variant="outline" />
       </div>
     </UContainer>
   </UPage>

@@ -1,6 +1,5 @@
 export * from "./auth";
 export * from "./category";
-export * from "./favorite";
 export * from "./follow";
 export * from "./meal-plan";
 export * from "./recipe";

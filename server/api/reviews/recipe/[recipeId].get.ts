@@ -1,4 +1,4 @@
-import type { ReviewResponse } from "#server/types";
+import type { RecipeResponse } from "#server/types";
 
 export default defineEventHandler(async (event) => {
   const recipeId = getRouterParam(event, "recipeId");
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   const offset = Number(query.offset) || 0;
   const limit = Number(query.limit) || 10;
 
-  return proxy<ReviewResponse[]>(event, `/reviews/recipe/${recipeId}`, {
+  return proxy<RecipeResponse>(event, `/recipes/${recipeId}`, {
     query: { offset, limit },
   });
 });

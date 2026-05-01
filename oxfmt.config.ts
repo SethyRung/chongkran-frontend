@@ -11,6 +11,7 @@ export default defineConfig({
   printWidth: 100,
   ignorePatterns: [
     "node_modules",
+    ".agents",
     ".nuxt",
     ".output",
     ".data",

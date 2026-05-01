@@ -233,7 +233,9 @@ const filteredRecipes = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     recipes = recipes.filter(
-      (r) => r.title.toLowerCase().includes(query) || r.description.toLowerCase().includes(query),
+      (r) =>
+        r.title.toLowerCase().includes(query) ||
+        (r.description ?? "").toLowerCase().includes(query),
     );
   }
 
@@ -249,7 +251,7 @@ const filteredRecipes = computed(() => {
       recipes.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
       break;
     case "popular":
-      recipes.sort((a, b) => b.views - a.views);
+      recipes.sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
       break;
     case "liked":
       recipes.sort((a, b) => (b.likes || 0) - (a.likes || 0));

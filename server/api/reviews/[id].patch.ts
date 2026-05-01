@@ -1,4 +1,4 @@
-import type { UpdateReviewDto, ReviewResponse } from "#server/types";
+import type { UpdateReviewDto, RecipeResponse } from "#server/types";
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     );
   }
 
-  return proxy<ReviewResponse>(event, `/reviews/${id}`, {
+  return proxy<RecipeResponse>(event, `/reviews/${id}`, {
     method: "patch",
     body,
   });

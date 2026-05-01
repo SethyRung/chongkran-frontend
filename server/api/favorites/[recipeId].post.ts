@@ -1,5 +1,3 @@
-import type { FavoriteResponse } from "#server/types";
-
 export default defineEventHandler(async (event) => {
   const recipeId = getRouterParam(event, "recipeId");
 
@@ -13,7 +11,7 @@ export default defineEventHandler(async (event) => {
     );
   }
 
-  return proxy<FavoriteResponse>(event, `/favorites/${recipeId}`, {
+  return proxy<string>(event, `/favorites/${recipeId}`, {
     method: "post",
   });
 });

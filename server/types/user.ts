@@ -48,17 +48,3 @@ export type UserResponse = {
   createdAt?: Date | string;
   updatedAt?: Date | string;
 };
-
-export type AuthorRequestUser = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  avatar?: string;
-};
-
-export type AuthorRequest = {
-  id: string;
-  user: AuthorRequestUser;
-  status: "pending" | "approved" | "rejected";
-};

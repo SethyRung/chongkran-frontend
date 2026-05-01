@@ -1,4 +1,4 @@
-import type { AuthorRequest } from "#server/types";
+import type { UserResponse } from "#server/types";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const limit = Number(query.limit) || 10;
   const status = query.status as "pending" | "approved" | "rejected" | undefined;
 
-  return proxy<AuthorRequest[]>(event, "/users/authors/requests", {
+  return proxy<UserResponse[]>(event, "/users/authors/requests", {
     query: { offset, limit, status },
   });
 });
