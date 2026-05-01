@@ -13,12 +13,14 @@ export default defineEventHandler(async (event) => {
     );
   }
 
+  const contentType = getHeader(event, "content-type");
+
   try {
     return proxy<UploadResponse>(event, "/upload", {
       method: "post",
       body,
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": contentType || "application/octet-stream",
       },
     });
   } catch {

@@ -37,7 +37,7 @@ The Nuxt server (`server/`) acts as a **Backend-For-Frontend** proxy to the Nest
 - **`server/utils/response.ts`** — `createResponse<T>()` helper matching the backend's `ApiResponse<T>` envelope.
 - **`server/utils/auth.ts`** — `expiresInToSeconds()` for cookie maxAge calculation.
 
-All 60+ server routes in `server/api/` follow the same pattern: `defineEventHandler` → `proxy<T>(event, path, opts)`. Auth routes (`login.post.ts`, `signup.post.ts`) also set httpOnly cookies directly.
+All server routes in `server/api/` follow the same pattern: `defineEventHandler` → `proxy<T>(event, path, opts)`. Auth routes (`login.post.ts`, `signup.post.ts`) also set httpOnly cookies directly.
 
 ### Client → Server Communication
 
@@ -47,7 +47,7 @@ All 60+ server routes in `server/api/` follow the same pattern: `defineEventHand
 
 ### Auth Flow
 
-- **`app/plugins/auth.ts`** — runs on app load, calls `/api/auth/me` to hydrate `useUser()`. Uses `callOnce` to prevent duplicate calls.
+- **`app/plugins/auth.ts`** — runs on app load, calls `/api/auth/me` to hydrate `useUser()`. Depends on the `fetch` plugin.
 - **`app/middleware/auth.global.ts`** — global route guard. Public routes: `/`, `/auth`, `/recipes`, `/categories`. All other routes redirect to `/auth` if no user.
 - Tokens stored as **httpOnly cookies** (`access_token`, `refresh_token` / `CookieName` enum). Client never sees raw tokens.
 
@@ -55,10 +55,11 @@ All 60+ server routes in `server/api/` follow the same pattern: `defineEventHand
 
 - **Entrypoint**: `app/app.vue` — `<UApp>` wraps `<NuxtLayout>` + `<NuxtPage>`
 - **Nuxt 4 compat**: `future.compatibilityVersion: 4` in `nuxt.config.ts`
+- **App config**: `app/app.config.ts` — Nuxt UI theme colors (primary: yellow, neutral: zinc)
 - **Layouts**: `app/layouts/default.vue` (header + footer), `app/layouts/auth.vue` (no header/footer)
 - **Pages**: `app/pages/` — file-based routing. Auth page sets `layout: "auth"`.
-- **Components**: `app/components/` — auto-imported by Nuxt. `AppHeader`, `AppFooter`, `RecipeCard`, `CreateRecipeModal`, `auth/LoginForm`, `auth/SignupForm`
-- **Shared types**: `shared/types/index.ts` — `ApiResponse<T>`, `ApiResponseCode`, `PaginationMeta`, `CookieName`, `Role`, `User`, `Author`, `Recipe`, `RecipeWithAuthor`, `Category`, `Review`, `Ingredient`, `Favorite`, `FollowStats`, `MealPlan`, `ShoppingList`, `AuthorRequest`. Auto-imported.
+- **Components**: `app/components/` — auto-imported by Nuxt.
+- **Shared types**: `shared/types/index.ts` — `ApiResponse<T>`, `ApiResponseCode`, `PaginationMeta`, `CookieName`, `Role`, `User`, `Author`, `Recipe`, `RecipeWithAuthor`, `Category`, `Review`, `Ingredient`, `FollowStats`, `MealPlan`, `ShoppingItem`, `ShoppingList`. Auto-imported.
 - **Server types**: `server/types/` — server-specific types like `RecipeResponse`, `CreateRecipeDto`, `UploadResponse`, `AuthResponse`, `CurrentUser`. These are **NOT auto-imported on the client** — only available in `server/` code via `#server/types`.
 - **Styling**: Tailwind CSS v4 via `@tailwindcss/vite`. Nuxt UI v4 (primary: yellow, neutral: zinc). Fonts: Geist. Custom scrollbar styles in `app/assets/css/main.css`.
 - **State**: Pinia (`@pinia/nuxt`)
@@ -84,7 +85,7 @@ All paginated endpoints use `{ offset, limit }` query params and return `{ meta:
 ## Key Conventions & Gotchas
 
 - **Server types are server-only**: `RecipeResponse`, `UploadResponse`, etc. from `#server/types` are not available in client components. Use shared types (`Recipe`, `Category`, etc.) or inline types for client-side API calls.
-- **`noUncheckedIndexedAccess: true`**: Array index access returns `T | undefined`. Use non-null assertions (`arr[index]!`) in v-for templates where the index is known to exist.
+- **`noUncheckedIndexedAccess: true`** (in generated `.nuxt/tsconfig.json`): Array index access returns `T | undefined`. Use non-null assertions (`arr[index]!`) in v-for templates where the index is known to exist.
 - **Pagination is offset-based**: The backend uses `PaginationQueryDto` with `{ offset, limit }` — not page-based. All server proxy routes forward these params.
 - **Recipe `category` and `author` fields**: Can be either a string ID (unpopulated) or an object (populated). Always handle both: `typeof r.category === "string" ? r.category : r.category.id`.
 - **UForm nesting**: Use `<UForm :schema="itemSchema" :name="`items.${index}`" nested>` for validating dynamic array items. The parent form auto-validates nested forms on submit. The parent schema should not include the nested fields — use a `validate` function for array-level constraints (e.g., "at least one item").
@@ -92,11 +93,13 @@ All paginated endpoints use `{ offset, limit }` query params and return `{ meta:
 - **UFileUpload**: Without `multiple` prop, v-model is `File | undefined` (not `File[]`).
 - **USelectMenu `value-key`**: Must be `"id"` not `"_id"` — all Mongoose IDs are serialized as `id` by the backend's global `toJSON` transform.
 - **Recipe status filtering**: The public recipes endpoint (`GET /api/recipes`) returns all statuses. Filter client-side with `r.status === "approved"` for public-facing pages.
+- **Always use Nuxt UI semantic colors**: Use `text-default`, `bg-elevated`, `border-muted`, etc. Never use raw Tailwind palette colors like `text-gray-500`.
 
 ## Git
 
-- `production` — main branch
-- `dev` — development branch
+- `main` — default branch (origin/HEAD)
+- `production` — production deployment branch
+- `dev` — development branch, merged into production via PRs
 
 ## .gitignore Excludes
 
