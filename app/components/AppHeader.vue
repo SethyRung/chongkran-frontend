@@ -17,6 +17,21 @@ const navigation = computed<NavigationMenuItem[]>(() => [
 
 const userMenuItems = computed(() => [
   { label: "Profile", icon: "i-lucide:user", to: "/profile" },
+  user.value?.role === "admin"
+    ? { label: "Admin Portal", icon: "i-lucide:layout-dashboard", to: "/admin" }
+    : user.value?.role === "author"
+      ? {
+          label: "My Recipes",
+          icon: "i-lucide:book-open",
+          to: "/profile/recipes",
+        }
+      : {
+          label: "Become an Author",
+          icon: "i-lucide:user-plus",
+          onSelect: () => {
+            // TODO: Implement author application flow
+          },
+        },
   {
     label: "Logout",
     icon: "i-lucide:log-out",
