@@ -46,15 +46,13 @@ const navItems = computed<NavigationMenuItem[][]>(() => [
   <UDashboardGroup>
     <UDashboardSidebar collapsible resizable class="bg-elevated/50">
       <template #header="{ collapsed }">
-        <div class="flex items-center gap-2 p-4">
-          <UIcon
-            name="i-lucide:cooking-pot"
-            class="size-8 shrink-0 text-primary"
-          />
-          <div v-if="!collapsed" class="flex items-center gap-2">
-            <span class="text-lg font-bold">Chongkran</span>
-            <UBadge label="Admin" color="primary" variant="subtle" size="xs" />
-          </div>
+        <UIcon
+          name="i-lucide:cooking-pot"
+          class="size-8 shrink-0 text-primary"
+        />
+        <div v-if="!collapsed" class="flex items-center gap-2">
+          <span class="text-lg font-bold">Chongkran</span>
+          <UBadge label="Admin" color="primary" variant="subtle" size="xs" />
         </div>
       </template>
 
@@ -67,22 +65,18 @@ const navItems = computed<NavigationMenuItem[][]>(() => [
       </template>
 
       <template #footer="{ collapsed }">
-        <USeparator />
+        <UAvatar
+          :src="user?.avatar"
+          :alt="`${user?.firstName} ${user?.lastName}`"
+          size="sm"
+          icon="i-lucide:user"
+        />
 
-        <div class="flex items-center gap-3 p-4">
-          <UAvatar
-            :src="user?.avatar"
-            :alt="`${user?.firstName} ${user?.lastName}`"
-            size="sm"
-            icon="i-lucide:user"
-          />
-
-          <div v-if="!collapsed" class="flex-1 min-w-0">
-            <p class="truncate text-sm font-medium text-default">
-              {{ user?.firstName }} {{ user?.lastName }}
-            </p>
-            <p class="truncate text-xs text-muted">{{ user?.email }}</p>
-          </div>
+        <div v-if="!collapsed" class="flex-1 min-w-0">
+          <p class="truncate text-sm font-medium text-default">
+            {{ user?.firstName }} {{ user?.lastName }}
+          </p>
+          <p class="truncate text-xs text-muted">{{ user?.email }}</p>
         </div>
       </template>
     </UDashboardSidebar>
