@@ -43,20 +43,16 @@ const {
 
 async function updateRecipeStatus(id: string, status: "approved" | "rejected") {
   try {
-    const res = await useApi(
-      `/api/recipes/update-status?id=${id}&status=${status}`,
-      {
-        method: "PUT",
-      },
-    );
+    const res = await useApi(`/api/recipes/update-status?id=${id}&status=${status}`, {
+      method: "PUT",
+    });
 
     if (res.status.code === ApiResponseCode.Success) {
       toast.add({
         title: `Recipe ${status}`,
         description: `The recipe has been ${status}.`,
         color: status === "approved" ? "success" : "warning",
-        icon:
-          status === "approved" ? "i-lucide-check-circle" : "i-lucide-x-circle",
+        icon: status === "approved" ? "i-lucide-check-circle" : "i-lucide-x-circle",
       });
       await refresh();
     } else {
@@ -88,8 +84,7 @@ async function handleAuthorRequest(id: string, action: "approve" | "reject") {
         title: `Request ${action}d`,
         description: `The author request has been ${action}d.`,
         color: action === "approve" ? "success" : "warning",
-        icon:
-          action === "approve" ? "i-lucide-check-circle" : "i-lucide:x-circle",
+        icon: action === "approve" ? "i-lucide-check-circle" : "i-lucide:x-circle",
       });
       await refresh();
     } else {
@@ -187,12 +182,7 @@ function formatDate(dateStr?: string) {
                 :key="recipe.id"
                 class="flex items-center gap-3 p-3 rounded-lg bg-elevated/50"
               >
-                <UAvatar
-                  :src="recipe.image"
-                  :alt="recipe.title"
-                  size="sm"
-                  icon="i-lucide:image"
-                />
+                <UAvatar :src="recipe.image" :alt="recipe.title" size="sm" icon="i-lucide:image" />
 
                 <div class="flex-1 min-w-0">
                   <p class="truncate text-sm font-medium">{{ recipe.title }}</p>
@@ -236,9 +226,7 @@ function formatDate(dateStr?: string) {
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="font-semibold">Author Requests</h3>
-                  <p class="text-sm text-muted">
-                    Users requesting author status
-                  </p>
+                  <p class="text-sm text-muted">Users requesting author status</p>
                 </div>
                 <UButton
                   to="/admin/author-requests"
@@ -264,9 +252,7 @@ function formatDate(dateStr?: string) {
                 />
 
                 <div class="flex-1 min-w-0">
-                  <p class="truncate text-sm font-medium">
-                    {{ req.firstName }} {{ req.lastName }}
-                  </p>
+                  <p class="truncate text-sm font-medium">{{ req.firstName }} {{ req.lastName }}</p>
                   <p class="text-xs text-muted">{{ req.email }}</p>
                 </div>
 

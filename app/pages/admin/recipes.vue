@@ -9,11 +9,19 @@ const toast = useToast();
 const router = useRouter();
 
 const page = ref(1);
-const limit = 10;
-const search = ref("");
-const statusFilter = ref("all");
+const limit = ref(10);
+const limitOptions = [
+  { label: "10", value: 10 },
+  { label: "25", value: 25 },
+  { label: "50", value: 50 },
+  { label: "100", value: 100 },
+];
 
-const offset = computed(() => (page.value - 1) * limit);
+watch(limit, () => {
+  page.value = 1;
+});
+
+const offset = computed(() => (page.value - 1) * limit.value);
 
 const statusFilterOptions = [
   { label: "All", value: "all" },
@@ -27,38 +35,20 @@ const {
   pending,
   refresh,
 } = await useFetchApi("/api/recipes", {
-  query: computed(() => ({
-    offset: offset.value,
+  query: {
+    offset,
     limit,
-  })),
+  },
 });
 
 const total = computed(() => recipesData.value?.meta?.total ?? 0);
 const recipes = computed(() => recipesData.value?.data ?? []);
 
-const filteredRecipes = computed(() => {
-  let result = recipes.value;
-
-  if (statusFilter.value !== "all") {
-    result = result.filter((r) => r.status === statusFilter.value);
-  }
-
-  if (search.value) {
-    const q = search.value.toLowerCase();
-    result = result.filter(
-      (r) =>
-        r.title.toLowerCase().includes(q) ||
-        r.authorName?.toLowerCase().includes(q),
-    );
-  }
-
-  return result;
-});
+const table = useTemplateRef("table");
+const columnFilters = ref([]);
 
 const confirmModal = ref(false);
-const confirmAction = ref<{ id: string; action: string; label: string } | null>(
-  null,
-);
+const confirmAction = ref<{ id: string; action: string; label: string } | null>(null);
 
 const UBadge = resolveComponent("UBadge");
 const UButton = resolveComponent("UButton");
@@ -106,8 +96,7 @@ const columns: TableColumn<RecipeResponse>[] = [
       h(
         "span",
         {
-          class:
-            "font-medium text-default cursor-pointer hover:text-primary transition-colors",
+          class: "font-medium text-default cursor-pointer hover:text-primary transition-colors",
           onClick: () => router.push(`/recipes/${row.original.id}`),
         },
         row.original.title,
@@ -165,22 +154,14 @@ const columns: TableColumn<RecipeResponse>[] = [
                 label: "Approve",
                 icon: "i-lucide:check",
                 onSelect: () =>
-                  openConfirm(
-                    row.original.id,
-                    "approved",
-                    `Approve "${row.original.title}"?`,
-                  ),
+                  openConfirm(row.original.id, "approved", `Approve "${row.original.title}"?`),
               },
               {
                 label: "Reject",
                 icon: "i-lucide:x",
                 color: "warning",
                 onSelect: () =>
-                  openConfirm(
-                    row.original.id,
-                    "rejected",
-                    `Reject "${row.original.title}"?`,
-                  ),
+                  openConfirm(row.original.id, "rejected", `Reject "${row.original.title}"?`),
               },
             ],
             [
@@ -189,11 +170,7 @@ const columns: TableColumn<RecipeResponse>[] = [
                 icon: "i-lucide:trash",
                 color: "error",
                 onSelect: () =>
-                  openConfirm(
-                    row.original.id,
-                    "delete",
-                    `Delete "${row.original.title}"?`,
-                  ),
+                  openConfirm(row.original.id, "delete", `Delete "${row.original.title}"?`),
               },
             ],
           ],
@@ -223,12 +200,9 @@ async function executeAction() {
     const { id, action } = confirmAction.value;
 
     if (action === "delete") {
-      const res = await useApi<ApiResponse<RecipeResponse>>(
-        `/api/recipes/${id}`,
-        {
-          method: "DELETE",
-        },
-      );
+      const res = await useApi<ApiResponse<RecipeResponse>>(`/api/recipes/${id}`, {
+        method: "DELETE",
+      });
       if (res.status.code === ApiResponseCode.Success) {
         toast.add({
           title: "Recipe deleted",
@@ -254,10 +228,7 @@ async function executeAction() {
         toast.add({
           title: `Recipe ${action}`,
           color: action === "approved" ? "success" : "warning",
-          icon:
-            action === "approved"
-              ? "i-lucide-check-circle"
-              : "i-lucide:x-circle",
+          icon: action === "approved" ? "i-lucide-check-circle" : "i-lucide:x-circle",
         });
       } else {
         toast.add({
@@ -295,24 +266,36 @@ async function executeAction() {
 
       <UDashboardToolbar>
         <UInput
-          v-model="search"
+          :model-value="table?.tableApi?.getColumn('title')?.getFilterValue() as string"
           icon="i-lucide:search"
-          placeholder="Search recipes..."
+          placeholder="Filter title..."
           class="w-64"
+          @update:model-value="table?.tableApi?.getColumn('title')?.setFilterValue($event)"
         />
 
         <USelectMenu
-          v-model="statusFilter"
+          :model-value="(table?.tableApi?.getColumn('status')?.getFilterValue() as string) ?? 'all'"
           value-key="value"
           :items="statusFilterOptions"
           placeholder="Filter status"
           class="w-40"
+          @update:model-value="
+            table?.tableApi
+              ?.getColumn('status')
+              ?.setFilterValue($event === 'all' ? undefined : $event)
+          "
         />
       </UDashboardToolbar>
     </template>
 
     <template #body>
-      <UTable :data="filteredRecipes" :columns="columns" :loading="pending">
+      <UTable
+        ref="table"
+        v-model:column-filters="columnFilters"
+        :data="recipes"
+        :columns="columns"
+        :loading="pending"
+      >
         <template #empty>
           <div class="flex flex-col items-center justify-center py-6 gap-3">
             <UIcon name="i-lucide:chef-hat" class="size-10 text-muted" />
@@ -321,8 +304,13 @@ async function executeAction() {
         </template>
       </UTable>
 
-      <div class="flex justify-center px-4 py-4 border-t border-muted">
-        <UPagination v-model="page" :total="total" :items-per-page="limit" />
+      <div class="w-full flex justify-between items-center">
+        <div>
+          <span>item: </span>
+          <USelect v-model="limit" :items="limitOptions" />
+        </div>
+
+        <UPagination v-model:page="page" :total="total" :items-per-page="limit" />
       </div>
 
       <UModal v-model:open="confirmModal">
@@ -351,8 +339,7 @@ async function executeAction() {
                         : 'Reject'
                   "
                   :color="
-                    confirmAction?.action === 'delete' ||
-                    confirmAction?.action === 'rejected'
+                    confirmAction?.action === 'delete' || confirmAction?.action === 'rejected'
                       ? 'error'
                       : 'success'
                   "

@@ -46,10 +46,7 @@ const navItems = computed<NavigationMenuItem[][]>(() => [
   <UDashboardGroup>
     <UDashboardSidebar collapsible resizable class="bg-elevated/50">
       <template #header="{ collapsed }">
-        <UIcon
-          name="i-lucide:cooking-pot"
-          class="size-8 shrink-0 text-primary"
-        />
+        <UIcon name="i-lucide:cooking-pot" class="size-8 shrink-0 text-primary" />
         <div v-if="!collapsed" class="flex items-center gap-2">
           <span class="text-lg font-bold">Chongkran</span>
           <UBadge label="Admin" color="primary" variant="subtle" size="xs" />
@@ -57,11 +54,7 @@ const navItems = computed<NavigationMenuItem[][]>(() => [
       </template>
 
       <template #default="{ collapsed }">
-        <UNavigationMenu
-          :collapsed="collapsed"
-          :items="navItems"
-          orientation="vertical"
-        />
+        <UNavigationMenu :collapsed="collapsed" :items="navItems" orientation="vertical" />
       </template>
 
       <template #footer="{ collapsed }">
