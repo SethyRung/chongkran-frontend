@@ -112,7 +112,7 @@ watch(currentPage, updateFilters);
       <div class="flex flex-col md:flex-row gap-4 mb-8">
         <UInput
           v-model="searchQuery"
-          icon="i-heroicons-magnifying-glass"
+          icon="i-lucide-search"
           placeholder="Search recipes..."
           class="flex-1"
         />
@@ -138,7 +138,7 @@ watch(currentPage, updateFilters);
           v-if="searchQuery || selectedCategory || selectedDifficulty"
           label="Clear"
           variant="subtle"
-          icon="i-heroicons-x-mark"
+          icon="i-lucide-x"
           @click="clearFilters"
         />
       </div>
@@ -159,7 +159,7 @@ watch(currentPage, updateFilters);
       </div>
 
       <div v-else class="text-center py-16">
-        <UIcon name="i-heroicons-magnifying-glass" class="size-12 mx-auto mb-4 text-muted" />
+        <UIcon name="i-lucide-search" class="size-12 mx-auto mb-4 text-muted" />
         <h3 class="text-lg font-medium mb-2">No recipes found</h3>
         <p class="text-muted mb-4">Try adjusting your search or filters</p>
         <UButton label="Clear Filters" variant="outline" @click="clearFilters" />

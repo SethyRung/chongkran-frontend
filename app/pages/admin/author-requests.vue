@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { h } from "vue";
 import type { TableColumn } from "@nuxt/ui";
-import type { UserResponse } from "#server/types";
+import type { AuthorRequest } from "#shared/types";
 
 definePageMeta({ layout: "admin" });
 
@@ -81,12 +81,9 @@ async function executeAction() {
   try {
     const { id, action } = confirmAction.value;
 
-    const res = await useApi<ApiResponse<UserResponse>>(
-      `/api/users/authors/requests/${id}/${action}`,
-      {
-        method: "PATCH",
-      },
-    );
+    const res = await useApi<ApiResponse<string>>(`/api/users/authors/requests/${id}/${action}`, {
+      method: "PATCH",
+    });
 
     if (res.status.code === ApiResponseCode.Success) {
       toast.add({
@@ -116,15 +113,15 @@ async function executeAction() {
   }
 }
 
-const columns: TableColumn<UserResponse>[] = [
+const columns: TableColumn<AuthorRequest>[] = [
   {
     accessorKey: "firstName",
     header: "User",
     cell: ({ row }) =>
       h("div", { class: "flex items-center gap-3" }, [
         h(UAvatar, {
-          src: row.original.avatar,
-          alt: `${row.original.firstName} ${row.original.lastName}`,
+          src: row.original.user.avatar,
+          alt: `${row.original.user.firstName} ${row.original.user.lastName}`,
           size: "sm",
           icon: "i-lucide:user",
         }),
@@ -132,9 +129,9 @@ const columns: TableColumn<UserResponse>[] = [
           h(
             "p",
             { class: "font-medium text-default" },
-            `${row.original.firstName} ${row.original.lastName}`,
+            `${row.original.user.firstName} ${row.original.user.lastName}`,
           ),
-          h("p", { class: "text-xs text-muted" }, row.original.email),
+          h("p", { class: "text-xs text-muted" }, row.original.user.email),
         ]),
       ]),
   },
@@ -144,12 +141,12 @@ const columns: TableColumn<UserResponse>[] = [
     cell: ({ row }) => formatDate(row.original.createdAt),
   },
   {
-    accessorKey: "authorRequestStatus",
+    accessorKey: "status",
     header: "Status",
     cell: ({ row }) =>
       h(UBadge, {
-        label: row.original.authorRequestStatus ?? "pending",
-        color: statusColor(row.original.authorRequestStatus),
+        label: row.original.status ?? "pending",
+        color: statusColor(row.original.status),
         variant: "subtle",
         size: "sm",
         class: "capitalize",
@@ -159,7 +156,7 @@ const columns: TableColumn<UserResponse>[] = [
     id: "actions",
     header: "",
     cell: ({ row }) => {
-      if (row.original.authorRequestStatus !== "pending") {
+      if (row.original.status !== "pending") {
         return null;
       }
 
@@ -174,7 +171,7 @@ const columns: TableColumn<UserResponse>[] = [
             openConfirm(
               row.original.id,
               "approve",
-              `Approve "${row.original.firstName} ${row.original.lastName}"?`,
+              `Approve "${row.original.user.firstName} ${row.original.user.lastName}"?`,
             ),
         }),
         h(UButton, {
@@ -187,7 +184,7 @@ const columns: TableColumn<UserResponse>[] = [
             openConfirm(
               row.original.id,
               "reject",
-              `Reject "${row.original.firstName} ${row.original.lastName}"?`,
+              `Reject "${row.original.user.firstName} ${row.original.user.lastName}"?`,
             ),
         }),
       ]);

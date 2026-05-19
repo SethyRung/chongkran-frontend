@@ -1,6 +1,6 @@
 # Chongkran Frontend — Agent Notes
 
-Nuxt 4 Vue.js recipe web app. Connects to a NestJS backend at `../chongkran-backend`.
+Nuxt 4 Vue.js recipe web app. Proxies to a NestJS backend at `../chongkran-backend`.
 
 ## Commands
 
@@ -37,18 +37,26 @@ The Nuxt server (`server/`) acts as a **Backend-For-Frontend** proxy to the Nest
 - **`server/utils/response.ts`** — `createResponse<T>()` helper matching the backend's `ApiResponse<T>` envelope.
 - **`server/utils/auth.ts`** — `expiresInToSeconds()` for cookie maxAge calculation.
 
-All server routes in `server/api/` follow the same pattern: `defineEventHandler` → `proxy<T>(event, path, opts)`. Auth routes (`login.post.ts`, `signup.post.ts`) also set httpOnly cookies directly.
+All server routes in `server/api/` follow the same pattern: `defineEventHandler` → `proxy<T>(event, path, opts)`. Auth routes that manipulate cookies directly:
+
+- `login.post.ts` — sets `access_token` + `refresh_token` cookies on success
+- `logout.get.ts` — deletes both cookies on success
+- `refresh.get.ts` — delegates to `refreshToken()` utility
 
 ### Client → Server Communication
 
-- **`useApi`** (`app/composables/useApi.ts`) — `$fetch` wrapper. Use for imperative API calls (form submissions, mutations).
-- **`useFetchApi`** (`app/composables/useFetchApi.ts`) — `createUseFetch` wrapper with cookie relay. Use for SSR-aware data fetching in pages.
+- **`useApi`** (`app/composables/useApi.ts`) — `$fetch` wrapper using the custom `nuxtApp.$fetch` instance (provided by the `fetch` plugin). Use for imperative API calls and for parallel/complex data fetching inside `useAsyncData`.
+- **`useFetchApi`** (`app/composables/useFetchApi.ts`) — `createUseFetch` wrapper with cookie relay. Use for simple SSR-aware data fetching in pages. Pass reactive refs directly in `query` — no `computed()` wrapper needed.
 - **`useUser`** (`app/composables/useUser.ts`) — `useState<User | null>("user")` singleton. Populated by the auth plugin.
 
 ### Auth Flow
 
-- **`app/plugins/auth.ts`** — runs on app load, calls `/api/auth/me` to hydrate `useUser()`. Depends on the `fetch` plugin.
-- **`app/middleware/auth.global.ts`** — global route guard. Public routes: `/`, `/auth`, `/recipes`, `/categories`. All other routes redirect to `/auth` if no user.
+- **`app/plugins/fetch.ts`** — custom `$fetch` instance that forwards request cookies and relays response `set-cookie` headers. Must run before the auth plugin.
+- **`app/plugins/auth.ts`** — runs on app load, depends on `fetch` plugin, calls `/api/auth/me` to hydrate `useUser()`.
+- **`app/middleware/auth.global.ts`** — global route guard:
+  - `/admin/*` requires `role === "admin"`, otherwise redirects to `/`
+  - Public routes: `/`, `/auth`, `/recipes/*`, `/categories/*` — unauthenticated users allowed
+  - All other routes redirect to `/auth` if no user
 - Tokens stored as **httpOnly cookies** (`access_token`, `refresh_token` / `CookieName` enum). Client never sees raw tokens.
 
 ### Directory Layout
@@ -56,8 +64,10 @@ All server routes in `server/api/` follow the same pattern: `defineEventHandler`
 - **Entrypoint**: `app/app.vue` — `<UApp>` wraps `<NuxtLayout>` + `<NuxtPage>`
 - **Nuxt 4 compat**: `future.compatibilityVersion: 4` in `nuxt.config.ts`
 - **App config**: `app/app.config.ts` — Nuxt UI theme colors (primary: yellow, neutral: zinc)
-- **Layouts**: `app/layouts/default.vue` (header + footer), `app/layouts/auth.vue` (no header/footer)
-- **Pages**: `app/pages/` — file-based routing. Auth page sets `layout: "auth"`.
+- **Layouts**: `app/layouts/default.vue` (header + footer), `app/layouts/auth.vue` (no header/footer), `app/layouts/admin.vue` (dashboard sidebar with hardcoded nav items)
+- **Pages**: `app/pages/` — file-based routing. Auth page sets `layout: "auth"`. All admin pages set `layout: "admin"`.
+- **Admin layout nav**: Adding a new `/admin/*` route requires updating the `navItems` array in `app/layouts/admin.vue`.
+- **Admin page wrapper**: Every admin page wraps content in `<UDashboardPanel>` with `<UDashboardNavbar>` in `#header` and `<UDashboardToolbar>` when needed.
 - **Components**: `app/components/` — auto-imported by Nuxt.
 - **Shared types**: `shared/types/index.ts` — `ApiResponse<T>`, `ApiResponseCode`, `PaginationMeta`, `CookieName`, `Role`, `User`, `Author`, `Recipe`, `RecipeWithAuthor`, `Category`, `Review`, `Ingredient`, `FollowStats`, `MealPlan`, `ShoppingItem`, `ShoppingList`. Auto-imported.
 - **Server types**: `server/types/` — server-specific types like `RecipeResponse`, `CreateRecipeDto`, `UploadResponse`, `AuthResponse`, `CurrentUser`. These are **NOT auto-imported on the client** — only available in `server/` code via `#server/types`.
@@ -92,14 +102,15 @@ All paginated endpoints use `{ offset, limit }` query params and return `{ meta:
 - **UModal trigger pattern**: Use `<slot />` in the modal for the trigger element. Control open state with a local `ref` + `v-model:open`. The parent passes the trigger button as slot content.
 - **UFileUpload**: Without `multiple` prop, v-model is `File | undefined` (not `File[]`).
 - **USelectMenu `value-key`**: Must be `"id"` not `"_id"` — all Mongoose IDs are serialized as `id` by the backend's global `toJSON` transform.
+- **UPagination `v-model:page`**: Nuxt UI v4 uses `v-model:page`, not `v-model`.
 - **Recipe status filtering**: The public recipes endpoint (`GET /api/recipes`) returns all statuses. Filter client-side with `r.status === "approved"` for public-facing pages.
 - **Always use Nuxt UI semantic colors**: Use `text-default`, `bg-elevated`, `border-muted`, etc. Never use raw Tailwind palette colors like `text-gray-500`.
+- **Zod v4** (`zod@^4.3.6`): API differs from v3 (e.g. `z.string("message")` for invalid_type errors, refinements syntax changed). Check existing usage patterns before writing new schemas.
 
 ## Git
 
 - `main` — default branch (origin/HEAD)
-- `production` — production deployment branch
-- `dev` — development branch, merged into production via PRs
+- `develop` — development branch
 
 ## .gitignore Excludes
 
@@ -121,3 +132,7 @@ NestJS + MongoDB (Mongoose). Backend `.env` has `PORT=8080` and `ALLOW_ORIGIN=ht
 - `JwtAuthGuard` applied globally; public routes marked `@Public()` on backend
 - Roles: `admin`, `author`, `user`. Only `admin`/`author` can create/edit recipes
 - All Mongoose schemas have a global `toJSON` transform that maps `_id` → `id` and strips `__v`
+
+## OpenCode Config
+
+`opencode.json` enables remote MCP servers for Nuxt (`https://nuxt.com/mcp`) and Nuxt UI (`https://ui.nuxt.com/mcp`) documentation.

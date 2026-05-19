@@ -73,6 +73,20 @@ export interface Author {
   recipesCount?: number;
 }
 
+export interface AuthorRequestUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatar?: string;
+}
+
+export interface AuthorRequest {
+  id: string;
+  user: AuthorRequestUser;
+  status: "pending" | "approved" | "rejected";
+}
+
 export interface Ingredient {
   name: string;
   quantity: string;

@@ -93,15 +93,15 @@ function shareRecipe() {
         </h1>
         <div class="flex flex-wrap items-center gap-4 text-white/90">
           <span class="flex items-center gap-1">
-            <UIcon name="i-heroicons-clock" class="size-5" />
+            <UIcon name="i-lucide-clock" class="size-5" />
             {{ formattedCookTime }}
           </span>
           <span class="flex items-center gap-1">
-            <UIcon name="i-heroicons-heart" class="size-5" />
+            <UIcon name="i-lucide-heart" class="size-5" />
             {{ recipe.likes || 0 }} likes
           </span>
           <span class="flex items-center gap-1">
-            <UIcon name="i-heroicons-eye" class="size-5" />
+            <UIcon name="i-lucide-eye" class="size-5" />
             {{ recipe.views }} views
           </span>
         </div>
@@ -120,7 +120,7 @@ function shareRecipe() {
           <UCard>
             <template #header>
               <div class="flex items-center gap-2">
-                <UIcon name="i-heroicons-clipboard-document-list" class="size-5 text-primary" />
+                <UIcon name="i-lucide-clipboard-list" class="size-5 text-primary" />
                 <h2 class="text-xl font-semibold">Ingredients</h2>
               </div>
             </template>
@@ -142,7 +142,7 @@ function shareRecipe() {
           <UCard>
             <template #header>
               <div class="flex items-center gap-2">
-                <UIcon name="i-heroicons-list-bullet" class="size-5 text-primary" />
+                <UIcon name="i-lucide-list" class="size-5 text-primary" />
                 <h2 class="text-xl font-semibold">Instructions</h2>
               </div>
             </template>
@@ -171,7 +171,7 @@ function shareRecipe() {
           <UCard>
             <div class="flex gap-3">
               <UButton
-                :icon="isLiked ? 'i-heroicons-heart-solid' : 'i-heroicons-heart'"
+                :icon="isLiked ? 'i-lucide-heart' : 'i-lucide-heart'"
                 :label="isLiked ? 'Liked' : 'Like'"
                 :color="isLiked ? 'error' : 'neutral'"
                 variant="soft"
@@ -180,7 +180,7 @@ function shareRecipe() {
               />
 
               <UButton
-                icon="i-heroicons-share"
+                icon="i-lucide-share"
                 label="Share"
                 variant="soft"
                 block
@@ -245,7 +245,7 @@ function shareRecipe() {
       </div>
 
       <div v-else class="text-center py-16">
-        <UIcon name="i-heroicons-exclamation-circle" class="size-12 mx-auto mb-4 text-muted" />
+        <UIcon name="i-lucide-circle-alert" class="size-12 mx-auto mb-4 text-muted" />
         <h3 class="text-lg font-medium mb-2">Recipe not found</h3>
         <p class="text-muted mb-4">The recipe you are looking for does not exist.</p>
         <UButton to="/recipes" label="Browse Recipes" variant="outline" />
