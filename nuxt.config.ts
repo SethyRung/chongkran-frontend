@@ -16,11 +16,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     jwt: {
       access: {
-        secret: "",
         expiresIn: "",
       },
       refresh: {
-        secret: "",
         expiresIn: "",
       },
     },
