@@ -1,5 +1,11 @@
 import type { ShoppingListResponse } from "#server/types";
 
 export default defineEventHandler(async (event) => {
-  return proxy<ShoppingListResponse>(event, "/shopping-lists");
+  const query = getQuery(event);
+  const offset = Number(query.offset) || 0;
+  const limit = Number(query.limit) || 10;
+
+  return proxy<ShoppingListResponse[]>(event, "/shopping-lists", {
+    query: { offset, limit },
+  });
 });

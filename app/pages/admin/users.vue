@@ -3,7 +3,7 @@ import { h } from "vue";
 import type { TableColumn } from "@nuxt/ui";
 import type { FormSubmitEvent } from "@nuxt/ui";
 import { z } from "zod";
-import type { UserResponse } from "#server/types";
+import type { FollowStatsResponse, UserResponse } from "#server/types";
 
 definePageMeta({ layout: "admin" });
 
@@ -68,6 +68,59 @@ const filteredUsers = computed(() => {
   return result;
 });
 
+const followStatsByUser = reactive<Record<string, FollowStatsResponse | null>>({});
+const followStatsLoading = reactive<Record<string, boolean>>({});
+const followStatsErrorShown = ref(false);
+
+watch(
+  () => filteredUsers.value.map((user) => user.id),
+  async (userIds) => {
+    const missing = userIds.filter(
+      (id) => followStatsByUser[id] === undefined && !followStatsLoading[id],
+    );
+    if (!missing.length) return;
+
+    await Promise.all(
+      missing.map(async (id) => {
+        followStatsLoading[id] = true;
+
+        try {
+          const res = await useApi<ApiResponse<FollowStatsResponse>>(`/api/follows/stats/${id}`);
+
+          if (res.status.code === ApiResponseCode.Success) {
+            followStatsByUser[id] = res.data;
+          } else {
+            followStatsByUser[id] = null;
+            if (!followStatsErrorShown.value) {
+              followStatsErrorShown.value = true;
+              toast.add({
+                title: "Failed to load follow stats",
+                description: res.status.message || "Some follow stats could not be loaded.",
+                color: "warning",
+                icon: "i-lucide-alert-circle",
+              });
+            }
+          }
+        } catch {
+          followStatsByUser[id] = null;
+          if (!followStatsErrorShown.value) {
+            followStatsErrorShown.value = true;
+            toast.add({
+              title: "Failed to load follow stats",
+              description: "Some follow stats could not be loaded.",
+              color: "warning",
+              icon: "i-lucide-alert-circle",
+            });
+          }
+        } finally {
+          followStatsLoading[id] = false;
+        }
+      }),
+    );
+  },
+  { immediate: true },
+);
+
 function roleColor(role: string) {
   if (role === "admin") return "error";
   if (role === "author") return "primary";
@@ -83,10 +136,24 @@ function formatDate(dateStr?: Date | string) {
   });
 }
 
+function renderFollowCount(userId: string, key: "followersCount" | "followingCount") {
+  if (followStatsLoading[userId]) {
+    return h(UIcon, { name: "i-lucide:loader-circle", class: "size-4 text-muted animate-spin" });
+  }
+
+  const stats = followStatsByUser[userId];
+  if (!stats) {
+    return h("span", { class: "text-sm text-muted" }, "—");
+  }
+
+  return h("span", { class: "text-sm text-default" }, String(stats[key]));
+}
+
 const UBadge = resolveComponent("UBadge");
 const UButton = resolveComponent("UButton");
 const UDropdownMenu = resolveComponent("UDropdownMenu");
 const UAvatar = resolveComponent("UAvatar");
+const UIcon = resolveComponent("UIcon");
 
 const table = useTemplateRef("table");
 const columnFilters = ref([]);
@@ -258,6 +325,16 @@ const columns: TableColumn<UserResponse>[] = [
         size: "sm",
         class: "capitalize",
       }),
+  },
+  {
+    id: "followers",
+    header: "Followers",
+    cell: ({ row }) => renderFollowCount(row.original.id, "followersCount"),
+  },
+  {
+    id: "following",
+    header: "Following",
+    cell: ({ row }) => renderFollowCount(row.original.id, "followingCount"),
   },
   {
     accessorKey: "createdAt",

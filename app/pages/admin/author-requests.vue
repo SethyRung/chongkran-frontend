@@ -136,11 +136,6 @@ const columns: TableColumn<AuthorRequest>[] = [
       ]),
   },
   {
-    accessorKey: "createdAt",
-    header: "Requested",
-    cell: ({ row }) => formatDate(row.original.createdAt),
-  },
-  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) =>
