@@ -1,45 +1,137 @@
 <script setup lang="ts">
+import type { ChartOptions } from "chart.js";
+import type { AdminDailyCount, AdminRoleCount } from "#shared/types";
+
 definePageMeta({ layout: "admin" });
 
 const toast = useToast();
 
-const {
-  data: dashboard,
-  pending,
-  refresh,
-} = await useAsyncData(
-  "admin-dashboard",
-  () =>
-    Promise.all([
-      useApi("/api/users", { query: { limit: 1 } }),
-      useApi("/api/recipes", { query: { limit: 1 } }),
-      useApi("/api/recipes/pending", { query: { limit: 1 } }),
-      useApi("/api/users/authors/requests", {
-        query: { limit: 1, status: "pending" },
-      }),
-      useApi("/api/recipes/pending", { query: { limit: 5 } }),
-      useApi("/api/users/authors/requests", {
-        query: { limit: 5, status: "pending" },
-      }),
-    ]),
-  {
-    transform: ([
-      users,
-      recipes,
-      pendingRecipes,
-      authorRequests,
-      recentPending,
-      recentRequests,
-    ]) => ({
-      totalUsers: users.meta?.total ?? 0,
-      totalRecipes: recipes.meta?.total ?? 0,
-      totalPendingRecipes: pendingRecipes.meta?.total ?? 0,
-      totalAuthorRequests: authorRequests.meta?.total ?? 0,
-      recentPending: recentPending.data ?? [],
-      recentRequests: recentRequests.data ?? [],
-    }),
+const { data: stats, pending, refresh } = await useFetchApi("/api/admin/stats");
+
+const lineOptions = (legend = false): ChartOptions => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: "rgba(150,150,150,0.15)" } },
+    x: { grid: { display: false } },
   },
-);
+  plugins: { legend: { display: legend } },
+});
+
+const barOptions = (): ChartOptions => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: "rgba(150,150,150,0.15)" } },
+    x: { grid: { display: false }, ticks: { maxRotation: 45, minRotation: 0 } },
+  },
+});
+
+const doughnutOptions = (): ChartOptions => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { position: "bottom" as const, labels: { color: "rgba(150,150,150,0.6)" } },
+  },
+});
+
+function dailySeriesToChartData(users: AdminDailyCount[], recipes: AdminDailyCount[]) {
+  const labels = users.map((d) => {
+    const date = new Date(d.date);
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  });
+
+  return {
+    labels,
+    datasets: [
+      {
+        label: "Users",
+        data: users.map((d) => d.count),
+        borderColor: "#eab308",
+        borderWidth: 2,
+        tension: 0.3,
+      },
+      {
+        label: "Recipes",
+        data: recipes.map((d) => d.count),
+        borderColor: "#22c55e",
+        borderWidth: 2,
+        tension: 0.3,
+      },
+    ],
+  };
+}
+
+function singleSeriesToChartData(series: AdminDailyCount[]) {
+  const labels = series.map((d) => {
+    const date = new Date(d.date);
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  });
+
+  return {
+    labels,
+    datasets: [
+      {
+        label: "Recipes",
+        data: series.map((d) => d.count),
+        borderColor: "#eab308",
+        borderWidth: 2,
+        tension: 0.3,
+      },
+    ],
+  };
+}
+
+const recipesOverTimeChartData = computed(() => {
+  const s = stats.value?.data;
+  if (!s?.recipeTrendSeries) return null;
+  const last14 = s.recipeTrendSeries.slice(-14);
+  return singleSeriesToChartData(last14);
+});
+
+const usersByRoleChartData = computed(() => {
+  const s = stats.value?.data;
+  if (!s?.usersByRole) return null;
+  const roleData = s.usersByRole as AdminRoleCount[];
+  return {
+    labels: roleData.map((r) => r.role.charAt(0).toUpperCase() + r.role.slice(1)),
+    datasets: [
+      {
+        data: roleData.map((r) => r.count),
+        backgroundColor: ["#eab308", "#f97316", "#22c55e"],
+        borderWidth: 0,
+      },
+    ],
+  };
+});
+
+const trendChartData = computed(() => {
+  const s = stats.value?.data;
+  if (!s?.userTrendSeries || !s?.recipeTrendSeries) return null;
+  return dailySeriesToChartData(s.userTrendSeries, s.recipeTrendSeries);
+});
+
+const popularRecipesChartData = computed(() => {
+  const s = stats.value?.data;
+  if (!s?.popularRecipes) return null;
+  return {
+    labels: s.popularRecipes.map((r) => r.title),
+    datasets: [
+      {
+        label: "Views",
+        data: s.popularRecipes.map((r) => r.views),
+        backgroundColor: "#eab308",
+        borderRadius: 6,
+      },
+      {
+        label: "Likes",
+        data: s.popularRecipes.map((r) => r.likes),
+        backgroundColor: "#22c55e",
+        borderRadius: 6,
+      },
+    ],
+  };
+});
 
 async function updateRecipeStatus(id: string, status: "approved" | "rejected") {
   try {
@@ -104,15 +196,6 @@ async function handleAuthorRequest(id: string, action: "approve" | "reject") {
     });
   }
 }
-
-function formatDate(dateStr?: string) {
-  if (!dateStr) return "";
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
 </script>
 
 <template>
@@ -127,164 +210,53 @@ function formatDate(dateStr?: string) {
 
     <template #body>
       <div class="space-y-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <AdminStatCard
-            title="Total Users"
-            :value="dashboard?.totalUsers ?? 0"
-            icon="i-lucide:users"
-            color="primary"
-            :loading="pending"
-          />
-          <AdminStatCard
-            title="Total Recipes"
-            :value="dashboard?.totalRecipes ?? 0"
-            icon="i-lucide:chef-hat"
-            color="primary"
-            :loading="pending"
-          />
-          <AdminStatCard
-            title="Pending Recipes"
-            :value="dashboard?.totalPendingRecipes ?? 0"
-            icon="i-lucide:clock"
-            color="warning"
-            :loading="pending"
-          />
-          <AdminStatCard
-            title="Pending Author Requests"
-            :value="dashboard?.totalAuthorRequests ?? 0"
-            icon="i-lucide:user-check"
-            color="warning"
-            :loading="pending"
-          />
-        </div>
+        <AdminStats :stats="stats?.data" :loading="pending" />
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <UCard>
-            <template #header>
-              <div class="flex items-center justify-between">
-                <div>
-                  <h3 class="font-semibold">Pending Recipes</h3>
-                  <p class="text-sm text-muted">Recipes awaiting review</p>
-                </div>
-                <UButton
-                  to="/admin/recipes"
-                  label="View All"
-                  variant="subtle"
-                  trailing-icon="i-lucide:arrow-right"
-                  size="sm"
-                />
-              </div>
-            </template>
+          <AdminChartCard
+            title="Recipes created over time"
+            subtitle="Last 14 days"
+            :chart-data="recipesOverTimeChartData"
+            :chart-options="lineOptions()"
+          />
 
-            <div v-if="dashboard?.recentPending.length" class="space-y-3">
-              <div
-                v-for="recipe in dashboard.recentPending"
-                :key="recipe.id"
-                class="flex items-center gap-3 p-3 rounded-lg bg-elevated/50"
-              >
-                <UAvatar :src="recipe.image" :alt="recipe.title" size="sm" icon="i-lucide:image" />
-
-                <div class="flex-1 min-w-0">
-                  <p class="truncate text-sm font-medium">{{ recipe.title }}</p>
-                  <p class="text-xs text-muted">
-                    {{ recipe.authorName }} &middot;
-                    {{ formatDate(recipe.createdAt) }}
-                  </p>
-                </div>
-
-                <div class="flex gap-1 shrink-0">
-                  <UButton
-                    label="Approve"
-                    size="xs"
-                    color="success"
-                    variant="subtle"
-                    @click="updateRecipeStatus(recipe.id, 'approved')"
-                  />
-                  <UButton
-                    label="Reject"
-                    size="xs"
-                    color="error"
-                    variant="subtle"
-                    @click="updateRecipeStatus(recipe.id, 'rejected')"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <UAlert
-              v-else
-              icon="i-lucide:check-circle"
-              title="All caught up!"
-              description="No pending recipes to review."
-              color="success"
-              variant="subtle"
-            />
-          </UCard>
-
-          <UCard>
-            <template #header>
-              <div class="flex items-center justify-between">
-                <div>
-                  <h3 class="font-semibold">Author Requests</h3>
-                  <p class="text-sm text-muted">Users requesting author status</p>
-                </div>
-                <UButton
-                  to="/admin/author-requests"
-                  label="View All"
-                  variant="subtle"
-                  trailing-icon="i-lucide:arrow-right"
-                  size="sm"
-                />
-              </div>
-            </template>
-
-            <div v-if="dashboard?.recentRequests.length" class="space-y-3">
-              <div
-                v-for="req in dashboard.recentRequests"
-                :key="req.id"
-                class="flex items-center gap-3 p-3 rounded-lg bg-elevated/50"
-              >
-                <UAvatar
-                  :src="req.avatar"
-                  :alt="`${req.firstName} ${req.lastName}`"
-                  size="sm"
-                  icon="i-lucide:user"
-                />
-
-                <div class="flex-1 min-w-0">
-                  <p class="truncate text-sm font-medium">{{ req.firstName }} {{ req.lastName }}</p>
-                  <p class="text-xs text-muted">{{ req.email }}</p>
-                </div>
-
-                <div class="flex gap-1 shrink-0">
-                  <UButton
-                    label="Approve"
-                    size="xs"
-                    color="success"
-                    variant="subtle"
-                    @click="handleAuthorRequest(req.id, 'approve')"
-                  />
-                  <UButton
-                    label="Reject"
-                    size="xs"
-                    color="error"
-                    variant="subtle"
-                    @click="handleAuthorRequest(req.id, 'reject')"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <UAlert
-              v-else
-              icon="i-lucide:check-circle"
-              title="All caught up!"
-              description="No pending author requests."
-              color="success"
-              variant="subtle"
-            />
-          </UCard>
+          <AdminChartCard
+            title="Users by role"
+            subtitle="Distribution of current roles"
+            :chart-data="usersByRoleChartData"
+            :chart-options="doughnutOptions()"
+            chart-type="doughnut"
+          />
         </div>
+
+        <AdminChartCard
+          title="New users & recipes"
+          subtitle="Last 30 days"
+          :chart-data="trendChartData"
+          :chart-options="lineOptions(true)"
+        />
+
+        <AdminChartCard
+          title="Most popular recipes"
+          subtitle="Top recipes by views and likes"
+          chart-type="bar"
+          :chart-data="popularRecipesChartData"
+          :chart-options="barOptions()"
+        />
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <AdminPendingRecipes
+            :recipes="stats?.data.recentPendingRecipes"
+            @update-status="updateRecipeStatus"
+          />
+
+          <AdminPendingAuthorRequests
+            :requests="stats?.data.recentPendingAuthorRequests"
+            @handle-request="handleAuthorRequest"
+          />
+        </div>
+
+        <AdminRecentActivity :items="stats?.data.recentActivity" />
       </div>
     </template>
   </UDashboardPanel>

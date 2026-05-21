@@ -17,6 +17,11 @@ const navItems = computed<NavigationMenuItem[][]>(() => [
       to: "/admin/recipes",
     },
     {
+      label: "Reviews",
+      icon: "i-lucide:star",
+      to: "/admin/reviews",
+    },
+    {
       label: "Users",
       icon: "i-lucide:users",
       to: "/admin/users",
@@ -30,6 +35,16 @@ const navItems = computed<NavigationMenuItem[][]>(() => [
       label: "Categories",
       icon: "i-lucide:tag",
       to: "/admin/categories",
+    },
+    {
+      label: "Meal Plans",
+      icon: "i-lucide:calendar",
+      to: "/admin/meal-plans",
+    },
+    {
+      label: "Shopping Lists",
+      icon: "i-lucide:shopping-basket",
+      to: "/admin/shopping-lists",
     },
   ],
   [

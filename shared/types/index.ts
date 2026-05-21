@@ -171,3 +171,66 @@ export interface ShoppingList {
   items: ShoppingItem[];
   createdAt: string;
 }
+
+export interface AdminStatsSummary {
+  totalUsers: number;
+  totalRecipes: number;
+  totalPendingRecipes: number;
+  totalPendingAuthorRequests: number;
+  totalReviews: number;
+}
+
+export interface AdminRoleCount {
+  role: string;
+  count: number;
+}
+
+export interface AdminDailyCount {
+  date: string;
+  count: number;
+}
+
+export interface AdminPopularRecipe {
+  id: string;
+  title: string;
+  image?: string;
+  views: number;
+  likes: number;
+}
+
+export interface AdminActivityItem {
+  type: "user" | "recipe" | "review";
+  description: string;
+  timestamp?: string;
+}
+
+export interface AdminRecentAuthorRequest {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatar?: string;
+}
+
+export interface AdminRecentPendingRecipe {
+  id: string;
+  title: string;
+  image?: string;
+  authorName?: string;
+  createdAt: string;
+}
+
+export interface AdminStatsResponse {
+  totalUsers: number;
+  totalRecipes: number;
+  totalPendingRecipes: number;
+  totalPendingAuthorRequests: number;
+  totalReviews: number;
+  recentPendingRecipes: AdminRecentPendingRecipe[];
+  recentPendingAuthorRequests: AdminRecentAuthorRequest[];
+  usersByRole: AdminRoleCount[];
+  userTrendSeries: AdminDailyCount[];
+  recipeTrendSeries: AdminDailyCount[];
+  popularRecipes: AdminPopularRecipe[];
+  recentActivity: AdminActivityItem[];
+}
