@@ -63,12 +63,8 @@ const ratingMaxOptions = [
 ];
 
 const searchParam = computed(() => search.value || undefined);
-const ratingMinParam = computed(() =>
-  ratingMin.value === "any" ? undefined : ratingMin.value,
-);
-const ratingMaxParam = computed(() =>
-  ratingMax.value === "any" ? undefined : ratingMax.value,
-);
+const ratingMinParam = computed(() => (ratingMin.value === "any" ? undefined : ratingMin.value));
+const ratingMaxParam = computed(() => (ratingMax.value === "any" ? undefined : ratingMax.value));
 
 const {
   data: reviewsData,

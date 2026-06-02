@@ -13,6 +13,9 @@ const navigation = computed<NavigationMenuItem[]>(() => [
   { label: "Home", active: isActive("/"), to: "/" },
   { label: "Recipes", active: isActive("/recipes"), to: "/recipes" },
   { label: "Categories", active: isActive("/categories"), to: "/categories" },
+  ...(user.value
+    ? [{ label: "Meal Plans", active: isActive("/meal-plans"), to: "/meal-plans" }]
+    : []),
 ]);
 
 const userMenuItems = computed(() => [
