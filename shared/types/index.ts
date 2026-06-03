@@ -9,16 +9,25 @@ export enum ApiResponseCode {
   InternalError = "INTERNAL_ERROR",
 }
 
-export interface ApiResponse<T> {
-  status: {
-    code: ApiResponseCode;
-    message: string;
-    requestId: string;
-    requestTime: number;
-  };
+export interface ApiResponseStatus {
+  code: ApiResponseCode;
+  message: string;
+  requestId: string;
+  requestTime: number;
+}
+
+export type ApiResponseSuccess<T> = {
+  status: ApiResponseStatus & { code: ApiResponseCode.Success };
   data: T;
   meta?: PaginationMeta;
-}
+};
+
+export type ApiResponseError = {
+  status: ApiResponseStatus & { code: Exclude<ApiResponseCode, ApiResponseCode.Success> };
+  data: null;
+};
+
+export type ApiResponse<T> = ApiResponseSuccess<T> | ApiResponseError;
 
 export interface PaginationMeta {
   total: number;
