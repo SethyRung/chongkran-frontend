@@ -115,6 +115,7 @@ export interface Recipe {
   image: string;
   cookTime: number;
   likes?: number;
+  likedUserIds?: string[];
   views?: number;
   difficulty: "easy" | "medium" | "hard";
   status?: "pending" | "approved" | "rejected";

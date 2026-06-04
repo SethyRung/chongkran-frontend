@@ -3,8 +3,10 @@ import type { RecipeResponse } from "#server/types";
 
 const route = useRoute();
 const recipeId = computed(() => route.params.id as string);
+const user = useUser();
+const toast = useToast();
 
-const { data: recipeRes } = await useFetchApi<ApiResponse<RecipeResponse>>(
+const { data: recipeRes, refresh } = await useFetchApi<ApiResponse<RecipeResponse>>(
   `/api/recipes/${recipeId.value}`,
   {
     lazy: true,
@@ -17,6 +19,16 @@ const recipe = computed<Recipe | null>(() => {
   }
   return null;
 });
+
+async function refreshUser() {
+  try {
+    const res = await useApi<ApiResponse<User>>("/api/auth/me");
+    if (res.status.code === ApiResponseCode.Success) {
+      const user = useUser();
+      user.value = res.data;
+    }
+  } catch {}
+}
 
 const category = computed(() => {
   if (!recipe.value) return null;
@@ -57,24 +69,132 @@ const formattedDate = computed(() => {
   });
 });
 
-const isLiked = ref(false);
+const isLiked = computed(() => {
+  if (!user.value || !recipe.value) return false;
+  return recipe.value.likedUserIds?.includes(user.value.id) ?? false;
+});
+const isSaved = computed(() => {
+  if (!user.value || !recipe.value) return false;
+  return user.value.favoriteRecipes?.includes(recipe.value.id) ?? false;
+});
 
-function toggleLike() {
-  isLiked.value = !isLiked.value;
-  // TODO: API call to like/unlike
+const likeLoading = ref(false);
+const saveLoading = ref(false);
+
+async function toggleLike() {
+  if (!recipe.value || !user.value) {
+    toast.add({
+      title: "Please log in to like this recipe",
+      color: "warning",
+      icon: "i-lucide-log-in",
+    });
+    return;
+  }
+
+  try {
+    likeLoading.value = true;
+
+    const willUnlike = isLiked.value;
+
+    const res = await useApi<ApiResponse<string>>(`/api/recipes/${recipe.value.id}/like`, {
+      method: "PUT",
+    });
+
+    if (res.status.code === ApiResponseCode.Success) {
+      await refresh();
+      toast.add({
+        title: willUnlike ? "Recipe unliked" : "Recipe liked",
+        color: "success",
+        icon: "i-lucide-heart",
+      });
+    }
+  } catch {
+    toast.add({
+      title: "Failed to update like",
+      color: "error",
+      icon: "i-lucide-alert-circle",
+    });
+  } finally {
+    likeLoading.value = false;
+  }
 }
 
-function shareRecipe() {
-  if (!recipe.value) return;
-  if (navigator.share) {
-    void navigator.share({
-      title: recipe.value.title,
-      text: recipe.value.description,
-      url: window.location.href,
+async function toggleSave() {
+  if (!recipe.value || !user.value) {
+    toast.add({
+      title: "Please log in to save this recipe",
+      color: "warning",
+      icon: "i-lucide-log-in",
     });
+    return;
+  }
+
+  try {
+    saveLoading.value = true;
+
+    if (isSaved.value) {
+      await useApi<ApiResponse<string>>(`/api/favorites/${recipe.value.id}`, {
+        method: "DELETE",
+      });
+    } else {
+      await useApi<ApiResponse<string>>(`/api/favorites/${recipe.value.id}`, {
+        method: "POST",
+      });
+    }
+
+    await refreshUser();
+    toast.add({
+      title: isSaved.value ? "Recipe saved" : "Recipe removed from favorites",
+      color: "success",
+      icon: "i-lucide-bookmark",
+    });
+  } catch {
+    toast.add({
+      title: "Failed to update favorite",
+      color: "error",
+      icon: "i-lucide-alert-circle",
+    });
+  } finally {
+    saveLoading.value = false;
+  }
+}
+
+async function shareRecipe() {
+  if (!recipe.value) return;
+
+  const url = `${window.location.origin}/recipes/${recipe.value.id}`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: recipe.value.title,
+        text: recipe.value.description ?? undefined,
+        url,
+      });
+    } catch (err) {
+      if (err instanceof Error && err.name !== "AbortError") {
+        await copyToClipboard(url);
+      }
+    }
   } else {
-    void navigator.clipboard.writeText(window.location.href);
-    // TODO: Show toast notification
+    await copyToClipboard(url);
+  }
+}
+
+async function copyToClipboard(url: string) {
+  try {
+    await navigator.clipboard.writeText(url);
+    toast.add({
+      title: "Link copied to clipboard",
+      color: "success",
+      icon: "i-lucide-link",
+    });
+  } catch {
+    toast.add({
+      title: "Failed to copy link",
+      color: "error",
+      icon: "i-lucide-alert-circle",
+    });
   }
 }
 </script>
@@ -171,21 +291,24 @@ function shareRecipe() {
           <UCard>
             <div class="flex gap-3">
               <UButton
-                :icon="isLiked ? 'i-lucide-heart' : 'i-lucide-heart'"
+                icon="i-lucide-heart"
                 :label="isLiked ? 'Liked' : 'Like'"
                 :color="isLiked ? 'error' : 'neutral'"
                 variant="soft"
-                block
+                :loading="likeLoading"
                 @click="toggleLike"
               />
 
               <UButton
-                icon="i-lucide-share"
-                label="Share"
+                :icon="isSaved ? 'i-lucide-bookmark-check' : 'i-lucide-bookmark'"
+                :label="isSaved ? 'Saved' : 'Save'"
+                :color="isSaved ? 'primary' : 'neutral'"
                 variant="soft"
-                block
-                @click="shareRecipe"
+                :loading="saveLoading"
+                @click="toggleSave"
               />
+
+              <UButton icon="i-lucide-share" label="Share" variant="soft" @click="shareRecipe" />
             </div>
           </UCard>
 
