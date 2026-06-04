@@ -14,7 +14,10 @@ const navigation = computed<NavigationMenuItem[]>(() => [
   { label: "Recipes", active: isActive("/recipes"), to: "/recipes" },
   { label: "Categories", active: isActive("/categories"), to: "/categories" },
   ...(user.value
-    ? [{ label: "Meal Plans", active: isActive("/meal-plans"), to: "/meal-plans" }]
+    ? [
+        { label: "Meal Plans", active: isActive("/meal-plans"), to: "/meal-plans" },
+        { label: "Shopping List", active: isActive("/shopping-lists"), to: "/shopping-lists" },
+      ]
     : []),
 ]);
 
